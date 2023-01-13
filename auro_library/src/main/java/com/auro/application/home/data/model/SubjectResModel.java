@@ -1,0 +1,128 @@
+package com.auro.application.home.data.model;
+
+
+import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+import java.util.List;
+
+public class SubjectResModel implements Parcelable {
+
+    @SerializedName("subject")
+    @Expose
+    private String subject;
+    @SerializedName("description")
+    @Expose
+    private String description;
+    @SerializedName("chapter")
+    @Expose
+    private List<QuizResModel> chapter = null;
+    @SerializedName("quiz_won")
+    @Expose
+    private int quizWonAmount;
+    @SerializedName("subject_code")
+    @Expose
+    private String subjectCode;
+    @SerializedName("quizOpen")
+    @Expose
+    private boolean quizOpen;
+
+    private Drawable imagePath;
+
+
+    protected SubjectResModel(Parcel in) {
+        subject = in.readString();
+        description = in.readString();
+        chapter = in.createTypedArrayList(QuizResModel.CREATOR);
+        quizWonAmount = in.readInt();
+        subjectCode = in.readString();
+        quizOpen = in.readByte() != 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(subject);
+        dest.writeString(description);
+        dest.writeTypedList(chapter);
+        dest.writeInt(quizWonAmount);
+        dest.writeString(subjectCode);
+        dest.writeByte((byte) (quizOpen ? 1 : 0));
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<SubjectResModel> CREATOR = new Creator<SubjectResModel>() {
+        @Override
+        public SubjectResModel createFromParcel(Parcel in) {
+            return new SubjectResModel(in);
+        }
+
+        @Override
+        public SubjectResModel[] newArray(int size) {
+            return new SubjectResModel[size];
+        }
+    };
+
+    public boolean isQuizOpen() {
+        return quizOpen;
+    }
+
+    public void setQuizOpen(boolean quizOpen) {
+        this.quizOpen = quizOpen;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public List<QuizResModel> getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(List<QuizResModel> chapter) {
+        this.chapter = chapter;
+    }
+
+    public int getQuizWonAmount() {
+        return quizWonAmount;
+    }
+
+    public void setQuizWonAmount(int quizWonAmount) {
+        this.quizWonAmount = quizWonAmount;
+    }
+
+    public String getSubjectCode() {
+        return subjectCode;
+    }
+
+    public void setSubjectCode(String subjectCode) {
+        this.subjectCode = subjectCode;
+    }
+
+    public Drawable getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(Drawable imagePath) {
+        this.imagePath = imagePath;
+    }
+}

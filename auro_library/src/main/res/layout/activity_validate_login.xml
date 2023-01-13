@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/login_screen_bgcolor">
+
+        <ImageView
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/login_right_corner" />
+
+        <ImageView
+            android:id="@+id/left_corner_image"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/login_left_corner" />
+
+        <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginEnd="@dimen/_30sdp"
+            android:src="@drawable/login_back_button" />
+
+        <com.auro.application.core.util.uiwidget.RPTextView
+            android:id="@+id/title_first"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/left_corner_image"
+            android:layout_marginStart="@dimen/_35sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:text="Validate"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_22sdp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/title_first"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:background="@drawable/login_bg_white"
+            android:orientation="vertical">
+
+            <androidx.core.widget.NestedScrollView
+                android:fillViewport="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:orientation="vertical">
+
+                    <com.auro.application.core.util.uiwidget.RPTextView
+                        android:id="@+id/validateText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="@dimen/_20sdp"
+                        android:layout_below="@+id/left_corner_image"
+                        android:text="Complete this mobile number 75036XXXXXX"
+                        android:textColor="@color/ui_color_code"
+                        android:textSize="@dimen/_12sdp" />
+                    <LinearLayout
+                        android:id="@+id/llinputPhone"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginRight="@dimen/_20sdp"
+                        android:background="@drawable/bg_rectangle_box"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/_10sdp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/view">
+
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:tint="@color/blue_color"
+                            android:src="@drawable/mobile_icon_svg" />
+
+                        <com.auro.application.core.util.uiwidget.RPEditText
+                            android:id="@+id/editOldNumder"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:background="@null"
+                            android:hint="Old Mobile Number"
+                            android:inputType="number"
+                            android:maxLength="10"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp"
+                            app:Font="Poppins-SemiBold.ttf" />
+
+                    </LinearLayout>
+
+
+                    <com.auro.application.core.util.uiwidget.RPTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="@dimen/_20sdp"
+                        android:layout_below="@+id/left_corner_image"
+                        android:layout_marginTop="@dimen/_30sdp"
+                        android:text="Enter Your New Mobile Here "
+                        android:textColor="@color/ui_color_code"
+                        android:textSize="@dimen/_12sdp" />
+                    <LinearLayout
+                        android:id="@+id/passwordLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:layout_marginRight="@dimen/_20sdp"
+                        android:background="@drawable/bg_rectangle_box"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/_10sdp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/view">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:tint="@color/blue_color"
+                            android:src="@drawable/mobile_icon_svg" />
+
+
+
+                        <com.auro.application.core.util.uiwidget.RPEditText
+                            android:id="@+id/textNewNumber"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_10sdp"
+                            android:background="@null"
+                            android:hint="Mobile Number"
+                            android:inputType="number"
+                            android:maxLength="10"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/_12sdp"
+                            app:Font="Poppins-SemiBold.ttf" />
+
+                    </LinearLayout>
+
+                    <com.auro.application.core.util.uiwidget.RPTextView
+                        android:id="@+id/RPButtonSendOtp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:background="@drawable/button_submit"
+                        android:gravity="center"
+                        android:padding="@dimen/_11sdp"
+                        android:visibility="visible"
+                        android:text="@string/send_otp"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/_11sdp"
+                        app:Font="ArticulatCF-Regular.otf" />
+
+
+                    <com.auro.application.core.util.uiwidget.RPTextView
+                        android:id="@+id/terms_condition"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/left_corner_image"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:text="By Creating Passcode You Agree With Our Terms and Conditions and Privacy Policy"
+                        android:textAlignment="center"
+                        android:layout_marginBottom="@dimen/_7sdp"
+                        android:textSize="@dimen/_10sdp" />
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+
+        </RelativeLayout>
+        <include
+            android:id="@+id/progressbar"
+            layout="@layout/full_screen_progress_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </RelativeLayout>
+</layout>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:id="@+id/consParent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_7sdp"
+        android:layout_marginLeft="@dimen/_7sdp"
+        android:layout_marginEnd="@dimen/_50sdp"
+        android:layout_marginRight="@dimen/_50sdp"
+        android:background="@drawable/incoming_bubble"
+        android:paddingStart="@dimen/_25sdp"
+        android:paddingLeft="@dimen/_25sdp"
+        android:paddingTop="@dimen/_4sdp"
+        android:paddingEnd="@dimen/_8sdp"
+        android:paddingRight="@dimen/_8sdp"
+        android:paddingBottom="@dimen/_4sdp">
+
+        <ImageView
+            android:id="@+id/imvPersonPhoto"
+            android:layout_width="26dp"
+            android:layout_height="26dp"
+            android:src="@drawable/ic_bot_white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:layout_toEndOf="@id/imvPersonPhoto"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:layout_marginRight="@dimen/_10sdp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_13ssp" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvProductNodes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tvName"
+            android:orientation="horizontal"
+            tools:itemCount="1"
+            tools:listitem="@layout/product_item_layout" />
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvNodes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rvProductNodes"
+            android:layout_marginTop="@dimen/_5sdp"
+            android:layout_marginEnd="@dimen/_10sdp" />
+
+<!--        <LinearLayout-->
+<!--            android:id="@+id/linearLayout"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical"-->
+<!--            android:layout_below="@+id/imvPersonPhoto"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/imvPersonPhoto"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/imvPersonPhoto"-->
+<!--            app:layout_constraintTop_toTopOf="@+id/imvPersonPhoto">-->
+
+<!--            -->
+
+<!--        </LinearLayout>-->
+
+    </RelativeLayout>
+
+
+    <!--<androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvProductNodes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/consParent"
+        android:layout_marginTop="@dimen/_5sdp"
+        android:layout_marginEnd="@dimen/_10sdp"
+        tools:listitem="@layout/product_item_layout" />-->
+
+
+</RelativeLayout>

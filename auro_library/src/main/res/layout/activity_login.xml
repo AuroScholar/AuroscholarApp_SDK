@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/coordinatorLayout"
+                android:background="@color/login_screen_bgcolor">
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/login_screen_bgcolor">
+
+            <ImageView
+                android:id="@+id/auro_scholar_logo"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:adjustViewBounds="true"
+                android:src="@drawable/ic_auro_scholar_logo"
+                android:visibility="visible" />
+
+            <ImageView
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_70sdp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/login_right_corner" />
+
+            <ImageView
+                android:id="@+id/left_corner_image"
+                android:layout_width="@dimen/_70sdp"
+                android:layout_height="@dimen/_70sdp"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/login_left_corner" />
+
+            <ImageView
+                android:id="@+id/back_button"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_50sdp"
+                android:layout_alignParentRight="true"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:layout_marginEnd="@dimen/_30sdp"
+                android:src="@drawable/login_back_button" />
+
+            <com.auro.application.core.util.uiwidget.RPTextView
+                android:id="@+id/title_first"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/left_corner_image"
+                android:layout_marginStart="@dimen/_25sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:text="@string/auro_hey"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_16sdp" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/title_first"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@drawable/login_bg_white"
+                android:orientation="vertical">
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:fillViewport="true">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginEnd="@dimen/_20sdp"
+                        android:orientation="vertical">
+
+
+                        <LinearLayout
+                            android:id="@+id/llLoginForm"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:id="@+id/layout_heading_one"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:visibility="gone">
+
+                                <com.auro.application.core.util.uiwidget.RPTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/_15sdp"
+                                    android:text="@string/auro_login"
+                                    android:textColor="@color/text_color_103"
+                                    android:textSize="@dimen/_16sdp"
+                                    app:Font="ArticulatCF-DemiBold.otf" />
+
+                                <com.auro.application.core.util.uiwidget.RPTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/_5sdp"
+                                    android:layout_marginTop="@dimen/_15sdp"
+                                    android:text="@string/or"
+                                    android:textColor="@color/grey"
+                                    android:textSize="@dimen/_11sdp"
+                                    app:Font="ArticulatCF-Regular.otf" />
+
+                                <com.auro.application.core.util.uiwidget.RPTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/_5sdp"
+                                    android:layout_marginTop="@dimen/_15sdp"
+                                    android:text="@string/auro_signUp"
+                                    android:textColor="@color/text_color_103"
+                                    android:textSize="@dimen/_16sdp"
+                                    app:Font="ArticulatCF-DemiBold.otf" />
+
+                            </LinearLayout>
+
+                            <com.auro.application.core.util.uiwidget.RPTextView
+                                android:id="@+id/heading_two"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_15sdp"
+                                android:text="@string/login_to_your_account"
+                                android:textColor="@color/text_color_103"
+                                android:textSize="@dimen/_16sdp"
+
+                                app:Font="ArticulatCF-DemiBold.otf" />
+
+                            <LinearLayout
+                                android:id="@+id/mobileLayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_18sdp"
+                                android:background="@drawable/auro_white_strip_box"
+                                android:orientation="horizontal"
+                                android:padding="@dimen/_10sdp">
+
+                                <com.auro.application.core.util.uiwidget.RPTextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="+91"
+                                    android:textColor="@color/text_color_103"
+                                    android:textSize="@dimen/_13sdp"
+                                    app:Font="ArticulatCF-Regular.otf" />
+
+                                <View
+                                    android:layout_width="1dp"
+                                    android:layout_height="@dimen/_15sdp"
+                                    android:layout_gravity="center"
+                                    android:layout_marginLeft="@dimen/_5sdp"
+                                    android:background="@color/box_white_border" />
+
+                                <com.auro.application.core.util.uiwidget.RPEditText
+                                    android:id="@+id/etMobileNumber"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="@dimen/_5sdp"
+                                    android:background="@null"
+                                    android:hint="@string/mobile_number_username"
+                                    android:inputType="text"
+                                    android:maxLength="40"
+                                    android:singleLine="true"
+                                    android:textColor="@color/text_color_103"
+                                    android:textColorHint="@color/box_login_hint_color"
+                                    android:textSize="@dimen/_13sdp"
+                                    app:Font="ArticulatCF-Regular.otf" />
+
+                            </LinearLayout>
+
+                            <RelativeLayout
+                                android:id="@+id/passwordlayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:background="@drawable/auro_white_strip_box"
+                                android:orientation="horizontal"
+                                android:padding="@dimen/_10sdp"
+                                android:visibility="gone">
+
+
+                                <com.auro.application.core.util.uiwidget.RPEditText
+                                    android:id="@+id/etPassword"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_weight="8"
+                                    android:background="@null"
+                                    android:hint="@string/password"
+                                    android:enabled="true"
+                                    android:inputType="textPassword"
+                                    android:singleLine="true"
+                                    android:password="true"
+                                    android:textColor="@color/text_color_103"
+                                    android:textColorHint="@color/box_login_hint_color"
+                                    android:textSize="@dimen/_13sdp"
+                                    app:Font="ArticulatCF-Regular.otf" />
+
+                                <ImageView
+                                    android:id="@+id/passwordIcon"
+                                    android:layout_width="@dimen/_20sdp"
+                                    android:layout_height="@dimen/_20sdp"
+                                     android:visibility="visible"
+                                  android:layout_alignParentRight="true"
+                                    android:layout_alignParentEnd="true"
+                                    android:src="@drawable/ic_red_eye" />
+
+                            </RelativeLayout>
+                            <LinearLayout
+                                android:id="@+id/pinlayout"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:background="@drawable/auro_white_strip_box"
+                                android:orientation="horizontal"
+                                android:padding="@dimen/_10sdp"
+                                android:visibility="gone">
+
+
+                                <com.auro.application.core.util.uiwidget.RPEditText
+                                    android:id="@+id/etPin"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_weight="8"
+                                    android:background="@null"
+                                    android:hint="@string/enter_pin"
+                                    android:password="true"
+                                    android:textColor="@color/text_color_103"
+                                    android:textColorHint="@color/box_login_hint_color"
+                                    android:textSize="@dimen/_13sdp"
+                                    app:Font="ArticulatCF-Regular.otf" />
+
+                                <ImageView
+                                    android:id="@+id/pinIcon"
+                                    android:layout_width="@dimen/_20sdp"
+                                    android:layout_height="@dimen/_20sdp"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_weight="1.2"
+                                    android:src="@drawable/ic_red_eye" />
+
+                            </LinearLayout>
+
+
+                            <com.auro.application.core.util.uiwidget.RPTextView
+                                android:id="@+id/RPAccept"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_20sdp"
+                                android:background="@drawable/button_submit"
+                                android:gravity="center"
+                                android:padding="@dimen/_11sdp"
+                                android:text="@string/continue_exit"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_11sdp"
+                                android:visibility="visible"
+                                app:Font="ArticulatCF-Regular.otf" />
+
+                            <com.auro.application.core.util.uiwidget.RPTextView
+                                android:id="@+id/forgotPassword"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="@dimen/_20sdp"
+                                android:text="@string/forgot_password"
+                                android:textAlignment="center"
+                                android:visibility="gone"
+                                android:textColor="@color/blue_color"
+                                android:textSize="@dimen/_12sdp" />
+
+                            <com.auro.application.core.util.uiwidget.RPTextView
+                                android:id="@+id/loginWithOtp"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:visibility="gone"
+                                android:layout_gravity="center_horizontal"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:text="@string/login_with_otp"
+                                android:textAlignment="center"
+                                android:textColor="@color/blue_color"
+                                android:textSize="@dimen/_12sdp" />
+                        </LinearLayout>
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/llLoginForm">
+
+                            <com.auro.application.core.util.uiwidget.RPTextView
+                                android:id="@+id/terms_condition"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentBottom="true"
+                                android:layout_marginTop="@dimen/_20sdp"
+                                android:layout_marginBottom="@dimen/_20sdp"
+                                android:text="By Creating Passcode You Agree With Our Terms and Conditions and Privacy Policy"
+                                android:textAlignment="center"
+                                android:textSize="@dimen/_10sdp" />
+                        </RelativeLayout>
+
+
+
+
+
+                    </RelativeLayout>
+                </androidx.core.widget.NestedScrollView>
+
+
+            </RelativeLayout>
+
+            <include
+                android:id="@+id/progressbar"
+                layout="@layout/full_screen_progress_bar"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </RelativeLayout>
+
+
+             <!--   <include
+                    android:id="@+id/bottomsheetStudent"
+                    layout="@layout/bottom_student_list"/>
+
+
+-->
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+</layout>

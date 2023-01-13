@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+  <androidx.cardview.widget.CardView
+      android:layout_width="match_parent"
+      app:cardCornerRadius="@dimen/_10sdp"
+      app:cardBackgroundColor="@color/transparent"
+      android:layout_height="@dimen/_120sdp">
+
+    <RelativeLayout
+        android:background="@drawable/scholarship_status_layout_bg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+      <ImageView
+          android:layout_margin="@dimen/_10sdp"
+          android:layout_alignParentRight="true"
+          android:src="@drawable/ic_information"
+          android:layout_width="@dimen/_10sdp"
+          android:layout_height="@dimen/_10sdp"/>
+
+      <LinearLayout
+          android:orientation="vertical"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+        <com.auro.application.core.util.uiwidget.RPTextView
+            android:id="@+id/heading_two"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:text="@string/keep_taking_quizzes_to_unlock_next_level"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_10sdp"
+           />
+
+      </LinearLayout>
+
+    </RelativeLayout>
+
+
+
+  </androidx.cardview.widget.CardView>
+</layout>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".home.presentation.view.activity.SplashScreenAnimationActivity">
+
+
+<!-- android:bottom="-110dp"
+        android:left="-10dp"
+        android:right="-10dp"
+        android:top="530dp"-->
+
+
+    <ImageView
+        android:id="@+id/ivFirstCircle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:visibility="gone"
+        android:background="@drawable/spalsh_first_circle"/>
+
+    <ImageView
+        android:id="@+id/ivSecondCircle"
+        android:layout_width="@dimen/_250sdp"
+        android:layout_height="@dimen/_250sdp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="-80sp"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/splash_second_circle"/>
+
+    <ImageView
+        android:id="@+id/ivStar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="-5sp"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/first_splash"/>
+    <ImageView
+        android:id="@+id/ivBooks"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/_40sdp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="@dimen/_40sdp"
+        android:layout_marginRight="@dimen/_40sdp"
+        android:visibility="gone"
+        android:src="@drawable/second_splash"/>
+    <ImageView
+        android:id="@+id/ivChildren"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10sp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:visibility="gone"
+        android:layout_alignParentBottom="true"
+        android:src="@drawable/third_splash"/>
+
+    <com.auro.application.core.util.uiwidget.RPTextView
+        android:id="@+id/tvDesinBy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Designed By Auroscholar"
+        android:textSize="@dimen/_10sdp"
+        android:textColor="@color/transparent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/_30sdp"
+        android:visibility="gone"
+        android:layout_centerHorizontal="true"
+        app:Font="Calibre-Light.ttf"
+        />
+    <include
+        android:id="@+id/header_top_parent"
+        layout="@layout/splash_header_layout"
+        android:layout_width="match_parent"
+        android:layout_marginTop="@dimen/_10sdp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_8sdp"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar_layout" />
+
+
+    <ImageView
+        android:id="@+id/auro_scholar_logo"
+        android:layout_width="@dimen/_180sdp"
+        android:layout_height="@dimen/_80sdp"
+        android:layout_marginStart="@dimen/_5sdp"
+        android:adjustViewBounds="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:visibility="gone"
+        android:layout_below="@+id/header_top_parent"
+        android:src="@drawable/ic_auro_scholar_logo"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.auro.application.core.util.uiwidget.RPTextView
+        android:id="@+id/tvquiz"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Take 10 Min Quiz and Get Scholarship\nIn 24 Hours"
+        android:textSize="@dimen/_12sdp"
+        android:visibility="gone"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:textColor="@color/new_text_color"
+       android:layout_below="@+id/auro_scholar_logo"
+        android:layout_marginBottom="@dimen/_30sdp"
+        android:layout_centerHorizontal="true"
+        app:Font="Calibre-Light.ttf"
+        />
+
+    <RelativeLayout
+        android:visibility="gone"
+        android:id="@+id/progress_layout"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <include
+            android:id="@+id/custom_progress_layout"
+            layout="@layout/custom_snackbar_progress"
+            />
+    </RelativeLayout>
+
+
+</RelativeLayout>
+</layout>

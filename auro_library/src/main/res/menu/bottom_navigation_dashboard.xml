@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+
+    <item
+        android:id="@+id/item_home"
+        android:enabled="true"
+        android:icon="@drawable/ic_home_ds"
+        android:title="@string/nav_home"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item_partner"
+        android:enabled="true"
+        android:title="@string/certificatesmenuauro"
+        android:icon="@drawable/ic_partner_ds"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/item_profile"
+        android:enabled="true"
+        android:icon="@drawable/ic_leaderboard_ds"
+        android:title="@string/my_profile"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/item_passport"
+        android:enabled="true"
+        android:icon="@drawable/ic_passport_ds"
+        android:title="@string/nav_passport"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/item_more"
+        android:enabled="true"
+        android:icon="@drawable/ic_more_ds"
+        android:title="@string/more"
+        app:showAsAction="never" />
+</menu>

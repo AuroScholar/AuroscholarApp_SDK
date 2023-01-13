@@ -1,0 +1,6 @@
+rootProject.name = "Final_AuroscholarApp_SDK"
+include ':app',':auro_library'
+//,':yubobotsdk-debug'
+//project(':yubobotsdk-debug').projectDir = new File(rootProject.projectDir, '../auro_library/libs/yubobotsdk-debug')
+//include ':auro_library:yubobotsdk-debug'
+

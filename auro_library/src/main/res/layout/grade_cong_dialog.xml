@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/transparent">
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardViewItem"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="@dimen/_10sdp"
+
+            android:layout_marginBottom="@dimen/_20sdp"
+
+            app:cardElevation="@dimen/_8sdp"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_10sdp"
+                android:orientation="vertical">
+
+
+
+
+                <androidx.core.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_10sdp"
+                        android:orientation="vertical">
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+
+                            <ImageView
+                                android:id="@+id/backgroundImage"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_240sdp"
+                                android:scaleType="fitXY"
+                                />
+
+
+
+                            <com.auro.application.core.util.uiwidget.RPTextView
+                                android:id="@+id/titleGrade"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@+id/left_corner_image"
+                                android:text="@string/enter_otp"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:layout_centerHorizontal="true"
+                                android:layout_margin="@dimen/_15sdp"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_15sdp"
+                                app:Font="Calibre-Light.ttf"/>
+
+                            <com.auro.application.core.util.uiwidget.RPTextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_below="@+id/titleGrade"
+                                android:text="@string/otp_has_been_sent_to_this_number"
+                                android:textColor="@color/ui_color_code"
+                                android:visibility="gone"
+                                android:layout_marginTop="@dimen/_8sdp"
+                                android:textSize="@dimen/_11sdp" />
+
+
+                        </RelativeLayout>
+
+
+
+
+
+
+
+
+
+
+
+
+
+                        <RelativeLayout
+                            android:id="@+id/RlyesClick"
+                            android:layout_width="wrap_content"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:background="@drawable/grade_cong_blue"
+                            android:layout_gravity="center"
+                            android:layout_height="wrap_content">
+
+                            <com.auro.application.core.util.uiwidget.RPTextView
+                                android:id="@+id/RPVerify"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:paddingLeft="@dimen/_50sdp"
+                                android:paddingRight="@dimen/_50sdp"
+                                android:textColor="@color/white"
+                                android:paddingTop="@dimen/_8sdp"
+                                android:paddingBottom="@dimen/_8sdp"
+                                android:textSize="@dimen/_12sdp"
+                               android:text="YES"
+                                android:visibility="visible"
+                                app:Font="ArticulatCF-Regular.otf" />
+
+
+                            <ProgressBar
+                                android:id="@+id/progressBar_2"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:elevation="@dimen/_2sdp"
+                                android:indeterminateDrawable="@drawable/circular_progress"
+                                android:innerRadiusRatio="3"
+                                android:visibility="gone"
+                                android:layout_centerInParent="true"
+                                />
+
+                        </RelativeLayout>
+
+
+
+
+
+
+
+                    </LinearLayout>
+                </androidx.core.widget.NestedScrollView>
+
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <RelativeLayout
+            android:id="@+id/closeButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cardViewItem"
+            android:layout_centerHorizontal="true"
+            android:background="@drawable/grade_congl">
+            <com.auro.application.core.util.uiwidget.RPTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/_50sdp"
+                android:paddingRight="@dimen/_50sdp"
+                android:textColor="@color/white"
+                android:paddingTop="@dimen/_8sdp"
+                android:paddingBottom="@dimen/_8sdp"
+                android:textSize="@dimen/_12sdp"
+                android:text="@string/no_txt"/>
+
+            <ProgressBar
+                android:id="@+id/progressBar_one"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:elevation="@dimen/_2sdp"
+                android:indeterminateDrawable="@drawable/circular_progress"
+                android:innerRadiusRatio="3"
+                android:visibility="gone"
+                android:layout_centerInParent="true"
+                />
+        </RelativeLayout>
+
+
+
+
+    </RelativeLayout>
+</layout>

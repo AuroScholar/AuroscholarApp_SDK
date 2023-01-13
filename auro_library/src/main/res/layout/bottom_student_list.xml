@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="@dimen/_50sdp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+<androidx.core.widget.NestedScrollView
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_25sdp"
+            android:background="@drawable/student_round_bottom"
+            android:orientation="vertical">
+            <ScrollView
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+            <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+            <View
+                android:id="@+id/View"
+                android:layout_width="@dimen/_100sdp"
+                android:layout_height="@dimen/_2sdp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="@dimen/_20sdp"
+                android:background="@drawable/corder_student_list" />
+
+            <TextView
+                android:id="@+id/txtmyaccount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/View"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:text="My Account"
+                android:textColor="@color/auro_buton_text_blue"
+                android:textSize="16sp"></TextView>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/parentList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="vertical"
+                android:layout_below="@+id/txtmyaccount"
+                android:layout_marginTop="@dimen/_10sdp"
+
+                />
+
+                <TextView
+                    android:id="@+id/txtchildaccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/parentList"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="20dp"
+                    android:text="Your Child Accounts"
+                    android:textColor="@color/auro_buton_text_blue"
+                    android:textSize="16sp"></TextView>
+
+>
+
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/studentList"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_below="@+id/txtchildaccount"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginBottom="20dp"
+                    />
+
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="-100dp"
+                    android:src="@drawable/ic_bottom_animation" />
+    </RelativeLayout>
+            </ScrollView>
+        </RelativeLayout>
+</androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+</layout>

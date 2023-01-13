@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background_1"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:minHeight="40dp"
+        app:title="Yubo Bot"
+        android:visibility="gone"
+        app:titleTextColor="@android:color/white"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcTest"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/rlTyping"
+            android:layout_marginTop="@dimen/_2sdp"
+            android:background="@color/background_1"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            tools:listitem="@layout/bot_user_item_layout" />
+
+
+        <RelativeLayout
+            android:id="@+id/rlTyping"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/llChatSend"
+            android:background="@color/background_1">
+
+            <ImageView
+                android:id="@+id/typingInd"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:src="@drawable/typing_view"
+                android:visibility="gone" />
+
+
+            <ImageView
+                android:id="@+id/typingInd1"
+                android:layout_width="@dimen/_80sdp"
+                android:layout_height="@dimen/_40sdp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/typing_view"
+                android:visibility="gone" />
+
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/llChatSend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            android:weightSum="1">
+
+            <LinearLayout
+                android:id="@+id/llSelfRpl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/llTapMore"
+                android:orientation="horizontal"
+                android:paddingStart="@dimen/_6sdp"
+                android:paddingTop="@dimen/_2sdp"
+                android:paddingEnd="@dimen/_6sdp"
+                android:paddingBottom="@dimen/_2sdp">
+
+                <EditText
+                    android:id="@+id/et_sendMsg"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight=".85"
+                    android:background="@drawable/border_shadow"
+                    android:gravity="center_vertical"
+                    android:hint="Type your question here"
+                    android:inputType="textCapSentences|textMultiLine|textShortMessage"
+                    android:paddingStart="@dimen/_13sdp"
+                    android:paddingTop="@dimen/_7sdp"
+                    android:paddingEnd="@dimen/_10sdp"
+                    android:paddingBottom="@dimen/_7sdp"
+                    android:textColor="@color/dark_text_color"
+                    android:textColorHint="@color/light_gray_text1"
+                    android:textCursorDrawable="@drawable/blackpipe"
+                    android:textSize="12dp" />
+
+
+                <ImageView
+                    android:id="@+id/image"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:background="@drawable/round_pro_bar"
+                    android:padding="@dimen/_7sdp"
+                    android:src="@drawable/ic_attach" />
+
+                <ImageView
+                    android:id="@+id/imgSend"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:background="@drawable/round_pro_bar"
+                    android:padding="@dimen/_7sdp"
+                    android:src="@drawable/ic_send_new" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </RelativeLayout>
+</LinearLayout>

@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "366052618270",
+    "firebase_url": "https://auroscholarapp.firebaseio.com",
+    "project_id": "auroscholarapp",
+    "storage_bucket": "auroscholarapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:366052618270:android:2dd48b074acac7ae167e0f",
+        "android_client_info": {
+          "package_name": "com.auro.application"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "366052618270-un8fu5m3uu431moie72vcati005spavg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDzCM4cOe5GFZ0Rtl8Ficv7lXMJIJFChZQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "366052618270-un8fu5m3uu431moie72vcati005spavg.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

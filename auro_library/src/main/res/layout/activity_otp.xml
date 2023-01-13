@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background=" @color/login_screen_bgcolor">
+
+        <ImageView
+            android:id="@+id/auro_scholar_logo"
+            android:layout_width="@dimen/_100sdp"
+            android:layout_height="@dimen/_45sdp"
+            android:layout_marginStart="@dimen/_5sdp"
+            android:adjustViewBounds="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:visibility="visible"
+            android:src="@drawable/ic_auro_scholar_logo"
+            />
+
+        <ImageView
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/login_right_corner" />
+
+        <ImageView
+            android:id="@+id/left_corner_image"
+            android:layout_width="@dimen/_70sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_alignParentTop="true"
+            android:src="@drawable/login_left_corner" />
+
+        <ImageView
+            android:id="@+id/back_button"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_50sdp"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginEnd="@dimen/_30sdp"
+            android:src="@drawable/login_back_button" />
+
+        <com.auro.application.core.util.uiwidget.RPTextView
+            android:id="@+id/title_first"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/left_corner_image"
+            android:layout_marginStart="@dimen/_35sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:text="@string/hey_enter_otp"
+            android:textColor="@color/black"
+            android:textSize="@dimen/_20sdp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/title_first"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:background="@drawable/login_bg_white"
+            android:orientation="vertical">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:orientation="vertical">
+
+
+                    <com.auro.application.core.util.uiwidget.RPTextView
+                        android:id="@+id/rpTextview2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/left_corner_image"
+                        android:text="@string/enter_otp_below_number"
+                        android:textColor="@color/ui_color_code"
+                        android:textSize="@dimen/_12sdp" />
+
+                    <com.auro.application.core.util.uiwidget.RPTextView
+                        android:id="@+id/mobile_number_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/left_corner_image"
+                        android:layout_marginTop="@dimen/_3sdp"
+                        android:text=""
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_14sdp" />
+
+                    <com.chaos.view.PinView
+                        android:id="@+id/otp_view"
+                        style="@style/PinWidget.PinView"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:cursorVisible="true"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:inputType="text"
+                        android:itemBackground="@color/transparent"
+                        android:padding="@dimen/_12sdp"
+                        android:textColor="@color/blue_color"
+                        android:textSize="@dimen/_14sdp"
+                        android:textStyle="bold"
+                        app:cursorColor="@color/blue_color"
+                        app:cursorWidth="2dp"
+                        app:hideLineWhenFilled="false"
+                        app:itemCount="6"
+                        app:itemHeight="@dimen/_30sdp"
+                        app:itemSpacing="@dimen/_5sdp"
+                        app:itemWidth="@dimen/_30sdp"
+                        app:lineColor="@color/grey_color"
+                        app:lineWidth="@dimen/_1sdp"
+                        app:viewType="line" />
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/dialer_recycler_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/_8sdp" />
+
+
+                    <com.auro.application.core.util.uiwidget.RPTextView
+                        android:id="@+id/resend_timer_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/left_corner_image"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginBottom="@dimen/_7sdp"
+                        android:text="@string/you_can_resend_otp_in"
+                        android:textAlignment="center"
+                        android:textColor="@color/blue_color"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <com.auro.application.core.util.uiwidget.RPTextView
+                        android:id="@+id/opt_over_call_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/left_corner_image"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:layout_marginBottom="@dimen/_7sdp"
+                        android:text="@string/otp_over_call"
+                        android:textAlignment="center"
+                        android:textColor="@color/blue_color"
+                        android:textSize="@dimen/_10sdp" />
+
+                    <com.auro.application.core.util.uiwidget.RPTextView
+                        android:id="@+id/resend_btn"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_5sdp"
+                        android:background="@drawable/button_unsubmit"
+                        android:gravity="center"
+                        android:padding="@dimen/_11sdp"
+                        android:text="@string/resend"
+                        android:textColor="@color/auro_buton_text_blue"
+                        android:textSize="@dimen/_11sdp"
+                        android:visibility="visible"
+                        app:Font="ArticulatCF-Regular.otf" />
+
+
+                    <com.auro.application.core.util.uiwidget.RPTextView
+                        android:id="@+id/terms_condition"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/left_corner_image"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginBottom="@dimen/_7sdp"
+                        android:text="By Creating Passcode You Agree With Our Terms and Conditions and Privacy Policy"
+                        android:textAlignment="center"
+                        android:textSize="@dimen/_10sdp" />
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+
+
+        </RelativeLayout>
+        <include
+            android:id="@+id/progressbar"
+            layout="@layout/full_screen_progress_bar"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </RelativeLayout>
+</layout>

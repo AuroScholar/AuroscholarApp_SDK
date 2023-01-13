@@ -1,0 +1,87 @@
+plugins {
+    id 'com.android.library'
+    id 'kotlin-android'
+}
+
+android {
+    compileSdkVersion 31
+
+
+
+    buildTypes {
+        debug {
+            buildConfigField "String", "BASE_URL", '"http://172.105.42.134:5000/"'
+            buildConfigField "String", "BASE_URL_NEW", '"https://admin.helloyubo.com/app/get/"'
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = '1.8'
+    }
+}
+
+dependencies {
+
+//    implementation 'androidx.core:core-ktx:1.7.0'
+//    implementation 'androidx.appcompat:appcompat:1.4.1'
+//    implementation 'com.google.android.material:material:1.5.0'
+//    implementation 'androidx.constraintlayout:constraintlayout:2.1.3'
+//    testImplementation 'junit:junit:'
+//    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+//    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+//
+//    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+//    implementation 'com.intuit.ssp:ssp-android:1.0.6'
+//    implementation 'com.google.android.material:material:1.6.0-beta01'
+//    implementation 'com.agrawalsuneet.androidlibs:dotsloader:1.4'
+//    implementation project(':yubobotsdk')
+//
+//    implementation 'com.github.bumptech.glide:glide:4.13.0'
+//    implementation 'com.google.code.gson:gson:2.8.9'
+//    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+//    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+//    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.9.0'
+//    implementation 'io.reactivex.rxjava2:rxjava:2.2.21'
+//    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+//    implementation 'androidx.core:core-ktx:1.7.0'
+//    implementation 'androidx.multidex:multidex:2.0.1'
+//    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+
+
+    implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.appcompat:appcompat:1.4.1'
+    implementation 'com.google.android.material:material:1.6.1'
+    implementation "androidx.recyclerview:recyclerview:1.2.1"
+    compileOnly 'com.google.android.wearable:wearable:2.9.0'
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.2")
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    //dimensions
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    implementation 'com.intuit.ssp:ssp-android:1.0.6'
+
+    implementation files('libs/yubobotsdk-debug.aar')
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.13.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
+    // Networking
+    implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-scalars:2.9.0'
+    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'
+    compileOnly 'com.google.android.wearable:wearable:2.9.0'
+    // Flex box view
+    implementation 'com.google.android:flexbox:2.0.1'
+
+
+}

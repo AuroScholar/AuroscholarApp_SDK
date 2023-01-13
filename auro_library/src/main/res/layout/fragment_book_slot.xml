@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+
+  <androidx.coordinatorlayout.widget.CoordinatorLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:id="@+id/coordinatorLayout">
+
+
+    <ImageView
+        android:src="@drawable/ic_book_slot_bg_image"
+        android:layout_width="match_parent"
+        android:scaleType="fitXY"
+        android:visibility="visible"
+        android:layout_height="@dimen/_350sdp"/>
+    <ImageView
+        android:id="@+id/back_button"
+        android:layout_width="@dimen/_50sdp"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_30sdp"
+        android:layout_gravity="right"
+        android:src="@drawable/login_back_button" />
+
+
+    <include
+          android:id="@+id/bottomsheet"
+          layout="@layout/bottom_sheet_persistent"/>
+
+
+    <FrameLayout
+        android:id="@+id/bookFrame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
+
+  </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+</layout>

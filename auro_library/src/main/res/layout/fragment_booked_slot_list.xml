@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        tools:context=".teacher.presentation.view.fragment.BookedSlotListFragment">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvBookSlot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_16sdp"
+            android:clipToPadding="true"
+            android:visibility="visible" />
+
+
+        <com.auro.application.core.util.uiwidget.RPTextView
+            android:id="@+id/bookWebinar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_80sdp"
+            android:background="@drawable/book_slot_tab_bg"
+            android:gravity="center"
+            android:paddingLeft="@dimen/_10sdp"
+
+            android:paddingTop="@dimen/_5sdp"
+            android:paddingRight="@dimen/_10sdp"
+            android:paddingBottom="@dimen/_5sdp"
+            android:text="Book your Webinar"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_13sdp"
+            app:Font="ArticulatCF-Regular.otf" />
+
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/errorConstraint"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/_30sdp"
+            android:visibility="gone">
+
+            <include
+                android:id="@+id/errorLayout"
+                layout="@layout/error_layout" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ImageView
+            android:id="@+id/progressGif"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/_60sdp"
+            android:background="@drawable/ic_image_placeholder" />
+    </RelativeLayout>
+</layout>

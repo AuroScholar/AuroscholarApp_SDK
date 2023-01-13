@@ -1,0 +1,479 @@
+<resources>
+
+    <!--App-->
+    <string name="app_name">AuroScholar</string>
+    <string name="partnerKey">cHsPa895adcc1632d4ea489b0006d4e72865f</string>
+
+    <string name="facebook_app_id">376950950122226</string>
+
+    <string name="internet_check">Oops, No internet found.Please check your connection or try again.</string>
+    <string name="default_error">Unable to connect. Please try after sometime.</string>
+
+    <string name="terms_of_service">Terms &amp; Conditions</string>
+    <string name="privacy_policy">Privacy Policy</string>
+
+    <string name="back_button">BACK</string>
+    <string name="confirm_otp">CONFIRM OTP</string>
+    <string name="not_receive_resend">Not Receive ? Resend</string>
+    <string name="code_valid_for">(Code valid for)</string>
+
+    <!-- Strings used for fragments for navigation -->
+    <string name="intent_phone_number">intentphoneNumber</string>
+    <string name="userOtp">userOtp</string>
+    <string name="title_activity_web">WebActivity</string>
+    <string name="change_mobile_no">Change Number</string>
+
+
+    <!--Crop image string -->
+    <string name="crop_image_activity_title"></string>
+    <string name="crop_image_menu_rotate_left">Rotate counter clockwise</string>
+    <string name="crop_image_menu_rotate_right">Rotate</string>
+    <string name="crop_image_menu_crop">Crop</string>
+    <string name="crop_image_menu_flip">Flip</string>
+    <string name="crop_image_menu_flip_horizontally">Flip horizontally</string>
+    <string name="crop_image_menu_flip_vertically">Flip vertically</string>
+    <string name="pick_image_intent_chooser_title">Select source</string>
+    <string name="crop_image_activity_no_permissions">Cancelling, required permissions are not granted</string>
+    <string name="rs">₹</string>
+    <string name="score_msg">Up to ₹1000 Scholarship, ₹50 per quiz if you score more than 8/10</string>
+    <string name="get_scholarship">Get Scholarship</string>
+    <string name="scholarship">Scholarship</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="retry">Retry</string>
+    <string name="id_proof_front_side">ID Proof Front Side</string>
+    <string name="title_activity_camera">CameraActivity</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="next">Next</string>
+
+    <string name="choose_file">Choose File</string>
+    <string name="no_file_chosen">No File chosen</string>
+    <string name="id_proof_back_side">ID Proof Back Side</string>
+    <string name="school_id_card">School ID Card</string>
+    <string name="upload_profile_pic">Upload Your Photo</string>
+    <string name="upload">Upload</string>
+    <string name="submit">Submit</string>
+    <string name="modify">Want To Modify Uploaded File</string>
+    <string name="document_all_four_error_msg">Please select the all four document first</string>
+    <string name="question_bank_powered_by_cambridge">Maths Questions powered by Cambridge</string>
+    <string name="privacy_policy_auro">Privacy Policy</string>
+    <string name="logout">Logout</string>
+    <string name="permission_error_msg">For taking the quiz camera permission is must.</string>
+    <string name="your_wallet">Your Wallet</string>
+    <string name="upload_doc_text_msg">If you  face any issues please call us at +919667480783</string>
+    <string name="english">English</string>
+    <string name="sucessfully_uploaded">Sucessfully Uploaded</string>
+    <string name="auro_scholar_demographics_details">Auro Scholar Demographics Details</string>
+    <string name="gender">Student Gender<font color='#FF0000'>*</font></string>
+    <string name="school_type">Student School Type</string>
+    <string name="board">Student School Board</string>
+    <string name="language_medium">Student School Language medium</string>
+
+    <string-array name="genderlist">
+        <item>Select Gender</item>
+        <item>Male</item>
+        <item>Female</item>
+        <item>Others</item>
+    </string-array>
+
+    <string-array name="genderlist_profile">
+        <item>Select Gender</item>
+        <item>Male</item>
+        <item>Female</item>
+        <item>Others</item>
+    </string-array>
+
+    <string-array name="boardlist">
+        <item>Select Board</item>
+        <item>CBSE</item>
+        <item>ICSE</item>
+        <item>GSEB</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="schooltypelist">
+        <item>Select School Type</item>
+        <item>Private School</item>
+        <item>Government School</item>
+        <item>SHBCT</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="languagelist">
+        <item>Please Select Language Medium</item>
+        <item>English</item>
+        <item>Hindi</item>
+        <item>Punjabi</item>
+        <item>Gujarati</item>
+        <item>Tamil</item>
+        <item>Kannada</item>
+        <item>Marathi</item>
+    </string-array>
+    <string-array name="privateTutionList">
+        <item>Select Private Tution</item>
+        <item>Yes</item>
+        <item>NO</item>
+    </string-array>
+    <string-array name="privateTypeList">
+        <item>Select Tution Type</item>
+        <item>Group</item>
+        <item>Personal</item>
+        <item>Online</item>
+    </string-array>
+
+
+    <string name="bullted_list">
+          \u25CF  Please read the all instructions carefully,
+       \n \u25CF Question bank is powered by Cambridge.
+        \n \u25CF Quiz contains the 10 questions.
+        \n \u25CF Please read each and every question carefully.
+        \n \u25CF Camera  will be only used for fraud control purpose.
+
+    </string>
+
+    <string name="bullet_one">Please read the all instructions carefully</string>
+    <string name="bullet_two">Maths Question bank is powered by Cambridge</string>
+    <string name="bullet_three">Quiz contains the 10 questions.</string>
+    <string name="bullet_four">Please read each and every question carefully.</string>
+    <string name="bullet_five">Camera  will be only used for fraud control purpose.</string>
+
+
+    <string name="document_uploaded">Document Uploaded</string>
+    <string name="verification_is_in_process">Verification is in process</string>
+    <string name="document_verified">Document Verified</string>
+    <string name="declined">Declined</string>
+    <string name="you_will_see_transfer">You will see transfer option after your document is verified</string>
+    <string name="tranfer_money">Transfer Scholarship</string>
+
+    <string name="invite_by">Send Invite to Friend</string>
+    <string name="please_enter_phone_number">Please enter phone number</string>
+    <string name="or">Or</string>
+    <string name="share_with_other">Invite Student</string>
+    <string name="invite">Invite</string>
+
+    <string name="friends_leadeboard">Friends \nLeaderboard</string>
+
+    <string name="challenge_your_friends">Challenge Your Friends</string>
+
+    <string name="invite_them">Invite them</string>
+
+    <string name="please_put_your_face_inside_the_box">Please put your face inside the box</string>
+    <string name="call_our_customercare">Please call our customer care number to get your scholarship</string>
+    <string name="upload_document">Upload KYC Document</string>
+    <string name="please_upload_the_document">Please Upload the Document</string>
+    <string name="upload_verification">KYC Verification</string>
+    <string name="transfer_scholarship">Transfer Scholarship</string>
+
+    <string name="approved">Approved</string>
+    <string name="save_more_details">Save More Details?</string>
+    <string name="teacher_name">Teacher Name <font color='#FF0000'>*</font></string>
+    <string name="email_address">Parent Email Address</string>
+    <string name="mobile_number">Mobile Number<font color='#FF0000'>*</font></string>
+    <string name="skip_for_now"><u>Skip For Now</u></string>
+    <string name="default_message">Lorem ipsum is simply dummy text of the printing and typeseeting industry lorem ipsum</string>
+    <string name="total_points">Total Points :</string>
+    <string name="wallet_cash">Wallet Cash :</string>
+    <string name="teacher_profile">Teacher Profile</string>
+    <string name="subjects_you_teach_till">Subjects You Teach Till 12th<font color='#FF0000'>*</font></string>
+    <string name="school_name">School Name<font color='#FF0000'>*</font></string>
+    <string name="state">State<font color='#FF0000'></font></string>
+    <string name="city">City<font color='#FF0000'>*</font></string>
+    <string name="choose_your_state">Choose Your State</string>
+    <string name="upload_govt_id">Aadhar Front Side</string>
+    <string name="upload_govt_id_back_side">Aadhar Back Side</string>
+    <string name="upload_school_id">School ID Card</string>
+    <string name="upload_picture">Upload Your Photo</string>
+    <string name="save_changes">SAVE CHANGES</string>
+
+    <string name="information">Information</string>
+    <string name="friends_ke_bina_kya_fun">Friends ke bina kya fun!</string>
+    <string name="invite_friend_refrral">Hi! An exclusive invite just for you! Join me on AuroScholar App, challenge friends and get scholarship &amp; Certificates everyday! \n Click to accept my invitation &amp; Install App - ></string>
+    <string name="challenge_msg">just challenged you in a quiz! Can you beat their score?</string>
+
+    <string name="saved">The changes were saved successfully</string>
+    <string name="sure_to_logout">Are you sure you want to logout?</string>
+
+
+    <string name="address_not_found">Address not found</string>
+    <string name="getting_webinar_slots">Getting Webinar\nSlots</string>
+
+    <string name="retake_quiz">Retake Quiz</string>
+    <string name="auro_scholar_wallet">You have got ₹50 Scholarship in your\nAuro Scholar Wallet!</string>
+    <string name="share_with_friends">Share with friends</string>
+    <string name="congratulation_new">Congratulations</string>
+    <string name="impossible">It always seems impossible until it’s done.</string>
+    <string name="accept">Accept</string>
+    <string name="challenge">Challenge</string>
+    <string name="taking_private_tutions">Student Taking Private Tutions ?</string>
+    <string name="taking_type">Tution Type</string>
+    <string name="challenged_you">Challenged You</string>
+    <string name="book_free_tutoring_session">Book Free Tutoring Session</string>
+    <string name="add_friend">Add Friend</string>
+
+    <string-array name="classes">
+        <item>1st</item>
+        <item>2nd </item>
+        <item>3rd</item>
+        <item>4th</item>
+        <item>5th</item>
+        <item>6th</item>
+        <item>7th</item>
+        <item>8th</item>
+        <item>9th</item>
+        <item>10th</item>
+        <item>11th</item>
+        <item>12th</item>
+    </string-array>
+
+    <string name="enter_the_paytm_number">Enter the Paytm Number</string>
+    <string name="enter_the_upi_address">Enter the UPI Address</string>
+    <string name="ok">OK</string>
+    <string name="classes">Classes You Teach</string>
+
+    <string name="language">Language</string>
+    <string name="select_your_grade">Select Your Grade</string>
+    <string name="confirm_grade">CONFIRM GRADE</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="ideal_app_for_nyour_education">Ideal App For\nYour Education</string>
+    <string name="send_otp">SEND OTP</string>
+    <string name="by_continuing">By continuing, your agree to our</string>
+    <string name="and">and</string>
+    <string name="opt_sent_number_txt">OTP sent on this number</string>
+    <string name="enter_otp_txt">Enter the OTP</string>
+    <string name="press_again_for_exit">Press again for exit</string>
+    <string name="quiz_instruction">Quiz Instructions</string>
+    <string name="quiz_exit_txt">Are you sure you want to quit the quiz ?</string>
+    <string name="bundledashboardresmodel">dashboardResModel</string>
+    <string name="bundleassignmentreqmodel">assignmentReqModel</string>
+    <string name="your_certificates">Your Certificates</string>
+    <string name="certificatesmenuauro">Certificates</string>
+    <string name="certificate_content">Select Your Certificates to download or click on each to view in large size</string>
+    <string name="quiz_verification">Quiz Verification</string>
+    <string name="quiz_is_not_apporved">Quiz is not Approved</string>
+    <string name="scholarship_approved">Scholarship Approved</string>
+    <string name="others">OTHERS</string>
+    <string name="psp_not_register">PSP is not registered</string>
+    <!-- <string name="verification_pending">Please reupload your document again</string>-->
+    <string name="verification_pending">Verification in Process</string>
+    <string name="transfer_to_paytm_account">Transfer Scholarship To The Paytm Account</string>
+    <string name="transfer_to_bank_account">Transfer Scholarship to The Bank Account</string>
+    <string name="enter_the_account_number">Enter the account number</string>
+    <string name="beneficiary_name">Beneficiary Name</string>
+    <string name="confirm_the_account_number">Confirm the account number</string>
+    <string name="ifsc_code">IFSC Code</string>
+    <string name="transfer_to_upi_account">Transfer Scholarship To The UPI Account</string>
+    <string name="wallet">Wallet</string>
+    <string name="updateMessage">We have worked harder to improve the app, Please click the button below to update.</string>
+    <string name="update_auroscholar">Update Auroscholar?</string>
+    <string name="update">Update</string>
+    <string name="student_phone_number">Parent Phone Number<font color='#FF0000'>*</font></string>
+    <string name="grade_student">Grade :</string>
+    <string name="wl_amount_rejected">Scholarship Rejected</string>
+    <string name="wl_amount">₹100.00</string>
+    <string name="wl_verification_in_process">Verification In Process</string>
+    <string name="wl_scholarship_disbursed">Scholarship Disbursed</string>
+    <string name="wl_payment_in_process">Transfer In Process</string>
+    <string name="wl_scholarship_amounta_approved">Scholarship Approved</string>
+    <string name="save">Save</string>
+    <string name="processing">Processing...</string>
+
+
+    <!--New Desgin-->
+    <string name="auro_app_language">Please select your language</string>
+    <string name="auro_multi_language">You can select your preferable option to enjoy the best of Auro Scholar</string>
+    <string-array name="auro_languagelist">
+        <item>English</item>
+        <item>हिन्दी</item>
+    </string-array>
+
+    <string name="auro_login_sign_up">Are you a parent/student or a teacher ?</string>
+    <string name="auro_choose_any_one_option">Select your profile to continue your account set up accordingly.</string>
+    <string name="auro_teacher">Teacher</string>
+    <string name="auro_set_my_account">Setup My Account</string>
+    <string name="auro_choose_class_des">10 mins, 10 questions one step away from scholarship</string>
+    <string name="auro_please_be_patience">Please Be Patience <font color='#5B96F3'>Almost Done !</font></string>
+    <string name="auro_choose_class">Choose Class</string>
+    <string name="auro_january_scholarship">January Scholarship</string>
+    <string name="auro_subject">Subject</string>
+    <string name="auro_you_have_chance">You have Chance To<font color='#5B96F3'> Win ₹50 Per Quiz</font>   So What Are You Waiting For?</string>
+    <string name="botoom_text">Lorem Ipsum is simply dummy text of the printing and <font color='#5B96F3'> typesetting industry.</font></string>
+    <string name="auro_skip_for_now"><u>Skip For Now</u></string>
+    <string name="auro_low_memory_status">Low Internal Storage</string>
+    <string name="enter_your_mobile_number">Enter your mobile number</string>
+    <string name="we_sent_otp_to_the_below_number">Enter Your Phone number for OTP</string>
+    <string name="you_can_resend_in">You can resend OTP in </string>
+    <string name="nav_passport">Passport</string>
+    <string name="more">More</string>
+    <string name="nave_back">Back</string>
+    <string name="nav_kyc">KYC</string>
+    <string name="nav_auro_friends">Auro Friends</string>
+    <string name="hey_enter_otp">Hey, Enter OTP!</string>
+    <string name="hey_enter_set">Hey, Set Username and Pin</string>
+    <string name="enter_otp_below_number">We Have Sent OTP To The Below Number </string>
+    <string name="resend">Resend</string>
+    <string name="my_profile">Profile</string>
+    <string name="learn_with_our_partner_app">Learn with our partner app</string>
+    <string name="sub_partner_title">Looking for some fun lessons? Check out and sharpen your knowledge with these apps.</string>
+    <string name="student_passport">Student Passport</string>
+    <string name="passport_sub_title">Find The Quiz Details As Per Your Prefrence</string>
+    <string name="nav_home">Home</string>
+    <string name="resend_code">Resend Code</string>
+    <string name="auro_parent">Parent/Student</string>
+    <string name="student_full_name">Student Full Name</string>
+    <string name="parent_full_name">Full Name</string>
+    <string name="parent_email">Email-ID</string>
+    <string name="teacher_full_name">Teacher Full Name</string>
+    <string name="auro_information">Information</string>
+    <string name="auro_grab_this_opportunity">Grab This opportunity To Become Auro Teacher</string>
+    <string name="auro_my_classroom">My Classroom</string>
+    <string name="auro_total_student">95 Students</string>
+    <string name="auro_student_list">Student List</string>
+    <string name="auro_group_name">Group Name</string>
+    <string name="auro_information_on_auroscholar">National Health Movement</string>
+    <string name="auro_hey">Hey!</string>
+    <string name="auro_login">Login</string>
+    <string name="auro_signUp">Signup</string>
+    <string name="login_to_your_account">Login or Signup</string>
+    <string name="set_a_new_password">Set a New Password</string>
+    <string name="reset_password">Reset Password</string>
+    <string name="set_password">Set Password</string>
+    <string name="login_with_otp">Login With OTP?</string>
+    <string name="forgot_password">Forgot Password?</string>
+    <string name="forgot_pin">Forgot Pin?</string>
+    <string name="your_subjects">Your Subjects</string>
+    <string name="welcome">Welcome!</string>
+    <string name="not_register_msg">Seems like you are not registered with us, please proceed to signup.</string>
+    <string name="not_register_note_msg">Note: If you have registered with your username, please use that to login.</string>
+    <string name="subject">Subject</string>
+    <string name="exit_quiz">Exit Quiz</string>
+    <string name="save_amp_next"><![CDATA[Save & Next]]></string>
+    <string name="not_showing_face">Your face is not visible. Please make sure you are in proper lighting.</string>
+    <string name="continue_exit">Continue</string>
+    <string name="quiz_internet">No internet connection. Please try again.</string>
+    <string name="finish_your_text">Finishing Your Test...</string>
+    <string name="want_to_quit_quiz">Please confirm if you want to end the quiz.</string>
+    <string name="save_next">Save and Next</string>
+    <string name="save_submit">Save and Submit</string>
+    <string name="saving">Saving...</string>
+    <string name="finish_quiz_txt">Are you sure you want to finish the quiz.</string>
+    <string name="quiz_error">Due to a technical issue, quiz is not launched. Please try again later.</string>
+    <string name="already_finished">Quiz is already finished due to some following reasons Time Out, Already Attempted or You Identify Cheated.</string>
+    <string name="quiz_internet_2">No internet connection, Please connect to the internet to complete the quiz.</string>
+    <string name="hi_there">Hi There!</string>
+    <string name="enter_set_below_number">We Have Set Pin For Your New Child </string>
+    <string name="add_student">Add Student</string>
+    <string name="enter_new_pin">Enter New Pin</string>
+    <string name="enter_pin">Enter Pin</string>
+    <string name="enter_the_pin_for_login">Enter the Pin for Login</string>
+    <string name="mobile_number_username">Mobile number/Username</string>
+    <string name="kyc_information">KYC Information</string>
+    <string name="kyc_verification_teacher">KYC Verification</string>
+    <string name="your_profile_is_verified">Your profile is verified</string>
+    <string name="complete_kyc">Upload documents to complete KYC</string>
+    <string name="once_it_s_done">Once It\'s Done, Will Let You Know</string>
+    <string name="choose_slot">Choose Slot</string>
+
+    <string name="teacher_phone_number">Teacher Phone Number</string>
+    <string name="email_id">Email Id</string>
+
+    <string name="district">City</string>
+    <string name="school">School</string>
+    <string name="recent">Recent</string>
+    <string name="group">Group</string>
+    <string name="choose_student">Choose Student</string>
+    <string name="dashboard">Dashboard</string>
+    <string name="total_students_in_class">Total Students In Class</string>
+    <string name="winning_quiz">Winning Quiz</string>
+    <string name="test_reports">Test Reports</string>
+    <string name="total_test_taken">Total Test Taken</string>
+    <string name="test_taken_by_unique_students">Test Taken By Unique Students</string>
+    <string name="create_group">Create Group</string>
+    <string name="added">Added</string>
+    <string name="no_student">No Student Added Yet in Group</string>
+    <string name="students_list">Students List</string>
+    <string name="message">Message</string>
+    <string name="cancel">Cancel</string>
+
+    <string name="re_upload_ndocuments">Re-upload\nDocuments ?</string>
+
+    <string name="password">Password</string>
+    <string name="confirm_password">Confirm Password</string>
+    <string name="set_username">Set Username</string>
+    <string name="enter_username">Enter Username</string>
+    <string name="set_new_pin">Set New Pin</string>
+    <string name="confirm_pin">Confirm Pin</string>
+    <string name="username">Username</string>
+    <string name="login_id">Login Id</string>
+    <string name="user_id">UserId</string>
+    <string name="start_now">Start Now</string>
+    <string name="scholarship_transfer">Scholarship Transfer</string>
+    <string name="subject_brief">Please select 5 Subjects of your choice</string>
+    <string name="parent_phone_number">Parent Phone Number</string>
+    <string name="student_gender">Student Gender</string>
+    <string name="parent_gender">Gender</string>
+    <string name="check_discalimer_first_text">I/we hereby allow my/our child to use the Auro Scholar application to take quizzes, learn and win scholarships. In consideration of this, I will not allow, promote or use any unfair means to help my child to get scholarships or while taking quizzes.</string>
+    <string name="check_discalimer_second_text">I/We declare to provide all the demographic and personal information voluntarily furnished by my/our child is true, correct and complete and has been under my/our supervision and Auro Scholar is not liable for any incorrect information provided by me/us.</string>
+    <string name="check_discalimer_third_text">I grant my consent to Auro Scholar to use the details provided, The Scholarship shall be transferred to my bank account post their consent.</string>
+    <string name="accept_and_use_the_app">Accept and use the app</string>
+    <string name="accept_and_start_quiz">Accept and start quiz</string>
+    <string name="quiz_disclaimer_text_one">I/we hereby accept the allowance of the Auro Scholar application being used by our child and grant our consent to take pictures in the quiz for proctoring/invigilation purposes. Auro Scholar inherits the confidentiality of the information provided.</string>
+    <string name="disclaimer">Disclaimer</string>
+    <string name="kyc_disclaimer_text_one">I/We hereby submit voluntarily at my/our own discretion, the copy of Aadhaar card/physical e-Aadhaar / masked Aadhaar /offline electronic Aadhaar XML as issued by UIDAI (Aadhaar),to Auro Scholar for the purpose of establishing my/our identity/address proof and; hereby consent to Auro Scholar for verification of my/our Aadhaar to establish its genuineness through Quick Response (QR) code embedded in the Aadhaar card or through such other acceptable manner as per UIDAI or under any Act or law from time to time.\n</string>
+    <string name="parent_section">Parent Section</string>
+    <string name="choose_language">Choose Language</string>
+    <string name="teacher_share_msg">Hi, I have just referred you to get Scholarship  on AuroScholar App! \nTake quiz and get Scholarship Certificate every month. \nDownload App -  </string>
+    <string name="otp_has_been_sent_to_this_number">OTP has been sent to this number</string>
+    <string name="enter_otp">Enter OTP!</string>
+    <string name="your_scholarship_status">Your Scholarship status</string>
+    <string name="keep_taking_quizzes_to_unlock_next_level">Keep taking quizzes to unlock next level.</string>
+    <string name="you_can_resend_otp_in">You can resend OTP in</string>
+    <string name="otp_over_call">OTP Over Call</string>
+    <string name="accept_continue"><![CDATA[Accept & Continue]]></string>
+    <string name="wallet_info">Wallet Info</string>
+    <string name="wallet_subtitle">We Would Like To Tell You About Our Partners</string>
+    <string name="partner_menuauro">Partners</string>
+    <string name="re_upload">Re-Upload</string>
+    <string name="uploaded">Uploaded</string>
+    <string name="uplaod_txt">Upload</string>
+    <string name="upi_transfer">UPI Transfer</string>
+    <string name="bank_transfer">Bank Transfer</string>
+    <string name="it_will_available_soon">available soon</string>
+    <string name="no_txt">NO</string>
+    <string name="upload_your_photo_kyc">• Upload Your Photo</string>
+    <string name="proceed_to_signup">Proceed to signup</string>
+    <string name="set_pin">Set Pin</string>
+    <string name="enter_the_pin">"Enter the pin"</string>
+    <string name="enter_the_confirm_pin">Enter the confirm pin</string>
+    <string name="pin_and_confirm_not_match">Pin and Confirm Pin not match</string>
+
+    <string name="please_enter_bank_account_number">Please Enter Bank Account Number</string>
+    <string name="please_enter_valid_account_number">Please Enter Valid Account Number</string>
+    <string name="please_enter_valid_confirm_account_number">Plase Enter Valid Confirm Account Number</string>
+    <string name="account_number_mismatch">Account Number Mismatch</string>
+    <string name="please_enter_beneficiarry_name">Please Enter Beneficiary Name</string>
+    <string name="please_enter_ifsc_code">Please Enter IFSC Code</string>
+    <string name="please_enter_valid_ifsc_code">Please Enter valid IFSC Code</string>
+    <string name="please_enter_the_mobile_number">Please enter the mobile number</string>
+    <string name="please_enter_valid_phone_number">Please Enter Valid Mobile Number</string>
+    <string name="support_jpg">Supports : JPG, PNG, JPEG</string>
+    <string name="aadhar_back">Aadhar Back Side</string>
+    <string name="school_ids">School ID Cards</string>
+    <string name="no_data_found">No Data Found</string>
+    <string name="success_fully_save">Successfully Save</string>
+    <string name="let_you_know">Once it`s Done,Will Let You Know</string>
+    <string name="to_add_an_account">To add an account you have to follow the following steps</string>
+    <string name="grade_student_new">Grade</string>
+    <string name="name">Name</string>
+    <string name="no_certificate_for_download">No Certificate for Download.</string>
+    <string name="please_select_certificate">Please select the certificate first, using long press on it.</string>
+    <string name="done_dialog">Done</string>
+    <string name="enter_your_name">Enter your Name</string>
+    <string name="confirm_your_name">Confirm Your Name</string>
+    <string name="you_have_scored">You Have Scored</string>
+    <string name="scholarship_happen">You are almost there! Let\'s make the scholarship happen!</string>
+    <string name="fetch_data">Fetching Data...</string>
+    <string name="fetch_quiz_data">Fetching Quiz Data...</string>
+
+
+</resources>

@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+   <LinearLayout
+       android:orientation="vertical"
+       android:layout_width="wrap_content"
+       android:layout_marginStart="@dimen/_5sdp"
+       android:layout_height="wrap_content">
+
+       <RatingBar
+           android:id="@+id/rating"
+           android:layout_width="wrap_content"
+           android:numStars="4"
+           android:progressTint="#EDBD31"
+           android:layout_marginBottom="@dimen/_2sdp"
+           android:layout_gravity="center_horizontal"
+           style="@style/Widget.AppCompat.RatingBar.Small"
+           android:layout_height="wrap_content"/>
+
+
+
+
+
+       <androidx.cardview.widget.CardView
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           app:cardBackgroundColor="#033047"
+           app:cardCornerRadius="16dp"
+           android:layout_gravity="center_horizontal"
+           app:cardElevation="8dp"
+           app:cardPreventCornerOverlap="false">
+           <LinearLayout
+               android:gravity="center"
+               android:orientation="vertical"
+               android:layout_marginTop="@dimen/_7sdp"
+               android:layout_marginBottom="@dimen/_7sdp"
+               android:layout_marginStart="@dimen/_7sdp"
+               android:layout_marginEnd="@dimen/_7sdp"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content">
+               <TextView
+                   android:id="@+id/quiz_amount"
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center_horizontal"
+                   android:text="₹20"
+                   android:textAlignment="center"
+                   android:textColor="@color/white"
+                   android:textSize="@dimen/_10sdp" />
+               <TextView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center_horizontal"
+                   android:text="per quiz"
+                   android:textAlignment="center"
+                   android:textColor="@color/white"
+                   android:textSize="@dimen/_8sdp" />
+
+           </LinearLayout>
+
+
+
+       </androidx.cardview.widget.CardView>
+
+
+   </LinearLayout>
+</layout>

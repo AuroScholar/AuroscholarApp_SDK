@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+
+        <TextView
+            android:id="@+id/bt_sdk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:background="#F44336"
+            android:padding="10dp"
+            android:text="Student SDK"
+            android:visibility="visible"
+            android:textColor="@color/white" />
+
+
+
+        <EditText
+            android:id="@+id/mobile_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+         android:layout_margin="10dp"
+            android:inputType="phone"
+            android:maxLength="10"
+            android:hint="Please Enter Your Mobile Number"
+            android:layout_below="@+id/bt_sdk"/>
+
+        <EditText
+            android:id="@+id/user_class"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+        android:layout_margin="10dp"
+            android:inputType="phone"
+            android:maxLength="2"
+            android:visibility="visible"
+            android:hint="Please Enter class"
+            android:layout_below="@+id/mobile_number"/>
+
+        <EditText
+            android:id="@+id/language"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+          android:layout_margin="10dp"
+            android:inputType="text"
+            android:maxLength="2"
+            android:visibility="visible"
+            android:hint="Please select Language"
+            android:layout_below="@+id/user_class"/>
+
+        <EditText
+            android:id="@+id/utm_text_here"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="10dp"
+          android:layout_margin="10dp"
+            android:inputType="text"
+            android:visibility="gone"
+            android:hint="Enter the UTM Link Here"
+            android:layout_below="@+id/user_class"/>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/home_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible" />
+
+
+    </RelativeLayout>
+</layout>

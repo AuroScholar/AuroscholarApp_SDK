@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:bind="http://schemas.android.com/tools">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/parent_layout_one"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent">
+
+
+                <com.auro.application.core.util.uiwidget.RPTextView
+                    android:id="@+id/txt_myclassroom"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_30sdp"
+                    android:background="@color/shimmer_color"
+                    android:text="My Classroom"
+                    android:textSize="@dimen/_20sdp"
+                    app:Font="Poppins-SemiBold.ttf"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+
+
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/constantLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@color/white">
+
+
+                        <ImageView
+                            android:id="@+id/imageView5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/shimmer_color"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <ImageView
+                            android:id="@+id/auro_scholar_logo"
+                            android:layout_width="@dimen/_100sdp"
+                            android:layout_height="@dimen/_45sdp"
+
+                            android:layout_centerHorizontal="true"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_marginTop="@dimen/_15sdp"
+                            android:adjustViewBounds="true"
+                            android:background="@color/shimmer_color"
+                            android:visibility="visible"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+
+                        <androidx.cardview.widget.CardView
+                            android:id="@+id/cardView2"
+                            android:layout_width="@dimen/_40sdp"
+                            android:layout_height="@dimen/_40sdp"
+                            android:layout_marginRight="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:clipChildren="false"
+                            android:clipToPadding="false"
+                            android:divider="@android:color/transparent"
+                            android:dividerHeight="0.0px"
+                            android:elevation="@dimen/_10sdp"
+                            app:cardCornerRadius="@dimen/_5sdp"
+                            app:cardElevation="@dimen/_15sdp"
+                            app:cardPreventCornerOverlap="false"
+                            app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+                            app:layout_constraintEnd_toEndOf="@+id/imageView5">
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_margin="@dimen/_2sdp"
+                                android:divider="@android:color/transparent"
+                                app:cardCornerRadius="@dimen/_5sdp">
+
+                                <ImageView
+                                    android:id="@+id/imageView6"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:background="@drawable/ic_profile"
+                                    android:scaleType="fitXY" />
+                            </androidx.cardview.widget.CardView>
+                        </androidx.cardview.widget.CardView>
+
+                        <LinearLayout
+                            android:id="@+id/language_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/_20sdp"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:orientation="horizontal"
+                            app:layout_constraintBottom_toBottomOf="@+id/imageView5"
+                            app:layout_constraintEnd_toEndOf="parent">
+
+
+                            <ImageView
+                                android:id="@+id/imageViewNotification"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_marginRight="@dimen/_10sdp"
+                                android:padding="@dimen/_2sdp"
+                                android:src="@drawable/ic_notification"
+                                android:visibility="gone" />
+
+                            <ImageView
+                                android:id="@+id/imageViewLanguage"
+                                android:layout_width="@dimen/_25sdp"
+                                android:layout_height="@dimen/_25sdp"
+                                android:layout_marginRight="@dimen/_3sdp"
+                                android:padding="@dimen/_2sdp"
+                                android:src="@drawable/ic_language_google" />
+
+                            <ImageView
+                                android:id="@+id/imageViewLanguageMenu"
+                                android:layout_width="@dimen/_10sdp"
+                                android:layout_height="@dimen/_10sdp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/triangle" />
+
+
+                        </LinearLayout>
+
+
+                        <LinearLayout
+                            android:id="@+id/mainHeadtop"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_20sdp"
+                            android:layout_marginRight="@dimen/_20sdp"
+                            android:orientation="vertical"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/auro_scholar_logo">
+
+                            <com.auro.application.core.util.uiwidget.RPTextView
+                                android:id="@+id/RPTextView11"
+                                android:layout_width="@dimen/_60sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_20sdp"
+                                android:textColor="@color/dark_magenta"
+                                android:textSize="@dimen/_15sdp"
+                                android:background="@color/shimmer_color"
+                                android:visibility="visible"
+                                app:Font="ArticulatCF-Regular.otf"
+                                app:layout_constraintStart_toStartOf="@+id/linearLayout6"
+                                app:layout_constraintTop_toBottomOf="@+id/linearLayout6" />
+
+
+                            <com.auro.application.core.util.uiwidget.RPTextView
+                                android:id="@+id/RPDetailInformation"
+                                android:layout_width="@dimen/_59sdp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/_2sdp"
+                                android:background="@color/shimmer_color"
+                                android:textColor="@color/auro_more_dark_grey"
+                                android:textSize="@dimen/_8sdp"
+                                android:visibility="visible"
+                                app:Font="ArticulatCF-Medium.otf"
+                                app:layout_constraintStart_toStartOf="@+id/linearLayout6"
+                                app:layout_constraintTop_toBottomOf="@+id/linearLayout6" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/swipeCons"
+                            android:layout_width="match_parent"
+                            android:layout_height="0dp"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:orientation="vertical"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@+id/mainHeadtop"
+                            app:layout_constraintVertical_bias="0.0">
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/auro_color_grey" />
+
+                            <com.auro.application.core.util.uiwidget.RPTextView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="@dimen/_20sdp"
+                                android:layout_marginTop="@dimen/_10sdp"
+                                android:layout_marginBottom="@dimen/_10sdp"
+                                android:background="@color/shimmer_color"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/_12sdp"
+                                android:visibility="visible"
+                                app:Font="ArticulatCF-Regular.otf" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="@color/auro_color_grey" />
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="@color/seprartion_color">
+
+                                <LinearLayout
+                                    android:id="@+id/llstudent"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal"
+                                    android:weightSum="2">
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="@dimen/_10sdp"
+                                        android:layout_weight="1.5"
+                                        android:orientation="vertical">
+
+                                        <com.auro.application.core.util.uiwidget.RPTextView
+                                            android:layout_width="@dimen/_20sdp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="@dimen/_20sdp"
+                                            android:layout_marginTop="@dimen/_10sdp"
+                                            android:background="@color/shimmer_color"
+                                            android:textColor="@color/auro_text_grey"
+                                            android:textSize="@dimen/_12sdp"
+                                            android:visibility="visible"
+                                            app:Font="ArticulatCF-Regular.otf" />
+
+                                        <androidx.recyclerview.widget.RecyclerView
+                                            android:id="@+id/rvItemPic"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_gravity="start"
+                                            android:clipToPadding="true"
+                                            android:layoutDirection="rtl"
+                                            android:orientation="horizontal"
+                                            android:paddingLeft="@dimen/_10sdp"
+                                            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                                            app:reverseLayout="true" />
+
+
+                                    </LinearLayout>
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginBottom="@dimen/_10sdp"
+                                        android:layout_weight="0.5"
+                                        android:orientation="vertical">
+
+                                        <com.auro.application.core.util.uiwidget.RPTextView
+                                            android:layout_width="@dimen/_20sdp"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginLeft="@dimen/_20sdp"
+                                            android:layout_marginTop="@dimen/_10sdp"
+                                            android:layout_marginBottom="@dimen/_10sdp"
+                                            android:background="@color/shimmer_color"
+                                            android:textColor="@color/auro_text_grey"
+                                            android:textSize="@dimen/_12sdp"
+                                            android:visibility="visible"
+                                            app:Font="ArticulatCF-Regular.otf" />
+
+                                        <ImageView
+                                            android:id="@+id/bt_add_group"
+                                            android:layout_width="@dimen/_30sdp"
+                                            android:layout_height="@dimen/_30sdp"
+                                            android:layout_marginLeft="@dimen/_20sdp"
+                                            android:layout_marginTop="@dimen/_17sdp"
+                                            android:background="@color/shimmer_color"
+                                            android:layout_marginRight="@dimen/_10sdp"
+                                          />
+
+
+                                    </LinearLayout>
+
+                                </LinearLayout>
+
+                                <RelativeLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_below="@+id/llstudent">
+
+                                    <com.auro.application.core.util.uiwidget.RPTextView
+                                        android:id="@+id/rpChoose_Student"
+                                        android:layout_width="@dimen/_50sdp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginLeft="@dimen/_20sdp"
+                                        android:layout_marginTop="@dimen/_10sdp"
+                                        android:layout_marginBottom="@dimen/_10sdp"
+                                        android:background="@color/shimmer_color"
+                                        android:textColor="@color/auro_text_grey"
+                                        android:textSize="@dimen/_12sdp"
+                                        android:visibility="visible"
+                                        app:Font="ArticulatCF-Regular.otf" />
+
+                                    <LinearLayout
+                                        android:id="@+id/rv_choose_student"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_below="@+id/rpChoose_Student"
+                                        android:layout_marginBottom="@dimen/_10sdp"
+                                        android:orientation="vertical"
+                                        android:clipToPadding="true">
+                                        <com.auro.application.core.util.uiwidget.RPTextView
+                                            android:id="@+id/student_list_message"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:layout_marginEnd="@dimen/_20sdp"
+                                            android:layout_marginStart="@dimen/_20sdp"
+                                            android:layout_marginTop="@dimen/_10sdp"
+
+                                            android:background="@color/shimmer_color"
+                                            android:textColor="@color/auro_text_grey"
+                                            android:textSize="@dimen/_12sdp"
+                                            android:visibility="visible"
+                                            app:Font="ArticulatCF-Regular.otf" />
+
+
+                                        <com.auro.application.core.util.uiwidget.RPTextView
+
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:layout_marginEnd="@dimen/_20sdp"
+                                            android:layout_marginStart="@dimen/_20sdp"
+                                            android:layout_marginTop="@dimen/_10sdp"
+
+                                            android:background="@color/shimmer_color"
+                                            android:textColor="@color/auro_text_grey"
+                                            android:textSize="@dimen/_12sdp"
+                                            android:visibility="visible"
+                                            app:Font="ArticulatCF-Regular.otf" />
+
+
+                                        <com.auro.application.core.util.uiwidget.RPTextView
+
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:layout_marginEnd="@dimen/_20sdp"
+                                            android:layout_marginStart="@dimen/_20sdp"
+                                            android:layout_marginTop="@dimen/_10sdp"
+
+                                            android:background="@color/shimmer_color"
+                                            android:textColor="@color/auro_text_grey"
+                                            android:textSize="@dimen/_12sdp"
+                                            android:visibility="visible"
+                                            app:Font="ArticulatCF-Regular.otf" />
+
+
+                                        <com.auro.application.core.util.uiwidget.RPTextView
+
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:layout_marginEnd="@dimen/_20sdp"
+                                            android:layout_marginStart="@dimen/_20sdp"
+                                            android:layout_marginTop="@dimen/_10sdp"
+
+                                            android:background="@color/shimmer_color"
+                                            android:textColor="@color/auro_text_grey"
+                                            android:textSize="@dimen/_12sdp"
+                                            android:visibility="visible"
+                                            app:Font="ArticulatCF-Regular.otf" />
+
+
+                                        <com.auro.application.core.util.uiwidget.RPTextView
+
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:layout_marginEnd="@dimen/_20sdp"
+                                            android:layout_marginStart="@dimen/_20sdp"
+                                            android:layout_marginTop="@dimen/_10sdp"
+
+                                            android:background="@color/shimmer_color"
+                                            android:textColor="@color/auro_text_grey"
+                                            android:textSize="@dimen/_12sdp"
+                                            android:visibility="visible"
+                                            app:Font="ArticulatCF-Regular.otf" />
+
+
+                                        <com.auro.application.core.util.uiwidget.RPTextView
+
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:layout_marginEnd="@dimen/_20sdp"
+                                            android:layout_marginStart="@dimen/_20sdp"
+                                            android:layout_marginTop="@dimen/_10sdp"
+
+                                            android:background="@color/shimmer_color"
+                                            android:textColor="@color/auro_text_grey"
+                                            android:textSize="@dimen/_12sdp"
+                                            android:visibility="visible"
+                                            app:Font="ArticulatCF-Regular.otf" />
+
+
+                                        <com.auro.application.core.util.uiwidget.RPTextView
+
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:layout_marginEnd="@dimen/_20sdp"
+                                            android:layout_marginStart="@dimen/_20sdp"
+                                            android:layout_marginTop="@dimen/_10sdp"
+
+                                            android:background="@color/shimmer_color"
+                                            android:textColor="@color/auro_text_grey"
+                                            android:textSize="@dimen/_12sdp"
+                                            android:visibility="visible"
+                                            app:Font="ArticulatCF-Regular.otf" />
+
+                                        <com.auro.application.core.util.uiwidget.RPTextView
+
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:layout_marginEnd="@dimen/_20sdp"
+                                            android:layout_marginStart="@dimen/_20sdp"
+                                            android:layout_marginTop="@dimen/_10sdp"
+
+                                            android:background="@color/shimmer_color"
+                                            android:textColor="@color/auro_text_grey"
+                                            android:textSize="@dimen/_12sdp"
+                                            android:visibility="visible"
+                                            app:Font="ArticulatCF-Regular.otf" />
+
+                                        <com.auro.application.core.util.uiwidget.RPTextView
+
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:layout_marginEnd="@dimen/_20sdp"
+                                            android:layout_marginStart="@dimen/_20sdp"
+                                            android:layout_marginTop="@dimen/_10sdp"
+
+                                            android:background="@color/shimmer_color"
+                                            android:textColor="@color/auro_text_grey"
+                                            android:textSize="@dimen/_12sdp"
+                                            android:visibility="visible"
+                                            app:Font="ArticulatCF-Regular.otf" />
+
+                                        <com.auro.application.core.util.uiwidget.RPTextView
+
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:layout_marginEnd="@dimen/_20sdp"
+                                            android:layout_marginStart="@dimen/_20sdp"
+                                            android:layout_marginTop="@dimen/_10sdp"
+
+                                            android:background="@color/shimmer_color"
+                                            android:textColor="@color/auro_text_grey"
+                                            android:textSize="@dimen/_12sdp"
+                                            android:visibility="visible"
+                                            app:Font="ArticulatCF-Regular.otf" />
+
+                                        <com.auro.application.core.util.uiwidget.RPTextView
+
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:layout_marginEnd="@dimen/_20sdp"
+                                            android:layout_marginStart="@dimen/_20sdp"
+                                            android:layout_marginTop="@dimen/_10sdp"
+
+                                            android:background="@color/shimmer_color"
+                                            android:textColor="@color/auro_text_grey"
+                                            android:textSize="@dimen/_12sdp"
+                                            android:visibility="visible"
+                                            app:Font="ArticulatCF-Regular.otf" />
+
+                                        <com.auro.application.core.util.uiwidget.RPTextView
+
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_centerInParent="true"
+                                            android:layout_marginEnd="@dimen/_20sdp"
+                                            android:layout_marginStart="@dimen/_20sdp"
+                                            android:layout_marginTop="@dimen/_10sdp"
+
+                                            android:background="@color/shimmer_color"
+                                            android:textColor="@color/auro_text_grey"
+                                            android:textSize="@dimen/_12sdp"
+                                            android:visibility="visible"
+                                            app:Font="ArticulatCF-Regular.otf" />
+
+
+                                    </LinearLayout>
+
+
+                                </RelativeLayout>
+
+                            </RelativeLayout>
+
+                            <!-- </RelativeLayout>-->
+                        </LinearLayout>
+
+
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.core.widget.NestedScrollView>
+    </RelativeLayout>
+
+</layout>
