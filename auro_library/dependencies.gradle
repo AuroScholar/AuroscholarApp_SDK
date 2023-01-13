@@ -45,7 +45,7 @@ ext {
             update           :         "com.google.android.play:core:${update}"]
 
     TruecallerDependencies = [
-            truecaller : "com.truecaller.android.sdk:truecaller-sdk:2.3.0"
+            truecaller : "com.truecaller.android.sdk:truecaller-sdk:2.8.0"
     ]
     FacebookDependencies = [
             facebook  : 'com.facebook.android:facebook-login:4.30.0',
