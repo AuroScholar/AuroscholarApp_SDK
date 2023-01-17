@@ -53,15 +53,15 @@ android {
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.aar'])
     // DEVELOPMENT Dependencies
-    implementation supportDependencies.values()
+    api supportDependencies.values()
     // NETWORK Dependencies
     implementation networkDependencies.values()
     // GOOGLE Dependencies
     implementation googleDependencies.values()
     implementation googleDependencies.dagger
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'com.google.android.material:material:1.4.0-alpha02'
+    api 'androidx.appcompat:appcompat:1.2.0'
+    api 'com.google.android.material:material:1.4.0-alpha02'
 
     implementation 'com.instabug.library:instabug:11.5.0'
 
