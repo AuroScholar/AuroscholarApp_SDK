@@ -22,4 +22,6 @@
 
 
 -keep class com.crashlytics.** { *; }
+-keep class androidx.databinding.** { *; }
+-keep class * extends androidx.databinding.DataBinderMapper { *; }
 -dontwarn com.crashlytics.**
