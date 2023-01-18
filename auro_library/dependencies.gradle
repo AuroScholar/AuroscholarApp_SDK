@@ -68,7 +68,7 @@ ext {
             services_auth        :     'com.google.android.gms:play-services-auth:18.1.0',
             msging               :     'com.google.firebase:firebase-messaging:20.2.4',
             dynamicLink          :     'com.google.firebase:firebase-dynamic-links:16.1.8',
-            firebaseCrash        :     'com.google.firebase:firebase-crash:16.2.1',
+            //firebaseCrash        :     'com.google.firebase:firebase-crash:16.2.1',
             core                 :     'com.google.firebase:firebase-core:16.0.8',
             perfomance           :     'com.google.firebase:firebase-perf:19.0.8',
             analytics            :     'com.google.firebase:firebase-analytics:17.5.0'

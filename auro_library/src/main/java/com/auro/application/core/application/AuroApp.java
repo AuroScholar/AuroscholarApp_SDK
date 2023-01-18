@@ -11,7 +11,6 @@ import com.auro.application.core.application.di.component.DaggerAppComponent;
 import com.auro.application.core.application.di.module.AppModule;
 import com.auro.application.core.application.di.module.UtilsModule;
 import com.auro.application.home.data.model.AuroScholarDataModel;
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 
 import io.reactivex.plugins.RxJavaPlugins;
@@ -43,7 +42,7 @@ public class AuroApp extends Application {
                 .build();
 
         appComponent.injectAppContext(this);
-        FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG);
+        //FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG);
 
     }
 
