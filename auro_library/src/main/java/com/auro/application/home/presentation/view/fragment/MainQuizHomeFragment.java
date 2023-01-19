@@ -35,6 +35,7 @@ import com.auro.application.R;
 import com.auro.application.RealTimeFaceDetection.CameraxActivity;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -166,10 +167,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
 
-        if (AuroApp.getAppComponent() != null) {
-            AuroApp.getAppComponent().doInjection(this);
-        }
-        AuroApp.getAppComponent().doInjection(this);
+        DaggerWrapper.getComponent(getActivity()).doInjection(this);
         quizViewModel = ViewModelProviders.of(this, viewModelFactory).get(QuizViewModel.class);
 
         Log.d(TAG, "onCreateView: QuizFragCall");
