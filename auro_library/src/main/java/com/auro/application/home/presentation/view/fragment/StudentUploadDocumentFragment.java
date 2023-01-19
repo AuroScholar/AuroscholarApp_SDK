@@ -30,6 +30,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseDialog;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.Status;
@@ -102,7 +103,8 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
 
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
-        ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+        //((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+        DaggerWrapper.getComponent(getActivity()).doInjection(this);
         kycViewModel = ViewModelProviders.of(this, viewModelFactory).get(KYCViewModel.class);
         binding.setLifecycleOwner(this);
         setRetainInstance(true);

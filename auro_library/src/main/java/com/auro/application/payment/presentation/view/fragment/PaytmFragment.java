@@ -17,6 +17,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.home.data.model.response.StudentWalletResModel;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
@@ -77,7 +78,8 @@ public class PaytmFragment extends BaseFragment implements CommonCallBackListner
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
-        ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+        //((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+        DaggerWrapper.getComponent(getActivity()).doInjection(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(SendMoneyViewModel.class);
         binding.setLifecycleOwner(this);
         setRetainInstance(true);

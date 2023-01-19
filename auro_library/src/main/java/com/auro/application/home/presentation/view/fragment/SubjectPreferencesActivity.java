@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseActivity;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -71,7 +72,8 @@ public class SubjectPreferencesActivity extends BaseActivity implements CommonCa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, getLayout());
-        ((AuroApp) this.getApplication()).getAppComponent().doInjection(this);
+        //((AuroApp) this.getApplication()).getAppComponent().doInjection(this);
+        DaggerWrapper.getComponent(this).doInjection(this);
         homeViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel.class);
         binding.setLifecycleOwner(this);
         init();

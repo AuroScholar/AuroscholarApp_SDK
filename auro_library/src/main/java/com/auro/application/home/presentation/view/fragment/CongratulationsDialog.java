@@ -95,7 +95,7 @@ public class CongratulationsDialog extends BaseDialog implements View.OnClickLis
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
-        ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+        //((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(CongratulationsDialogViewModel.class);
         binding.setLifecycleOwner(this);
         setRetainInstance(true);

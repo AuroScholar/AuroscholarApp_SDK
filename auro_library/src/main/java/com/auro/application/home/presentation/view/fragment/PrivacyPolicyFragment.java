@@ -28,6 +28,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.auro.application.R;
 import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.NetworkUtil;
 import com.auro.application.core.network.URLConstant;
 import com.auro.application.databinding.QuizTestLayoutBinding;
@@ -96,6 +97,7 @@ public class PrivacyPolicyFragment extends BaseFragment {
     @Override
     protected void init() {
         binding.toolbarLayout.backParentLayout.setVisibility(View.GONE);
+        DaggerWrapper.getComponent(getActivity()).doInjection(this);
         checkInternet();
         setListener();
     }

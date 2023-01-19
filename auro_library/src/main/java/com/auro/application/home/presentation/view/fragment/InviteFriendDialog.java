@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseDialog;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.databinding.DialogInviteLayoutBinding;
@@ -72,7 +73,8 @@ public class InviteFriendDialog  extends BaseDialog implements View.OnClickListe
         super.onCreateView(inflater, container, savedInstanceState);
 
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
-        ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+        //((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+        DaggerWrapper.getComponent(getActivity()).doInjection(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(InviteFriendViewModel.class);
         binding.setLifecycleOwner(this);
         setRetainInstance(true);

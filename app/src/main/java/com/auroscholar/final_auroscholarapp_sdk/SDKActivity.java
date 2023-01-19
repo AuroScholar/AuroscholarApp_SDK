@@ -1,6 +1,7 @@
 package com.auroscholar.final_auroscholarapp_sdk;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -9,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.auro.application.core.util.AuroScholar;
 import com.auro.application.home.data.model.AuroScholarInputModel;
+import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
+import com.auro.application.home.presentation.view.activity.SplashScreenAnimationActivity;
 import com.auroscholar.final_auroscholarapp_sdk.databinding.ActivitySdkBinding;
 
 
@@ -22,7 +25,8 @@ TextView bt_sdk;
         bt_sdk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                openGenricSDK("9289180019", "12");
+
+                startActivity(new Intent(SDKActivity.this, SplashScreenAnimationActivity.class));
             }
         });
     }

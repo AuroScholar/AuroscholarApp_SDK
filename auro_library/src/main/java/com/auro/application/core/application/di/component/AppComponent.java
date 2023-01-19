@@ -91,7 +91,17 @@ import javax.inject.Singleton;
 import dagger.Component;
 
 
-@Component(modules = {AppModule.class, UtilsModule.class, HomeModule.class, TeacherModule.class, PaymentModule.class, QuizModule.class, KycModule.class,})
+@Component(modules =
+        {
+                AppModule.class,
+                UtilsModule.class,
+                HomeModule.class,
+                TeacherModule.class,
+                PaymentModule.class,
+                QuizModule.class,
+                KycModule.class,
+        })
+
 @Singleton
 public interface AppComponent {
 
