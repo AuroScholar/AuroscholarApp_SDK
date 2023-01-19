@@ -13,7 +13,7 @@ ext {
     def update = '1.7.3'
 
     supportDependencies = [
-            appCompat_v7     :        'androidx.appcompat:appcompat:1.4.0',
+            appCompat_v7     :        'androidx.appcompat:appcompat:1.5.1',
             constraint       :        'androidx.constraintlayout:constraintlayout:2.0.0-alpha2',
             support_design   :        'com.google.android.material:material:1.5.0',
             exifInterface    :        'androidx.exifinterface:exifinterface:1.0.0',
@@ -50,7 +50,6 @@ ext {
     FacebookDependencies = [
             facebook  : 'com.facebook.android:facebook-login:4.30.0',
           facebookAppLink : 'com.facebook.android:facebook-applinks:latest.release'
-           // facebooksdk : 'com.facebook.android:facebook-android-sdk:[8,9)'
 
     ]
 
