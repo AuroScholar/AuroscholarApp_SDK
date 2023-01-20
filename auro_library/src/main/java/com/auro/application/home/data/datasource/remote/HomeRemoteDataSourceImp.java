@@ -41,6 +41,7 @@ import com.auro.application.util.AppLogger;
 import com.auro.application.util.AppUtil;
 import com.auro.application.util.ConversionUtil;
 import com.auro.application.util.ViewUtil;
+import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -63,9 +64,10 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
 
     @Override
     public Single<Response<JsonObject>> getDashboardData(AuroScholarDataModel model) {
+        SDKDataModel prefModel2 = AuroAppPref.INSTANCE.getModelInstance().getChildData();
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(AppConstant.DashBoardParams.USER_ID, model.getUserId());
-        params.put(AppConstant.DashBoardParams.LANGUAGE, ViewUtil.getLanguageId());
+        params.put(AppConstant.DashBoardParams.USER_ID, prefModel2.getUser_details().get(0).getUser_id());
+        params.put(AppConstant.DashBoardParams.LANGUAGE, prefModel2.getUser_details().get(0).getUser_prefered_language_id());
         params.put(AppConstant.DashBoardParams.MODULES, "details,wallet,quizes");
         params.put(AppConstant.DashBoardParams.LANGUAGE_VERSION, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         params.put(AppConstant.DashBoardParams.API_VERSION, AppConstant.ParamsValue.API_VERSION_VAL);
@@ -73,7 +75,7 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
         params.put(AppConstant.DashBoardParams.PARTNER_SOURCE, AppConstant.ParamsValue.PARTNER_SOURCE_VAL);
         params.put(AppConstant.DashBoardParams.LANGUAGE_VERSION, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         params.put(AppConstant.DashBoardParams.API_VERSION, AppConstant.ParamsValue.API_VERSION_VAL);
-        params.put(AppConstant.Language.USER_PREFERED_LANGUAGE,Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId()));
+        params.put(AppConstant.Language.USER_PREFERED_LANGUAGE,prefModel2.getUser_details().get(0).getUser_prefered_language_id());
         return homeRemoteApi.getDashboardSDKData(params);
     }
 

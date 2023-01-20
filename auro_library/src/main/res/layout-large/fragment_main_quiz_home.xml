@@ -57,7 +57,6 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
 
-
                     <androidx.cardview.widget.CardView
                         android:id="@+id/cardView2"
                         android:layout_width="@dimen/_40sdp"
@@ -66,10 +65,10 @@
                         android:layout_marginBottom="@dimen/_10sdp"
                         android:clipChildren="false"
                         android:clipToPadding="false"
-                        android:visibility="visible"
                         android:divider="@android:color/transparent"
                         android:dividerHeight="0.0px"
                         android:elevation="@dimen/_10sdp"
+                        android:visibility="visible"
                         app:cardCornerRadius="@dimen/_5sdp"
                         app:cardElevation="@dimen/_15sdp"
                         app:cardPreventCornerOverlap="false"
@@ -80,8 +79,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_margin="@dimen/_2sdp"
-                            android:visibility="visible"
                             android:divider="@android:color/transparent"
+                            android:visibility="visible"
                             app:cardCornerRadius="@dimen/_5sdp"
 
                             >
@@ -118,7 +117,7 @@
 
                         <ImageView
                             android:id="@+id/imageViewLanguage"
-                            android:layout_width="@dimen/_25sdp"
+                            android:layout_width="wrap_content"
                             android:layout_height="@dimen/_25sdp"
                             android:layout_marginRight="@dimen/_3sdp"
                             android:padding="@dimen/_2sdp"
@@ -139,81 +138,94 @@
 
                 <!--end layout-->
 
-
                 <LinearLayout
                     android:id="@+id/linearLayout6"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_12sdp"
-                    android:layout_marginTop="@dimen/_20sdp"
-                    android:orientation="vertical"
-                    app:layout_constraintEnd_toStartOf="@+id/walleticon"
+                    android:weightSum="3"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/topHeader_layout">
 
-                    <com.auro.application.core.util.uiwidget.RPTextView
-                        android:id="@+id/RPTextView9"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:id="@+id/MonthLayout"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/auro_black"
-                        android:textSize="@dimen/_22sdp"
-                        app:Font="Calibre-Light.ttf" />
+                        android:layout_weight="2.3"
+                        android:layout_marginLeft="@dimen/_10sdp"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginBottom="@dimen/_10sdp"
+                        android:orientation="vertical">
 
-                    <com.auro.application.core.util.uiwidget.RPTextView
-                        android:id="@+id/RPTextView10"
-                        android:layout_width="@dimen/_210sdp"
+                        <com.auro.application.core.util.uiwidget.RPTextView
+                            android:id="@+id/RPTextView9"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/auro_black"
+                            android:textSize="@dimen/_22sdp"
+                            app:Font="Calibre-Light.ttf" />
+
+                        <com.auro.application.core.util.uiwidget.RPTextView
+                            android:id="@+id/RPTextView10"
+                            android:layout_width="@dimen/_210sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/_1sdp"
+                            android:text="@string/score_msg"
+                            android:textColor="@color/auro_grey"
+                            android:textSize="@dimen/_8sdp"
+                            app:Font="ArticulatCF-Regular.otf" />
+                    </LinearLayout>
+                    <RelativeLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:text="@string/score_msg"
-                        android:textColor="@color/auro_grey"
-                        android:textSize="@dimen/_8sdp"
-                        android:layout_marginTop="@dimen/_1sdp"
-                        app:Font="ArticulatCF-Regular.otf" />
+                        android:layout_weight=".7">
+                        <RelativeLayout
+                            android:id="@+id/walleticon"
+                            android:layout_width="@dimen/_47sdp"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginTop="@dimen/_25sdp"
+
+                            android:layout_marginRight="@dimen/_10sdp"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            >
+
+
+                            <com.auro.application.core.util.uiwidget.RPTextView
+                                android:id="@+id/wallet_bal_text"
+                                android:layout_width="@dimen/_40sdp"
+                                android:layout_height="@dimen/_40sdp"
+                                android:background="@drawable/wallet_balance_icon"
+                                android:backgroundTint="@color/blue_color"
+                                android:gravity="center_vertical"
+                                android:textAlignment="center"
+                                android:textColor="@color/white"
+                                android:textSize="@dimen/_10sdp"
+                                app:Font="Poppins-SemiBold.ttf"
+                                tools:ignore="RtlCompat" />
+
+                            <RelativeLayout
+                                android:id="@+id/relativeLayout"
+                                android:layout_width="@dimen/_20sdp"
+                                android:layout_height="@dimen/_20sdp"
+                                android:layout_alignParentTop="true"
+                                android:layout_alignParentRight="true"
+                                android:background="@drawable/transparent_circle">
+
+                                <ImageView
+                                    android:layout_width="@dimen/_10sdp"
+                                    android:layout_height="@dimen/_10sdp"
+                                    android:layout_centerInParent="true"
+                                    android:background="@drawable/ic_cart"
+                                    android:visibility="visible" />
+
+                            </RelativeLayout>
+                        </RelativeLayout>
+                    </RelativeLayout>
+
+
                 </LinearLayout>
 
-                <RelativeLayout
-                    android:id="@+id/walleticon"
-                    android:layout_width="@dimen/_47sdp"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:layout_marginTop="@dimen/_25sdp"
-                    android:layout_marginEnd="@dimen/_5sdp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/linearLayout6"
-                    app:layout_constraintTop_toBottomOf="@+id/topHeader_layout"
-                    android:layout_marginRight="@dimen/_20sdp">
-
-
-                    <com.auro.application.core.util.uiwidget.RPTextView
-                        android:id="@+id/wallet_bal_text"
-                        android:layout_width="@dimen/_40sdp"
-                        android:layout_height="@dimen/_40sdp"
-                        android:background="@drawable/wallet_balance_icon"
-                        android:backgroundTint="@color/blue_color"
-                        android:gravity="center_vertical"
-                        android:textAlignment="center"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/_10sdp"
-                        app:Font="Poppins-SemiBold.ttf"
-                        tools:ignore="RtlCompat" />
-
-                    <RelativeLayout
-                        android:id="@+id/relativeLayout"
-                        android:layout_width="@dimen/_20sdp"
-                        android:layout_height="@dimen/_20sdp"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignParentTop="true"
-                        android:background="@drawable/transparent_circle"
-                        >
-
-                        <ImageView
-                            android:layout_width="@dimen/_10sdp"
-                            android:layout_height="@dimen/_10sdp"
-                            android:layout_centerInParent="true"
-                            android:background="@drawable/ic_cart"
-                            android:visibility="visible" />
-
-                    </RelativeLayout>
-                </RelativeLayout>
 
                 <com.auro.application.core.util.uiwidget.RPTextView
                     android:id="@+id/RPTextView11"
@@ -234,8 +246,7 @@
                 android:id="@+id/swipe_refresh_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/constantLayout"
-                >
+                android:layout_below="@+id/constantLayout">
 
 
                 <androidx.core.widget.NestedScrollView
@@ -268,7 +279,6 @@
 
 
                         </LinearLayout>
-
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/recyclerViewMenu"
@@ -397,6 +407,7 @@
                 android:id="@+id/errorLayout"
                 layout="@layout/error_layout" />
         </androidx.constraintlayout.widget.ConstraintLayout>
+
         <LinearLayout
             android:id="@+id/imageChat"
             android:layout_width="wrap_content"
@@ -405,8 +416,8 @@
             android:layout_alignParentBottom="true"
             android:layout_marginRight="@dimen/_20sdp"
             android:layout_marginBottom="@dimen/_15sdp"
-            android:visibility="gone"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/float_chat"
@@ -421,7 +432,7 @@
                 android:clickable="true"
                 android:src="@drawable/ic_baseline_message_24"
                 app:tint="@color/white" />
-           <!-- <com.auro.application.core.util.uiwidget.RPTextView
+            <!--<com.auro.application.core.util.uiwidget.RPTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/hi_there"

@@ -22,11 +22,23 @@ public class SendOtpReqModel implements Parcelable {
     @SerializedName("api_version")
     String apiVersion;
 
+    public String getUser_prefered_language_id() {
+        return user_prefered_language_id;
+    }
+
+    public void setUser_prefered_language_id(String user_prefered_language_id) {
+        this.user_prefered_language_id = user_prefered_language_id;
+    }
+
+    @SerializedName("user_prefered_language_id")
+    String user_prefered_language_id;
+
     protected SendOtpReqModel(Parcel in) {
         mobileNo = in.readString();
         isType = in.readString();
         langVersion = in.readString();
         apiVersion = in.readString();
+        user_prefered_language_id = in.readString();
     }
 
     @Override
@@ -35,6 +47,7 @@ public class SendOtpReqModel implements Parcelable {
         dest.writeString(isType);
         dest.writeString(langVersion);
         dest.writeString(apiVersion);
+        dest.writeString(user_prefered_language_id);
     }
 
     @Override

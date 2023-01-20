@@ -19,6 +19,7 @@ import com.auro.application.home.data.model.response.SlabDetailResModel;
 import com.auro.application.home.data.model.response.SlabModel;
 import com.auro.application.home.data.model.response.SlabsResModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
+import com.auro.application.home.data.model.signupmodel.UserSlabsRequest;
 import com.auro.application.home.domain.usecase.HomeDbUseCase;
 import com.auro.application.home.domain.usecase.HomeRemoteUseCase;
 import com.auro.application.home.domain.usecase.HomeUseCase;
@@ -39,6 +40,7 @@ import static com.auro.application.core.common.Status.ASSIGNMENT_STUDENT_DATA_AP
 import static com.auro.application.core.common.Status.AZURE_API;
 import static com.auro.application.core.common.Status.DASHBOARD_API;
 import static com.auro.application.core.common.Status.GET_INSTRUCTIONS_API;
+import static com.auro.application.core.common.Status.GET_SLABS_API;
 import static com.auro.application.core.common.Status.GRADE_UPGRADE;
 import static com.auro.application.core.common.Status.PARTNERS_API;
 import static com.auro.application.core.common.Status.PARTNERS_LOGIN_API;
@@ -77,12 +79,35 @@ public class QuizViewModel extends ViewModel {
 
                     case DASHBOARD_API:
                         break;
+                    case GET_SLABS_API:
+                        AppLogger.e("GET_SLABS_API", "step 2");
+                        getSlabsApi((UserSlabsRequest) reqModel);
+                        break;
                 }
             } else {
                 serviceLiveData.setValue(new ResponseApi(Status.NO_INTERNET, AuroApp.getAppContext().getString(R.string.internet_check), Status.NO_INTERNET));
             }
         });
         getCompositeDisposable().add(disposable);
+    }
+
+    private void getSlabsApi(UserSlabsRequest id) {
+        getCompositeDisposable().add(homeRemoteUseCase.getSlabsApi(id).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Consumer<ResponseApi>() {
+                               @Override
+                               public void accept(ResponseApi responseApi) throws Exception {
+                                   AppLogger.e("GET_SLABS_API", "step 3");
+                                   serviceLiveData.setValue(responseApi);
+                               }
+                           },
+                        new Consumer<Throwable>() {
+                            @Override
+                            public void accept(Throwable throwable) throws Exception {
+                                AppLogger.e("GET_SLABS_API", "step 4");
+                                defaultError(GET_SLABS_API);
+                            }
+                        }));
     }
 
 

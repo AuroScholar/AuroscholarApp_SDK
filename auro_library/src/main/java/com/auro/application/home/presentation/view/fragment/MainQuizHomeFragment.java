@@ -1,9 +1,11 @@
 package com.auro.application.home.presentation.view.fragment;
 
+import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -25,6 +27,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -47,6 +50,7 @@ import com.auro.application.core.network.URLConstant;
 import com.auro.application.databinding.FragmentMainQuizHomeBinding;
 import com.auro.application.home.data.model.AssignmentReqModel;
 import com.auro.application.home.data.model.AssignmentResModel;
+import com.auro.application.home.data.model.AuroScholarDataModel;
 import com.auro.application.home.data.model.DashboardResModel;
 import com.auro.application.home.data.model.DashboardResponselDataModel;
 import com.auro.application.home.data.model.Details;
@@ -62,6 +66,7 @@ import com.auro.application.home.data.model.response.SlabsResModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
 import com.auro.application.home.presentation.view.activity.CameraActivity;
+import com.auro.application.home.presentation.view.activity.StudentMainDashboardActivity;
 import com.auro.application.home.presentation.view.activity.WebActivity;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
 import com.auro.application.home.presentation.view.adapter.ChapterSelectAdapter;
@@ -134,6 +139,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
     QuizResModel quizResModel;
     AssignmentReqModel assignmentReqModel;
     AssignmentResModel testAssignmentResModel;
+    AuroScholarDataModel auroScholarDataModel;
 
     ProgressDialog quizProgressDialog;
     InstructionDialog customDialog;
@@ -165,12 +171,27 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+        if (binding != null) {
+            return binding.getRoot();
+        }
+        if (!AuroApp.getAuroScholarModel().isApplicationLang()) {
+            String lang = AuroApp.getAuroScholarModel().getLanguage();
+            if (!TextUtil.isEmpty(lang)) {
+                if (lang.equalsIgnoreCase(AppConstant.LANGUAGE_HI) || lang.equalsIgnoreCase(AppConstant.LANGUAGE_EN)) {
+
+                }
+            } else {
+                AuroApp.getAuroScholarModel().setLanguage(AppConstant.LANGUAGE_EN);
+            }
+        }
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
 
+        //((AuroApp) requireActivity().getApplication()).getAppComponent().doInjection(this);
         DaggerWrapper.getComponent(getActivity()).doInjection(this);
         quizViewModel = ViewModelProviders.of(this, viewModelFactory).get(QuizViewModel.class);
 
-        Log.d(TAG, "onCreateView: QuizFragCall");
+
         binding.setLifecycleOwner(this);
         binding.setQuizViewModel(quizViewModel);
         setRetainInstance(true);
@@ -183,7 +204,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        ((DashBoardMainActivity) getContext()).setListner(this);
+        //((DashBoardMainActivity) getContext()).setListner(this);
     }
 
     @Override
@@ -191,7 +212,6 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
      prefModel = AuroAppPref.INSTANCE.getModelInstance();
    //  details = prefModel.getLanguageMasterDynamic().getDetails();
         try {
-            AppLogger.e(TAG, DateUtil.getMonthName());
             binding.RPTextView9.setText(DateUtil.getMonthName() + " " + getActivity().getResources().getString(R.string.scholarship));
             Details details = prefModel.getLanguageMasterDynamic().getDetails();
             if (!TextUtil.isEmpty(DateUtil.getMonthName())) {
@@ -201,13 +221,13 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
             AppLogger.e(TAG, e.getMessage());
         }
 
-        dashboardResModel = prefModel.getDashboardResModel();
+     dashboardResModel = prefModel.getDashboardResModel();
         checkScreenPreferences();
-        AppLogger.e("chhonker main quiz Fragment -- grade change--", "" + prefModel.isDashboardaApiNeedToCall());
+      //  AppLogger.e("chhonker main quiz Fragment -- grade change--", "" + prefModel.isDashboardaApiNeedToCall());
         if (dashboardResModel != null && !prefModel.isDashboardaApiNeedToCall()) {
             onApiSuccess();
         } else {
-            AppLogger.e("chhonker --", "Api calling callDasboardApi");
+
             callDasboardApi();
         }
         AppStringDynamic.setMainQuizHometrings(binding);
@@ -252,7 +272,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
 
     @Override
     protected void setListener() {
-        DashBoardMainActivity.setListingActiveFragment(DashBoardMainActivity.QUIZ_DASHBOARD_FRAGMENT);
+        ((DashBoardMainActivity) getActivity()).setListingActiveFragment(DashBoardMainActivity.QUIZ_DASHBOARD_FRAGMENT);
         binding.languageLayout.setOnClickListener(this);
         binding.walleticon.setOnClickListener(this);
         binding.cardView2.setOnClickListener(this);
@@ -264,7 +284,6 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
             @Override
             public void onClick(View v) {
                 openFadeOutSelectionLayout();
-
             }
         });
         binding.quizSelectionSheet.cardviewParent.setOnClickListener(new View.OnClickListener() {
@@ -853,8 +872,6 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
 
 
     void callDasboardApi() {
-        AppLogger.e("onRefresh-", "Step 02");
-        AppLogger.e("callDasboardApi-", "Step 1");
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         if (prefModel.isDashboardaApiNeedToCall()) {
             handleProgress(0, "");
@@ -865,7 +882,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
             AppLogger.v("DeviceToken_1", deviceToken);
         }
         AppLogger.v("DeviceToken_2", deviceToken);
-       // quizViewModel.getDashBoardData(AuroApp.getAuroScholarModel());
+        quizViewModel.getDashBoardData(AuroApp.getAuroScholarModel());
     }
 
     @Override
@@ -936,7 +953,6 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
        /* QuizTestFragment quizTestFragment = new QuizTestFragment();
         openFragment(quizTestFragment);*/
     }
-
     private void openFragment(Fragment fragment) {
         ((AppCompatActivity) (this.getContext())).getSupportFragmentManager()
                 .beginTransaction()

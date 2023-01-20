@@ -7,7 +7,7 @@ import android.os.Parcelable;
 import com.auro.application.core.common.SdkCallBack;
 
 public class AuroScholarInputModel implements Parcelable {
-
+    String userid;
     String mobileNumber;
     Activity activity;
     String studentClass;
@@ -25,6 +25,7 @@ public class AuroScholarInputModel implements Parcelable {
     String gender="";
     int fragmentContainerUiId;
     String setDeviceToken;
+    String partner_unique_id;
     SdkCallBack sdkcallback;
     public SdkCallBack getSdkcallback() {
         return sdkcallback;
@@ -34,9 +35,9 @@ public class AuroScholarInputModel implements Parcelable {
         this.sdkcallback = sdkcallback;
     }
 
-
-
     protected AuroScholarInputModel(Parcel in) {
+        userid = in.readString();
+        partner_unique_id = in.readString();
         mobileNumber = in.readString();
         setDeviceToken = in.readString();
         studentClass = in.readString();
@@ -58,6 +59,8 @@ public class AuroScholarInputModel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(partner_unique_id);
+        dest.writeString(userid);
         dest.writeString(setDeviceToken);
         dest.writeString(mobileNumber);
         dest.writeString(studentClass);
@@ -93,6 +96,22 @@ public class AuroScholarInputModel implements Parcelable {
             return new AuroScholarInputModel[size];
         }
     };
+
+    public String getPartner_unique_id() {
+        return partner_unique_id;
+    }
+
+    public void setPartner_unique_id(String partner_unique_id) {
+        this.partner_unique_id = partner_unique_id;
+    }
+
+    public String getUserid() {
+        return userid;
+    }
+
+    public void setUserid(String userid) {
+        this.userid = userid;
+    }
 
     public String getPartnerName() {
         return partnerName;

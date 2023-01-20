@@ -17,6 +17,8 @@ import com.auro.application.home.data.model.response.LanguageListResModel;
 import com.auro.application.home.data.model.response.UserDetailResModel;
 import com.auro.application.teacher.data.model.response.MyProfileResModel;
 import com.auro.application.util.ConversionUtil;
+import com.auroscholar.final_auroscholarapp_sdk.SDKChildModel;
+import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -77,6 +79,7 @@ public class PrefModel implements Serializable {
     private MyProfileResModel teacherProfileResModel;
     private GetAllChildDetailResModel childDetailResModel;
     private UserDetailResModel userDetailResModel;
+
 
     public UserDetailResModel getUserDetailResModel() {
         return userDetailResModel;
@@ -150,6 +153,25 @@ public class PrefModel implements Serializable {
     UserDetailResModel studentData;
 
     UserDetailResModel parentData;
+
+    SDKDataModel childData;
+    SDKChildModel childrenData;
+
+    public SDKChildModel getChildrenData() {
+        return childrenData;
+    }
+
+    public void setChildrenData(SDKChildModel childrenData) {
+        this.childrenData = childrenData;
+    }
+
+    public SDKDataModel getChildData() {
+        return childData;
+    }
+
+    public void setChildData(SDKDataModel childData) {
+        this.childData = childData;
+    }
 
     public UserDetailResModel getStudentData() {
         return studentData;

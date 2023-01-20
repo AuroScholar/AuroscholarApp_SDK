@@ -40,6 +40,8 @@ import androidx.lifecycle.ViewModelProviders;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseActivity;
+import com.auro.application.core.application.di.component.DaggerAppComponent;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -117,6 +119,7 @@ import com.auro.application.util.alert_dialog.disclaimer.LoginDisclaimerDialog;
 import com.auro.application.util.alert_dialog.disclaimer.NoticeDialogBox;
 import com.auro.application.util.authenticate.GoogleSignInHelper;
 import com.auro.application.util.firebaseAnalytics.AnalyticsRegistry;
+import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -168,7 +171,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class DashBoardMainActivity extends BaseActivity implements GradeChangeFragment.OnClickButton, BottomNavigationView.OnNavigationItemSelectedListener,CommonCallBackListner {
-
     @Inject
     @Named("DashBoardMainActivity")
     ViewModelFactory viewModelFactory;
@@ -192,8 +194,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     UpdateCustomDialog updateCustomDialog;
     public AlertDialog dialogQuit;
     String typeGradeChange;
-
-
     private static int LISTING_ACTIVE_FRAGMENT = 0;
     public static final int QUIZ_DASHBOARD_FRAGMENT = 1;
     public static final int QUIZ_KYC_FRAGMENT = 2;
@@ -212,17 +212,17 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     public static final int PARTNERS_FRAGMENT = 15;
     public static final int GRADE_CHANGE_FRAGMENT = 16;
     public static final int SEND_MONEY_FRAGMENT = 17;
-    public static final int PARTNERS_FRAGMENT_FRAGMENT = 18;
     public static final int NATIVE_QUIZ_FRAGMENT = 19;
     public static final int DEMOGRAPHIC_FRAGMENT = 20;
-    public static final int STUDENT_UPLOAD_DOCUMENT_FRAGMENT = 21;
-    AuroScholarDataModel auroScholarDataModel;
     DashboardResModel dashboardResModel;
     AuroScholarInputModel inputModel;
+    AuroScholarDataModel auroScholarDataModel;
     CommonCallBackListner commonCallBackListner;
     CommonCallBackListner clickLisner;
     String deviceToken = "";
     public boolean isBackNormal = true;
+    SDKDataModel checkUserResModel;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -237,13 +237,11 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 //            prefModel.setDeviceToken(deviceToken);
 //         getPreferences(Context.MODE_PRIVATE).edit().putString("fb_device_token", deviceToken).apply();
 //        });
-
-
-       // getInstabug();
+        // getInstabug();
        // getBranch();
       //  PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();  // for sdk
-        String mobilenumber = "9289180019";
-
+        checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
+        String mobilenumber = checkUserResModel.getUser_details().get(0).getMobile_no();
         SharedPreferences.Editor editor = getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
         editor.putString("statusparentprofile", "false");
         editor.putString("statusfillstudentprofile", "false");
@@ -252,7 +250,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         editor.putString("statuschoosedashboardscreen", "true");
         editor.putString("statusentermobilenumber",mobilenumber);
         editor.putString("statusopenprofilewithoutpin", "false");
-
         editor.apply();
         init();
         setListener();
@@ -263,40 +260,31 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     public void callFetchUserPreference() {
         SharedPreferences prefs = getSharedPreferences("My_Pref", MODE_PRIVATE);
-        String gradeforsubjectpreference = "12";
+        checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
+        int gradeid = Integer.parseInt(checkUserResModel.getUser_details().get(0).getGrade());
+        String gradeforsubjectpreference = String.valueOf(gradeid);
         AppLogger.e("DashbaordMain", "oncreate step 2");
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        AppLogger.e("DashbaordMain", "" + prefModel.getStudentClass());
-        if (12  > 10 || gradeforsubjectpreference.equals("11")||gradeforsubjectpreference.equals("12")||gradeforsubjectpreference.equals(11)||gradeforsubjectpreference.equals(12)) {
+        if (gradeforsubjectpreference.equals("11")||gradeforsubjectpreference.equals("12")||gradeforsubjectpreference.equals(11)||gradeforsubjectpreference.equals(12)) {
             FetchStudentPrefReqModel fetchStudentPrefReqModel = new FetchStudentPrefReqModel();
-
-            fetchStudentPrefReqModel.setUserId("971738");
-                //  viewModel.checkInternet(Status.FETCH_STUDENT_PREFERENCES_API, fetchStudentPrefReqModel);
+            fetchStudentPrefReqModel.setUserId(checkUserResModel.getUser_details().get(0).getUser_id());
+                 viewModel.checkInternet(Status.FETCH_STUDENT_PREFERENCES_API, fetchStudentPrefReqModel);
         }
     }
 
     @Override
     protected void init() {
 
-
         binding = DataBindingUtil.setContentView(this, getLayout());
        // ((AuroApp) this.getApplication()).getAppComponent().doInjection(this);
-        //view model and handler setup
-       // viewModel = ViewModelProviders.of(this, viewModelFactory).get(AuroScholarDashBoardViewModel.class);
+        DaggerWrapper.getComponent(this).doInjection(this);
+        viewModel = ViewModelProviders.of(this, viewModelFactory).get(AuroScholarDashBoardViewModel.class);
         binding.setLifecycleOwner(this);
         mContext = DashBoardMainActivity.this;
-        if (getIntent() != null && getIntent().getParcelableExtra(AppConstant.AURO_DATA_MODEL) != null) {
-            auroScholarDataModel = (AuroScholarDataModel) getIntent().getParcelableExtra(AppConstant.AURO_DATA_MODEL);
-        }
-
         setProgressVal();
-        if (getIntent().hasExtra(FbGoogleUserModel.class.getSimpleName())) {
-          /*  trueProfile = getIntent().getParcelableExtra("profile");
-            userType = getIntent().getStringExtra("userType");*/
-        }
         funnelStudentDashBoard();
-        prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
         setListener();
+        callDashboardApi();
        // checkRefferedData();
 
         if (viewModel != null && viewModel.serviceLiveData().hasObservers()) {
@@ -304,15 +292,12 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         }
         else {
             SharedPreferences prefs = getSharedPreferences("My_Pref", MODE_PRIVATE);
-            String gradeforsubjectpreference = "12";
+            String gradeforsubjectpreference = checkUserResModel.getUser_details().get(0).getGrade();
 
                                  if (gradeforsubjectpreference.equals("11")||gradeforsubjectpreference.equals("12")||gradeforsubjectpreference.equals(11)||gradeforsubjectpreference.equals(12)){
                         SharedPreferences.Editor editor1 = getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
                         editor1.putString("gradeforsubjectpreferencewithoutpin", "false");
                         editor1.apply();
-                  //      openSubjectPreferenceScreen();
-
-                                    // Toast.makeText(this, "profilegrade", Toast.LENGTH_SHORT).show();
                                      SharedPreferences preferences = getSharedPreferences("My_Pref", Context.MODE_PRIVATE);
                                      SharedPreferences.Editor editor = preferences.edit();
                         editor.remove("gradeforsubjectpreference");
@@ -325,33 +310,26 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
         }
         binding.naviagtionContent.bottomNavigation.setVisibility(View.GONE);
-        //hideBottomNavigationView();
         setupNavigation();
-
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         prefModel.setLogin(true);
         AuroAppPref.INSTANCE.setPref(prefModel);
-       // callGetInstructionsApi(AppConstant.InstructionsType.AFTER_LOGIN);
-        getRefferalPopUp();
+        callGetInstructionsApi(AppConstant.InstructionsType.AFTER_LOGIN);
+       // getRefferalPopUp();
         checkForGradeScreen();
-
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        openFragment(new MainQuizHomeFragment());
+
     }
 
     private void checkForGradeScreen() {
-
-            setHomeFragmentTab();
-
-
+        setHomeFragmentTab();
     }
 
 
 
     @Override
     protected void setListener() {
-
         clickLisner = this;
         binding.naviagtionContent.bottomNavigation.setOnNavigationItemSelectedListener(this);
         binding.naviagtionContent.bottomSecondnavigation.setOnNavigationItemSelectedListener(this);
@@ -365,38 +343,22 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     }
 
     public void auroStudentscholarSdk(int status) {
-        prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
         inputModel = new AuroScholarInputModel();
-
-//        if (!prefModel.getCheckUserResModel().getUserDetails().get(0).getUserMobile().isEmpty()||!prefModel.getCheckUserResModel().getUserDetails().get(0).getUserMobile().equals("")){
-//            inputModel.setMobileNumber(prefModel.getCheckUserResModel().getUserDetails().get(0).getUserMobile());
-//        }
-//        else{
-
-            inputModel.setMobileNumber("9289180019");
-     //   }
-
+        inputModel.setMobileNumber(checkUserResModel.getUser_details().get(0).getMobile_no());
         String newdeviceToken = deviceToken;
         if (!TextUtil.isEmpty(newdeviceToken)) {
             inputModel.setDeviceToken(newdeviceToken);
             AppLogger.v("sdkDeviceToken", newdeviceToken);
         }
-
         //Mandatory
-        inputModel.setStudentClass(String.valueOf("12"));
-
-//        if (prefModel.getDynamiclinkResModel() != null && !TextUtil.isEmpty(prefModel.getDynamiclinkResModel().getSource())) {
-//            inputModel.setRegitrationSource(prefModel.getDynamiclinkResModel().getSource());
-//        } else {
-            inputModel.setRegitrationSource("AuroScholr");
-       // }
-
+        inputModel.setStudentClass(String.valueOf(checkUserResModel.getUser_details().get(0).getGrade()));
+        inputModel.setRegitrationSource("AuroScholr");
         inputModel.setActivity(this); //Mandatory
         inputModel.setFragmentContainerUiId(R.id.home_container);
         //Mandatory
         inputModel.setReferralLink("");
         inputModel.setPartnerSource(AppConstant.AURO_ID); //this id is provided by auroscholar for valid partner
-        //  inputModel.setPartnerSource("IDREMDvF4g");  //Demo
         inputModel.setSdkcallback(new SdkCallBack() {
             @Override
             public void callBack(String message) {
@@ -407,7 +369,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             public void logOut() {
                 AppLogger.e("Chhonker", "Logout");
                 int userType = prefModel.getUserType();
-                //   mgoogleSignInHelper.signOut();
                 SharedPreferences preferences =getSharedPreferences("My_Pref",Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.clear();
@@ -427,7 +388,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                 Intent intent = new Intent(DashBoardMainActivity.this, LoginActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                 startActivity(intent);
-               // finishAffinity();
             }
 
             @Override
@@ -440,7 +400,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             }
         });
         setRequiredData();
-        /*Update Dynamic  to empty*/
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         if (status == 0) {
             AppLogger.e("notification ", "step 9 ");
@@ -490,7 +449,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                     AppLogger.e("notification ", "step 13 ");
 
                 }
-
             } else if (notificationDataModel.getNavigateto().equalsIgnoreCase(AppConstant.NavigateToScreen.STUDENT_CERTIFICATE)) {
                 openCertificate();
             } else if (notificationDataModel.getNavigateto().equalsIgnoreCase(AppConstant.NavigateToScreen.PAYMENT_TRANSFER)) {
@@ -505,8 +463,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                 } else {
                    // openFragment(AuroScholar.startAuroSDK(inputModel));
                 }
-
-
             } else if (notificationDataModel.getNavigateto().equalsIgnoreCase(AppConstant.NavigateToScreen.FRIENDS_LEADERBOARD)) {
                 openLeaderBoardFragment(new FriendsLeaderBoardListFragment());
 
@@ -533,13 +489,11 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     public void callDashboardApi() {
         viewModel.checkInternet(DASHBOARD_API, inputModel);
-        AppLogger.v("QuizNew", "Dashboard step 2");
     }
 
     public void openFragment(Fragment fragment) {
         FragmentUtil.replaceFragment(mContext, fragment, R.id.home_container, false, AppConstant.NEITHER_LEFT_NOR_RIGHT);
     }
-
     public void openLeaderBoardFragment(Fragment fragment) {
         ((AppCompatActivity) (this)).getSupportFragmentManager()
                 .beginTransaction()
@@ -560,7 +514,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             case REQ_CODE_VERSION_UPDATE:
                 if (resultCode != RESULT_OK) { //RESULT_OK / RESULT_CANCELED / RESULT_IN_APP_UPDATE_FAILED
                     AppLogger.e(TAG, "REQ_CODE_VERSION_UPDATE method calling 1 ");                    // If the update is cancelled or fails,
-                    // you can request to start the update again.
                     unregisterInstallStateUpdListener();
                 }
 
@@ -821,14 +774,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         NotificationDataModel notificationDataModel = prefModel.getNotificationDataModel();
         AppLogger.e("notification ", "step 1");
         openFragment(new MainQuizHomeFragment());
-//        if (notificationDataModel != null && !TextUtil.isEmpty(notificationDataModel.getNavigateto())) {
-//            openFragmentOnNotificationstatus(notificationDataModel);
-//            AppLogger.e("notification ", "step 2");
-//
-//        } else {
-//            auroStudentscholarSdk(0);
-//            AppLogger.e("notification ", "step 3");
-//        }
         selectNavigationMenu(0);
 
     }
@@ -882,63 +827,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     }
 
-    private synchronized void backStack() {
-
-        switch (LISTING_ACTIVE_FRAGMENT) {
-            case QUIZ_DASHBOARD_FRAGMENT:
-                if (commonCallBackListner != null) {
-                    commonCallBackListner.commonEventListner(AppUtil.getCommonClickModel(0, Status.BACK_CLICK, ""));
-                }
-                AppLogger.e(TAG, "commonEventListner BACK_CLICK");
-
-                break;
-
-            case QUIZ_TEST_FRAGMENT:
-                alertDialogForQuitQuiz();
-                break;
-
-
-            case CERTIFICATE_DIRECT_FRAGMENT:
-                openFragment(AuroScholar.startAuroSDK(inputModel));
-                break;
-            case PAYMENT_DIRECT_FRAGMENT:
-                openFragment(AuroScholar.startAuroSDK(inputModel));
-                break;
-
-            case PAYMENT_FRAGMENT:
-                openFragment(AuroScholar.startAuroSDK(inputModel));
-                break;
-            case DEMOGRAPHIC_FRAGMENT:
-            case STUDENT_PROFILE_FRAGMENT:
-            case TRANSACTION_FRAGMENT:
-            case PARTNERS_FRAGMENT:
-            case KYC_DIRECT_FRAGMENT:
-            case QUIZ_KYC_FRAGMENT:
-            case QUIZ_KYC_VIEW_FRAGMENT:
-            case PRIVACY_POLICY_FRAGMENT:
-            case LEADERBOARD_FRAGMENT:
-                selectNavigationMenu(0);
-                auroStudentscholarSdk(0);
-                closeItemMore();
-                break;
-
-
-            case SEND_MONEY_FRAGMENT:
-                popBackStack();
-                break;
-
-            case NATIVE_QUIZ_FRAGMENT:
-                openDialogForQuit();
-                break;
-
-            default:
-                popBackStack();
-                break;
-        }
-
-
-    }
-
     public void popBackStack() {
         backPress = 0;
         getSupportFragmentManager().popBackStack();
@@ -972,21 +860,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         dialog.show();
     }
 
-
-    private void checkRefferedData() {
-        AppLogger.e("SEND_REFERRAL_API", "dynamiclink step 1");
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        DynamiclinkResModel dynamiclinkResModel = prefModel.getDynamiclinkResModel();
-      //  if (prefModel != null && prefModel.getStudentData() != null) {
-            RefferalReqModel reqModel = new RefferalReqModel();
-            reqModel.setReferredUserId("971738");
-            reqModel.setReferredUserMobile("9289180019");
-            viewModel.checkInternet(Status.SEND_REFERRAL_API, reqModel);
-          //  AppLogger.e(TAG, dynamiclinkResModel.getRefferMobileno());
-//        } else {
-//            AppLogger.e(TAG, "No Link Available");
-//        }
-    }
 
     private void observeServiceResponse() {
         AppLogger.v("observeServiceResponse", " response Step 1");
@@ -1055,30 +928,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
 
                     }
-                    else if (responseApi.apiTypeStatus == SEND_REFERRAL_API) {
-                        DynamiclinkResModel dynamiclinkResModel = (DynamiclinkResModel) responseApi.data;
-                        AppLogger.v("SEND_REFERRAL_API", " response Step 1");
-                        if (!dynamiclinkResModel.getError()) {
-                            AppLogger.v("SEND_REFERRAL_API", "response Step 2");
-                            AppUtil.setEmptyToDynamicResponseModel();
-                        }
-                    }
-                    else if (responseApi.apiTypeStatus == Status.DYNAMIC_LINK_API) {
-                        AppLogger.v("observeServiceResponse", " response Step 2");
-                        DynamiclinkResModel dynamiclinkResModel = (DynamiclinkResModel) responseApi.data;
-                        AppLogger.v("observeServiceResponse", " response Step 3");
-                        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-                        prefModel.setDynamiclinkResModel(dynamiclinkResModel);
-                        AuroAppPref.INSTANCE.setPref(prefModel);
-                        AppLogger.v("observeServiceResponse", " response Step 4");
-                        if (dynamiclinkResModel.getError()) {
-                            AppLogger.v("observeServiceResponse", " response Step 5");
-                            sendRefferCallback(dynamiclinkResModel, 1);
-                        } else {
-                            AppLogger.v("observeServiceResponse", " response Step 6");
-                            sendRefferCallback(dynamiclinkResModel, 0);
-                        }
-                    }
+
                     else if (responseApi.apiTypeStatus == Status.GET_INSTRUCTIONS_API) {
                         InstructionsResModel instructionsResModel = (InstructionsResModel) responseApi.data;
                         AppLogger.v("Notice", "else part  GET_INSTRUCTIONS_API API RESPONSE First"+instructionsResModel.getError());
@@ -1211,7 +1061,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     public void callingCongratsDialog(){
         PendingKycDocsModel pendingKycDocsModel = new PendingKycDocsModel();
-        pendingKycDocsModel.setUserId("971738");
+        pendingKycDocsModel.setUserId("934705");
         pendingKycDocsModel.setUserPreferedLanguageId(1);
         viewModel.checkInternet(Status.GET_MESSAGE_POP_UP, pendingKycDocsModel);
 
@@ -1308,8 +1158,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     @Override
     public boolean dispatchTouchEvent(MotionEvent event) {
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            // View yourView = (View) findViewById(R.id.view_id);
-
             AppLogger.e("chhonker-", "Touch Event");
             if (AppUtil.commonCallBackListner != null) {
                 AppUtil.commonCallBackListner.commonEventListner(AppUtil.getCommonClickModel(0, Status.SCREEN_TOUCH, ""));
@@ -1391,12 +1239,9 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     }
 
     private void openSwipeRightSelectionLayout(View viewAnimation, View secondAnimation) {
-        //Animation on button
         viewAnimation.setVisibility(View.VISIBLE);
         Animation anim = AnimationUtils.loadAnimation(this, R.anim.frag_enter_right);
         viewAnimation.startAnimation(anim);
-
-        //Animation on button
 
         Animation secondanim = AnimationUtils.loadAnimation(this, R.anim.frag_exit_left);
         secondAnimation.startAnimation(secondanim);
@@ -1405,8 +1250,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     }
 
     private void openSwipeLeftSelectionLayout(View viewAnimation, View secondAnimation) {
-        //Animation on button
-
         secondAnimation.setVisibility(View.VISIBLE);
         Animation secondanim = AnimationUtils.loadAnimation(this, R.anim.frag_enter_left);
         secondAnimation.startAnimation(secondanim);
@@ -1434,7 +1277,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         } catch (Exception e) {
             AppLogger.e(TAG, e.getMessage());
         }
-        // Set the alert dialog yes button click listener
         builder.setPositiveButton(Html.fromHtml("<font color='#00A1DB'>" + yes + "</font>"), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -1443,17 +1285,14 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             }
         });
 
-        // Set the alert dialog no button click listener
         builder.setNegativeButton(Html.fromHtml("<font color='#00A1DB'>" + no + "</font>"), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                // Do something when No button clicked
                 dialog.dismiss();
             }
         });
 
         AlertDialog dialog = builder.create();
-        // Display the alert dialog on interface
         dialog.show();
     }
 
@@ -1462,25 +1301,13 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
 
         AppLogger.e("Chhonker", "Logout");
-       // AuroAppPref.INSTANCE.clearAuroAppPref();
         Intent intent = new Intent(DashBoardMainActivity.this, LoginActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         startActivity(intent);
 
     }
 
-    public void clearApplicationData() {
-        File cacheDirectory = getCacheDir();
-        File applicationDirectory = new File(cacheDirectory.getParent());
-        if (applicationDirectory.exists()) {
-            String[] fileNames = applicationDirectory.list();
-            for (String fileName : fileNames) {
-                if (!fileName.equals("lib")) {
-                    deleteFile(String.valueOf(new File(applicationDirectory, fileName)));
-                }
-            }
-        }
-    }
+
     private void openFriendLeaderBoardFragment() {
         FriendsLeaderBoardListFragment fragment = new FriendsLeaderBoardListFragment();
         openFragment(fragment);
@@ -1497,10 +1324,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     private void funnelStudentLogOut() {
         AnalyticsRegistry.INSTANCE.getModelInstance().trackStudentLogOut();
-    }
-
-    private void funnelStudentKYCscreen() {
-        AnalyticsRegistry.INSTANCE.getModelInstance().trackStudentKycScreen();
     }
 
     private void funnelStudentleaderBoardScreen() {
@@ -1523,10 +1346,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     }
 
     public void setProgressVal() {
-      //  AppLogger.e("Chhonker setProgressVal", "i am calling");
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         prefModel.setDashboardaApiNeedToCall(true);
-        //AppLogger.e("setStringPref-", "thrid time 3---");
         AuroAppPref.INSTANCE.setPref(prefModel);
 
     }
@@ -1565,7 +1386,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     private void checkOtpDialog() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-
         customOtpDialog = new CustomOtpDialog(this);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(customOtpDialog.getWindow().getAttributes());
@@ -1582,7 +1402,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     public void callOverOTPApi() {
         OtpOverCallReqModel reqModel=new OtpOverCallReqModel();
-        String phonenumber = auroScholarDataModel.getMobileNumber();
+        String phonenumber = checkUserResModel.getUser_details().get(0).getMobile_no();
         reqModel.setIsType(0);
         reqModel.setMobileNo(phonenumber);
 
@@ -1593,7 +1413,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             }
         }, 10000);
         binding.naviagtionContent.progressbar.pgbar.setVisibility(View.VISIBLE);
-       // binding.progressbar.pgbar.setVisibility(View.VISIBLE);
         viewModel.checkInternet(Status.OTP_OVER_CALL,reqModel);
     }
 
@@ -1608,7 +1427,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         }, 10000);
         binding.naviagtionContent.progressbar.pgbar.setVisibility(View.VISIBLE);
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String phonenumber = auroScholarDataModel.getMobileNumber();
+        String phonenumber = checkUserResModel.getUser_details().get(0).getMobile_no();
         SendOtpReqModel mreqmodel = new SendOtpReqModel();
         mreqmodel.setMobileNo(phonenumber);
         viewModel.checkInternet(SEND_OTP, mreqmodel);
@@ -1629,7 +1448,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                 mverifyOtpRequestModel.setUserType(0);
                 mverifyOtpRequestModel.setResgistrationSource("AuroScholr");
             }
-            String phonenumber = auroScholarDataModel.getMobileNumber();
+            String phonenumber = checkUserResModel.getUser_details().get(0).getMobile_no();
             mverifyOtpRequestModel.setDeviceToken(deviceToken);
             mverifyOtpRequestModel.setMobileNumber(phonenumber);
             mverifyOtpRequestModel.setOtpVerify(otptext);
@@ -1640,8 +1459,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     }
 
     public void setupNavigation() {
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        int studentClass = 12;
+        int studentClass = Integer.parseInt(checkUserResModel.getUser_details().get(0).getGrade());
         if (studentClass < 10) {
             Menu menuDashboard = binding.naviagtionContent.bottomNavigation.getMenu();
             menuDashboard.findItem(R.id.item_partner).setTitle(R.string.certificatesmenuauro);
@@ -1670,14 +1488,12 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     private void handlePartnertabClick() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        int studentClass = auroScholarDataModel.getStudentClass();
+        int studentClass = 11;
         if (studentClass < 10) {
             openCertificate();
         } else {
             openPartnersFragment();
         }
-
-        // openCertificate();
     }
 
 
@@ -1694,7 +1510,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     public void openDialogForQuit() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(prefModel.getLanguageMasterDynamic().getDetails().getPlease_confirm_if_you_want());
-        // Set the alert dialog yes button click listener
         String yes = prefModel.getLanguageMasterDynamic().getDetails().getYes();//this.getResources().getString(R.string.yes);
         String no = prefModel.getLanguageMasterDynamic().getDetails().getNo();//this.getResources().getString(R.string.no);
 
@@ -1706,7 +1521,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                 }
             }
         });
-        // Set the alert dialog no button click listener
         builder.setNegativeButton(Html.fromHtml("<font color='#00A1DB'>" + no + "</font>"), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogQuit, int which) {
@@ -1718,31 +1532,15 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
         dialogQuit = builder.create();
         dialogQuit.show();
-        // Display the alert dialog on interface
     }
 
-
-
-
-    public void sendRefferCallback(DynamiclinkResModel dynamiclinkResModel, int status) {
-        AppLogger.v("observeServiceResponse", " response Step 8");
-        if (commonCallBackListner != null) {
-            if (status == 1) {
-                AppLogger.v("observeServiceResponse", " response 9 ");
-                commonCallBackListner.commonEventListner(AppUtil.getCommonClickModel(status, Status.REFFER_API_SUCCESS, dynamiclinkResModel));
-            } else {
-                AppLogger.v("observeServiceResponse", " response Step 10");
-                commonCallBackListner.commonEventListner(AppUtil.getCommonClickModel(status, Status.REFFER_API_ERROR, dynamiclinkResModel));
-            }
-        }
-    }
 
     public void callGetInstructionsApi(String type) {
         typeGradeChange = type;
-      String userlangid = "1";
+      String userlangid = checkUserResModel.getUser_details().get(0).getUser_prefered_language_id();
       int langid = Integer.parseInt(userlangid);
         InstructionModel instructionModel = new InstructionModel();
-        instructionModel.setLanguageId(1);
+        instructionModel.setLanguageId(langid);
         instructionModel.setInstructionCode(type);
         viewModel.checkInternet(Status.GET_INSTRUCTIONS_API, instructionModel);
         AppLogger.v("Notice","callGetInstructionsApi " );
@@ -1766,250 +1564,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
         }
     }
-
-    public void callSlabsApi() {
-        UserSlabsRequest userSlabsRequest = new UserSlabsRequest();
-        userSlabsRequest.setUserId("971738");
-        userSlabsRequest.setUserPreferedLanguageId(1);
-        userSlabsRequest.setExamMonth(DateUtil.getcurrentMonthYear());
-        viewModel.checkInternet(Status.GET_SLABS_API, userSlabsRequest);
-    }
-
-
-    private void getRefferalPopUp()
-    {
-        String userid = "971738";
-
-        HashMap<String,String> map_data = new HashMap<>();
-        map_data.put("user_id",userid);
-
-        RemoteApi.Companion.invoke().getPendingRefferal(map_data)
-                .enqueue(new Callback<ReferralPopUpDataModel>()
-                {
-                    @Override
-                    public void onResponse(Call<ReferralPopUpDataModel> call, Response<ReferralPopUpDataModel> response)
-                    {
-                        if (response.isSuccessful())
-                        {
-                            if (response.body().getShow_refferal_popup().equals(true)||response.body().getShow_refferal_popup().equals("true")||response.body().getShow_refferal_popup()=="true"){
-                                for ( int i=0 ;i < response.body().getData().size();i++)
-                                {
-                                    String mobileno = response.body().getData().get(i).getMobile_no();
-                                    String requserid = String.valueOf(response.body().getData().get(i).getUser_id());
-                                    String studentname = response.body().getData().get(i).getStudent_name();
-                                    String profilepic = response.body().getData().get(i).getProfile_pic();
-
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(DashBoardMainActivity.this);
-                                    final View customLayout
-                                            = getLayoutInflater()
-                                            .inflate(
-                                                    R.layout.referal_pop_up_dashboard,
-                                                    null);
-                                    builder.setView(customLayout);
-                                    builder.setCancelable(false);
-                                    ImageView profileimage = customLayout.findViewById(R.id.profileimage);
-                                    TextView txtname = customLayout.findViewById(R.id.txtname);
-                                    TextView txtuserid = customLayout.findViewById(R.id.txtuserid);
-                                    Button buttonOk = customLayout.findViewById(R.id.buttonOk);
-                                    Button buttonrej = customLayout.findViewById(R.id.buttonrej);
-                                    if (profilepic.equals("")||profilepic.isEmpty()||profilepic.equals(null)||profilepic.equals("null")){
-                                        Glide.with(getApplicationContext())
-                                                .load(getApplicationContext().getResources().getIdentifier("my_drawable_image_name", "drawable",mContext.getPackageName()))
-                                                .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))
-                                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                                                .placeholder(R.drawable.account_circle)
-                                                .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL))
-                                                .into(profileimage);
-                                    }
-
-
-                                    else{
-                                        Glide.with(getApplicationContext()).load(profilepic)
-                                                  .apply(RequestOptions.bitmapTransform(new RoundedCorners(20)).circleCrop()).into(profileimage);
-                                    }
-
-                                    txtname.setText(studentname);
-                                    txtuserid.setText("User ID : " + requserid);
-                                    buttonOk.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            String accept = "Accepted";
-                                            String userid = AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId();
-                                            postReferalData(requserid,userid,accept);
-
-                                        }
-                                    });
-                                    buttonrej.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            String accept = "Rejected";
-                                            String userid = AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId();
-                                            postReferalData(requserid,userid,accept);
-                                        }
-                                    });
-
-                                     alertDialog = builder.create();
-                                    alertDialog.show();
-
-                                    // Display the alert dialog on interface
-                                }
-                                }
-                            }
-
-                        else
-                        {
-                            Log.d(TAG, "onResponser: "+response.message().toString());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<com.auro.application.home.data.model.ReferralPopUpDataModel> call, Throwable t)
-                    {
-                        Log.d(TAG, "onFailure: "+t.getMessage());
-                    }
-                });
-    }
-
-    private void postReferalData(String reqid, String userid, String status)
-    {
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String languageid = "1";
-        HashMap<String,String> map_data = new HashMap<>();
-        map_data.put("requested_by_id",reqid);
-        map_data.put("requested_user_id",userid);
-        map_data.put("request_status",status);
-        map_data.put("user_prefered_language_id",languageid);
-        RemoteApi.Companion.invoke().postrefer(map_data)
-                .enqueue(new Callback<GetAllChildModel>()
-                {
-                    @Override
-                    public void onResponse(Call<GetAllChildModel> call, Response<GetAllChildModel> response)
-                    {
-                        if (response.isSuccessful())
-                        {
-                            Toast.makeText(DashBoardMainActivity.this, "Updated Succesfully", Toast.LENGTH_SHORT).show();
-                            alertDialog.dismiss();
-                        }
-                        else
-                        {
-                            Toast.makeText(getApplicationContext(), response.message(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<GetAllChildModel> call, Throwable t)
-                    {
-                        Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private void getInstabug()
-    {
-        String suserid = "971738";
-        HashMap<String,String> map_data = new HashMap<>();
-        map_data.put("user_id",suserid);
-        map_data.put("modules","details,wallet,quizes");
-
-        RemoteApi.Companion.invoke().getStatusForInsta(map_data)
-                .enqueue(new Callback<DashboardResponselDataModel>()
-                {
-                    @Override
-                    public void onResponse(Call<DashboardResponselDataModel> call, Response<DashboardResponselDataModel> response)
-                    {
-                        if (response.isSuccessful())
-                        {
-
-                          String instabug = response.body().getInsta_bug();
-                          if (instabug.equals(true)||instabug.equals("true")){
-                              new Instabug.Builder(getApplication(),"ed30d18815acf92a8e7a3391ddf2ac1c").
-                                      setInvocationEvents(InstabugInvocationEvent.NONE).
-                                      build();
-                              Instabug.setReproStepsState(State.ENABLED);
-                              BugReporting.setShakingThreshold(800);
-                              Instabug.setSessionProfilerState(Feature.State.ENABLED);
-                              CrashReporting.setState(Feature.State.ENABLED);
-                              CrashReporting.setAnrState(Feature.State.ENABLED);
-                              CrashReporting.reportException(new NullPointerException("Test issue"));
-                              CrashReporting.reportException(new NullPointerException("Test issue"), "Exception identifier");
-                              CrashReporting.setNDKCrashesState(Feature.State.ENABLED);
-                              APM.setColdAppLaunchEnabled(true);
-                              APM.setHotAppLaunchEnabled(true);
-                              APM.endAppLaunch();
-                              Instabug.setTrackingUserStepsState(Feature.State.ENABLED);
-                              Instabug.setWelcomeMessageState(WelcomeMessage.State.LIVE);
-                              Instabug.showWelcomeMessage(WelcomeMessage.State.LIVE);
-                          }
-
-                        }
-                        else
-                        {
-
-                            Log.d(TAG, "onResponser: "+response.message().toString());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<DashboardResponselDataModel> call, Throwable t)
-                    {
-                        Log.d(TAG, "onFailure: "+t.getMessage());
-                    }
-                });
-    }
-    private void getBranch()
-    {
-        String suserid = "971738";
-        HashMap<String,String> map_data = new HashMap<>();
-        map_data.put("user_id",suserid);
-        map_data.put("modules","details,wallet,quizes");
-
-
-
-        RemoteApi.Companion.invoke().getStatusForInsta(map_data)
-                .enqueue(new Callback<DashboardResponselDataModel>()
-                {
-                    @Override
-                    public void onResponse(Call<DashboardResponselDataModel> call, Response<DashboardResponselDataModel> response)
-                    {
-                        if (response.isSuccessful())
-                        {
-
-//                            String branch = response.body().getBranch();
-//                            if (branch.equals(true)||branch.equals("true")){
-//                                new Instabug.Builder(getApplication(),"ed30d18815acf92a8e7a3391ddf2ac1c").
-//                                        setInvocationEvents(InstabugInvocationEvent.NONE).
-//                                        build();
-//                                Instabug.setReproStepsState(State.ENABLED);
-//                                BugReporting.setShakingThreshold(800);
-//                                Instabug.setSessionProfilerState(Feature.State.ENABLED);
-//                                CrashReporting.setState(Feature.State.ENABLED);
-//                                CrashReporting.setAnrState(Feature.State.ENABLED);
-//                                CrashReporting.reportException(new NullPointerException("Test issue"));
-//                                CrashReporting.reportException(new NullPointerException("Test issue"), "Exception identifier");
-//                                CrashReporting.setNDKCrashesState(Feature.State.ENABLED);
-//                                APM.setColdAppLaunchEnabled(true);
-//                                APM.setHotAppLaunchEnabled(true);
-//                                APM.endAppLaunch();
-//                                Instabug.setTrackingUserStepsState(Feature.State.ENABLED);
-//                                Instabug.setWelcomeMessageState(WelcomeMessage.State.LIVE);
-//                                Instabug.showWelcomeMessage(WelcomeMessage.State.LIVE);
-                            }
-
-                        else
-                        {
-
-                            Log.d(TAG, "onResponser: "+response.message().toString());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<DashboardResponselDataModel> call, Throwable t)
-                    {
-                        Log.d(TAG, "onFailure: "+t.getMessage());
-                    }
-                });
-    }
-
 
     @Override
     public void onBackPressed() {

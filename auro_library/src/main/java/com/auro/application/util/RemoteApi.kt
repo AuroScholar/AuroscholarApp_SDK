@@ -9,6 +9,7 @@ import com.auro.application.home.data.model.passportmodels.PassportMonthModel
 import com.auro.application.home.data.model.passportmodels.PassportQuizMonthModel
 import com.auro.application.home.data.model.response.ChildDetailResModel
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile
+import com.auro.application.home.data.model.response.StudentKycStatusResModel
 import com.auro.application.home.data.model.signupmodel.request.SetUsernamePinReqModel
 import com.auro.application.home.data.model.signupmodel.response.RegisterApiResModel
 import com.auro.application.home.data.model.signupmodel.response.SetUsernamePinResModel
@@ -111,6 +112,9 @@ interface RemoteApi
 
     @POST("set_username_pin")
     public fun setUsernamePin(@Body params:HashMap<String,String>):Call<SetUsernamePinResModel>
+
+    @POST("get_kyc_details")
+    public fun getKYCStatus(@Body params:HashMap<String,String>):Call<StudentKycStatusResModel>
 
   @Multipart
   @POST("update_user_details")

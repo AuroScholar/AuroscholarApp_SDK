@@ -34,6 +34,18 @@ public class VerifyOtpReqModel implements Parcelable {
     @Expose
     String srId;
 
+    public String getUser_prefered_language_id() {
+        return user_prefered_language_id;
+    }
+
+    public void setUser_prefered_language_id(String user_prefered_language_id) {
+        this.user_prefered_language_id = user_prefered_language_id;
+    }
+
+    @SerializedName("user_prefered_language_id")
+    @Expose
+    String user_prefered_language_id;
+
     public VerifyOtpReqModel() {
 
     }
@@ -46,6 +58,7 @@ public class VerifyOtpReqModel implements Parcelable {
         userType = in.readInt();
         deviceToken = in.readString();
         srId = in.readString();
+        user_prefered_language_id = in.readString();
     }
 
     @Override
@@ -56,6 +69,7 @@ public class VerifyOtpReqModel implements Parcelable {
         dest.writeInt(userType);
         dest.writeString(deviceToken);
         dest.writeString(srId);
+        dest.writeString(user_prefered_language_id);
     }
 
     @Override

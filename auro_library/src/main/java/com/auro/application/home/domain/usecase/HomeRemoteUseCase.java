@@ -78,6 +78,7 @@ import com.auro.application.teacher.data.model.response.MyClassRoomResModel;
 import com.auro.application.teacher.data.model.response.TeacherResModel;
 import com.auro.application.util.AppLogger;
 import com.auro.application.util.TextUtil;
+import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
@@ -476,6 +477,7 @@ public class HomeRemoteUseCase extends NetworkUseCase {
     public Single<ResponseApi> getDashboardData(AuroScholarDataModel model) {
         AppLogger.e("onRefresh-", "Step 04");
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        SDKDataModel prefModel2 = AuroAppPref.INSTANCE.getModelInstance().getChildData();
         if (prefModel.getDeviceToken() != null && !TextUtil.isEmpty(prefModel.getDeviceToken())) {
             model.setDevicetoken(prefModel.getDeviceToken());
         } else {
@@ -483,7 +485,7 @@ public class HomeRemoteUseCase extends NetworkUseCase {
 
         }
 
-        model.setUserId(prefModel.getStudentData().getUserId());
+        model.setUserId(prefModel2.getUser_details().get(0).getUser_id());
         return dashboardRemoteData.getDashboardData(model).map(new Function<Response<JsonObject>, ResponseApi>() {
             @Override
             public ResponseApi apply(Response<JsonObject> response) throws Exception {
