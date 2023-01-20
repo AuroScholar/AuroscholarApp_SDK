@@ -13,6 +13,7 @@ import com.auro.application.home.data.model.response.StudentKycStatusResModel
 import com.auro.application.home.data.model.signupmodel.request.SetUsernamePinReqModel
 import com.auro.application.home.data.model.signupmodel.response.RegisterApiResModel
 import com.auro.application.home.data.model.signupmodel.response.SetUsernamePinResModel
+import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import okhttp3.ResponseBody
@@ -87,6 +88,11 @@ interface RemoteApi
 
     @POST("set_user_pin")
     public fun setparentuserpin(@Body params:HashMap<String,String>):Call<SetUsernamePinResModel>
+
+
+    // For SDK
+    @POST("auto_login")
+    public fun getSDKData(@Body params:HashMap<String,String>): Call<SDKDataModel>
 
 
 

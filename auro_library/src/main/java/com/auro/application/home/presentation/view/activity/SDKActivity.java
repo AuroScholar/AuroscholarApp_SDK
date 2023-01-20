@@ -1,5 +1,4 @@
-package com.auroscholar.final_auroscholarapp_sdk;
-
+package com.auro.application.home.presentation.view.activity;
 
 import android.os.Bundle;
 import android.view.View;
@@ -9,12 +8,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.auro.application.R;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
 import com.auro.application.core.util.AuroScholar;
 import com.auro.application.home.data.model.AuroScholarInputModel;
-
 import com.auro.application.home.presentation.view.fragment.BottomSheetUsersDialog;
+import com.auro.application.util.RemoteApi;
+import com.auroscholar.final_auroscholarapp_sdk.SDKChildModel;
+import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,11 +26,10 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
-public class SDKActivity extends AppCompatActivity {
-TextView bt_sdk;
+public class SDKActivity  extends AppCompatActivity {
+    TextView bt_sdk;
     SDKDataModel checkUserResModel;
-EditText mobile_number,user_class,language;
+    EditText mobile_number,user_class,language;
 
     List<SDKChildModel> userDetails = new ArrayList<>();
     List<SDKChildModel> userDetailsNew = new ArrayList<>();
@@ -79,7 +80,7 @@ EditText mobile_number,user_class,language;
         map_data.put("partner_unique_id",partneruniqueid); //456456
         map_data.put("partner_source",partnersource);
 
-        SDKRemoteApi.Companion.invoke().getSDKData(map_data)
+        RemoteApi.Companion.invoke().getSDKData(map_data)
                 .enqueue(new Callback<SDKDataModel>() {
                     @Override
                     public void onResponse(Call<SDKDataModel> call, Response<SDKDataModel> response)
@@ -93,21 +94,21 @@ EditText mobile_number,user_class,language;
                                 userDetailsNew.clear();
                                 userDetails = response.body().getUser_details();
                                 checkUserResModel = (SDKDataModel) response.body();
-                               if (response.body().getUser_details().size() > 1){
+                                if (response.body().getUser_details().size() > 1){
 
                                     for (int i = 0; i<userDetails.size(); i++){
                                         userDetailsNew.add(userDetails.get(i));
 
                                     }
-                                   PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-                                   prefModel.setChildData(checkUserResModel);
-                                   AuroAppPref.INSTANCE.setPref(prefModel);
+                                    PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+                                    prefModel.setChildData(checkUserResModel);
+                                    AuroAppPref.INSTANCE.setPref(prefModel);
                                     openBottomSheetDialog();
                                 }
                                 else{
-                                   PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-                                   prefModel.setChildData(checkUserResModel);
-                                   AuroAppPref.INSTANCE.setPref(prefModel);
+                                    PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+                                    prefModel.setChildData(checkUserResModel);
+                                    AuroAppPref.INSTANCE.setPref(prefModel);
                                     String userid = response.body().getUser_details().get(0).getUser_id();
                                     openGenricSDK(userid,mobno);
                                 }

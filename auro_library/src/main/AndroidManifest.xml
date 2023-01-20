@@ -39,6 +39,10 @@
             android:name=".kyc.presentation.view.activity.KycActivity"
             android:exported="true" />
 
+        <activity
+            android:name=".home.presentation.view.activity.SDKActivity"
+            android:exported="true" />
+
 <!--        <receiver-->
 <!--            android:name=".util.network.NetworkChangeReceiver"-->
 <!--            android:exported="true"-->
