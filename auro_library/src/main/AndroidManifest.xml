@@ -43,6 +43,10 @@
             android:name=".home.presentation.view.activity.SDKActivity"
             android:exported="true" />
 
+        <activity
+            android:name=".ChatActivity"
+            android:exported="true" />
+
 <!--        <receiver-->
 <!--            android:name=".util.network.NetworkChangeReceiver"-->
 <!--            android:exported="true"-->
