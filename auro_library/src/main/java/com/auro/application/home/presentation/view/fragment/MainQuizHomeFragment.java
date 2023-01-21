@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.auro.application.ChatActivity;
 import com.auro.application.R;
 import com.auro.application.RealTimeFaceDetection.CameraxActivity;
 import com.auro.application.core.application.AuroApp;
@@ -93,7 +94,6 @@ import com.auro.application.util.strings.AppStringDynamic;
 import com.google.gson.Gson;
 import com.instabug.apm.APM;
 import com.instabug.bug.BugReporting;
-import com.instabug.chat.ui.ChatActivity;
 import com.instabug.crash.CrashReporting;
 import com.instabug.library.Feature;
 import com.instabug.library.Instabug;
