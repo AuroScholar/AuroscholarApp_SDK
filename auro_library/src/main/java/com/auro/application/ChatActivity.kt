@@ -23,12 +23,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.auro.application.core.database.AuroAppPref
 import com.auro.application.core.database.PrefModel
 import com.bumptech.glide.Glide
-import com.yugasa.yubobotsdk.YuboBot
+/*import com.yugasa.yubobotsdk.YuboBot
 import com.yugasa.yubobotsdk.listeners.YuboBotAdapterListener
 import com.yugasa.yubobotsdk.model.BotLanguage
 import com.yugasa.yubobotsdk.utils.FileUtils
 import com.yugasa.yubobotsdk.utils.YuboBotConstants
-import com.yugasa.yubobotsdk.utils.YuboBotUtil
+import com.yugasa.yubobotsdk.utils.YuboBotUtil*/
 import org.json.JSONException
 import org.json.JSONObject
 import java.io.*
@@ -45,9 +45,9 @@ class ChatActivity: AppCompatActivity() {
     private lateinit var llSelfRpl: LinearLayout
     private lateinit var typingInd: ImageView
     private lateinit var typingInd1: ImageView
-    private lateinit var yuboBot: YuboBot
+    //private lateinit var yuboBot: YuboBot
     private lateinit var toolbar: Toolbar
-    private var languageList = ArrayList<BotLanguage>()
+    //private var languageList = ArrayList<BotLanguage>()
     private  var language = "en"
     private var clientId: String = "auro_scholar"
 
@@ -114,7 +114,7 @@ class ChatActivity: AppCompatActivity() {
 
         imgSend.setOnClickListener {
             if (etSendMsg.text.toString().trim().isNotEmpty()) {
-                yuboBot.callBotApi(etSendMsg.text.toString())
+                //yuboBot.callBotApi(etSendMsg.text.toString())
                 etSendMsg.setText("")
                 etSendMsg.text.clear()
             } else {
@@ -170,7 +170,7 @@ class ChatActivity: AppCompatActivity() {
         when (item.itemId) {
             R.id.item1 -> {
 //
-                yuboBot.restartBot()
+                //yuboBot.restartBot()
             }
 //            R.id.item2 -> {
 //                LanguageDialog(
@@ -206,7 +206,7 @@ class ChatActivity: AppCompatActivity() {
                         .toString()
         val map = HashMap<String, Any>()
         map["client_id"] = clientId                                    //  mandatory
-        map["id"] = YuboBotConstants.YUBO_DEVICE_ID_2                  //  mandatory
+        //map["id"] = YuboBotConstants.YUBO_DEVICE_ID_2                  //  mandatory
         map["yubo_id"] = id                                            //  mandatory
         map["appUserId"] = "11"                                        //  mandatory
         map["type"] = "Android"                                        //  mandatory
@@ -216,10 +216,10 @@ class ChatActivity: AppCompatActivity() {
         map["name"] = "Amit Kumar"                                     //  mandatory
         map["phone"] = "9717291746"                                    //  mandatory
         map["rate_charges"] = "Rates/Charges are : 5% of value"        //  mandatory
-        map["kyc_status"] = YuboBotConstants.CARD_SE_KYC_APPROVED      //  mandatory
+        //map["kyc_status"] = YuboBotConstants.CARD_SE_KYC_APPROVED      //  mandatory
         map["bearer_token"] = "bearerToken"                            //  mandatory
         map["base_url"] = "baseurl"
-        yuboBot = YuboBot(this, map, object : YuboBot.SetTypingAnimation {
+        /*yuboBot = YuboBot(this, map, object : YuboBot.SetTypingAnimation {
             override fun scrollPosition(scrollToBottom: Int, typeOption: Boolean?) {
                 recycler.scrollToPosition(scrollToBottom)
                 recycler.smoothScrollToPosition(scrollToBottom)
@@ -250,19 +250,19 @@ class ChatActivity: AppCompatActivity() {
             override fun onBotLanguage(botLanguages: ArrayList<BotLanguage>) {
                 languageList.addAll(botLanguages)
             }
-        }, recycler)
+        }, recycler)*/
 
 //        If developer wants to change layout users side of chats
-        yuboBot.yuboBotChatAdapter!!.setUserLayout(R.layout.bot_user_item_layout)
+        //yuboBot.yuboBotChatAdapter!!.setUserLayout(R.layout.bot_user_item_layout)
 //        If developer wants to change layout bot side of chats
-        yuboBot.yuboBotChatAdapter!!.setBotLayout(R.layout.bot_chat_item_layout)
+        //yuboBot.yuboBotChatAdapter!!.setBotLayout(R.layout.bot_chat_item_layout)
 //        If developer wants to change bot replies layout of chats
 
-        yuboBot.yuboBotChatAdapter!!.setBotRepliesLayout(R.layout.bot_reply_item_layout)
+        //yuboBot.yuboBotChatAdapter!!.setBotRepliesLayout(R.layout.bot_reply_item_layout)
 //        If developer wants to modify spacing of the bot replies layout of chats
         //yuboBot.yuboBotChatAdapter!!.setDimensionPixelSize(com.yugasa.yubobotsdk.R.dimen._0sdp)
-        recycler.adapter = yuboBot.yuboBotChatAdapter     // Set adapter to the recycler view
-        recycler.adapter!!.notifyDataSetChanged()
+        //recycler.adapter = yuboBot.yuboBotChatAdapter     // Set adapter to the recycler view
+        //recycler.adapter!!.notifyDataSetChanged()
         //yuboBot.restartBot()
         /* recycler.addItemDecoration(
              ItemDecorationAlbumColumns(
@@ -270,12 +270,12 @@ class ChatActivity: AppCompatActivity() {
                  1
              )
          )*/
-        yuboBot.setYuboBotListener(object : YuboBotAdapterListener {
+        /*yuboBot.setYuboBotListener(object : YuboBotAdapterListener {
             override fun onClickYuboBotView(key: Int, data: HashMap<Int, Any>) {
 //                Log.d("AnyData", data[0].toString())               // here we can get the data send from YuboBot class
 
             }
-        })
+        })*/
     }
     //    When you upload a image to Yubo bot you have to use fileUploadApi function and parse following parameter
 //        File() (Multipart file path) Or Uri (file Uri)
@@ -291,7 +291,7 @@ class ChatActivity: AppCompatActivity() {
                 val data: Intent? = result.data
                 data.let {
                     val imageUri = data!!.data
-                    yuboBot.fileUploadApi(imageUri!!)
+                    //yuboBot.fileUploadApi(imageUri!!)
                 }
             }
         }
@@ -317,8 +317,8 @@ class ChatActivity: AppCompatActivity() {
                         fo = FileOutputStream(destination)
                         fo.write(bytes.toByteArray())
                         fo.close()
-                        val file = FileUtils.getFile(this, fileUri)
-                        yuboBot.fileUploadApi(file)
+                        //val file = FileUtils.getFile(this, fileUri)
+                       // yuboBot.fileUploadApi(file)
                     } catch (e: FileNotFoundException) {
                         e.printStackTrace()
                     } catch (e: IOException) {

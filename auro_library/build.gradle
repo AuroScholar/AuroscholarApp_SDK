@@ -50,7 +50,6 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.aar'])
     // DEVELOPMENT Dependencies
     api supportDependencies.values()
     // NETWORK Dependencies
@@ -77,7 +76,7 @@ dependencies {
     implementation 'com.github.faruktoptas:FancyShowCaseView:1.3.9'
     implementation 'com.robinhood.ticker:ticker:2.0.2'
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0'
-    implementation files('libs/yubobotsdk-debug.aar')
+    //implementation files('libs/yubobotsdk-debug.aar')
 
     annotationProcessor googleDependencies.daggerCompiler
     //Rx Dependencies
@@ -129,7 +128,7 @@ afterEvaluate {
 
                 groupId = 'com.github.AuroScholar'
                 artifactId = 'auroscholar-android-sdk'
-                version = '2.0.5'
+                version = '2.0.6'
             }
         }
     }
