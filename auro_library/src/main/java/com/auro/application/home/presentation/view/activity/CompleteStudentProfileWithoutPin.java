@@ -146,7 +146,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     String Schoolmedium = "";
     String boardtype = "";
     String schooltype = "";
-    String ExistGrade;
+    String ExistGrade="";
     String kycgrade;
     CustomDialog customDialog;
 
@@ -183,6 +183,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
 //        });
         binding.layoutSetusernamepin.setVisibility(View.GONE);
         binding.mainParentLayout.setVisibility(View.VISIBLE);
+        String auto_userid = getIntent().getStringExtra("auto_userid");
         getProfile();
         getGrade();
         getAllStateList();
@@ -251,7 +252,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         binding.etgrade.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
+                if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)||ExistGrade.isEmpty()){
                     binding.etgrade.showDropDown();
                 }
                 else{
@@ -274,7 +275,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus)
                 {
-                    if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
+                    if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)||ExistGrade.isEmpty()){
                         binding.etgrade.showDropDown();
                     }
                     else{
@@ -436,7 +437,8 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
 
                 } else {
 
-                    setAutoRegister();
+                    updateChild();
+                   // setAutoRegister();
 
                 }
 
@@ -483,8 +485,8 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                     Toast.makeText(this, "Can not enter space in school name", Toast.LENGTH_SHORT).show();
 
                 } else {
-
-                    setAutoRegister();
+                    String auto_userid = getIntent().getStringExtra("auto_userid");
+                    updateChild();
 
                 }
 
@@ -510,7 +512,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
 
     private void getProfile()
     {
-        String childid =  AuroAppPref.INSTANCE.getModelInstance().getUserId();
+       String childid =  AuroAppPref.INSTANCE.getModelInstance().getUserId();
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("user_id",childid);
 
@@ -527,6 +529,15 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                                 String district = response.body().getDistrictname();
                             String email = response.body().getEmailId();
                             ExistGrade = response.body().getStudentclass();
+                            if (response.body().getStudentclass().equals("0")||response.body().getStudentclass().isEmpty()||response.body().getStudentclass().equals("")){
+                                binding.etgrade.setEnabled(true);
+                                binding.etgrade.setClickable(true);
+                            }
+                            else  if (!ExistGrade.equals("null")||!ExistGrade.equals(null)||!ExistGrade.equals("")||!ExistGrade.isEmpty()||!ExistGrade.equals("0")||!ExistGrade.equals(0)){
+                                binding.etgrade.setText(ExistGrade);
+                                binding.etgrade.setEnabled(false);
+                                binding.etgrade.setClickable(false);
+                            }
                             String name = response.body().getStudentName();
                             String schooltype = response.body().getSchoolType();
                             String board = response.body().getBoardType();
@@ -547,11 +558,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                             if (!district.equals("null")||!district.equals(null)||!district.equals("")||!district.isEmpty()){
                                 binding.etdistrict.setText(district);
                             }
-                            if (!ExistGrade.equals("null")||!ExistGrade.equals(null)||!ExistGrade.equals("")||!ExistGrade.isEmpty()||!ExistGrade.equals("0")||!ExistGrade.equals(0)){
-                                binding.etgrade.setText(ExistGrade);
-                                binding.etgrade.setEnabled(false);
-                                binding.etgrade.setClickable(false);
-                            }
+
                             if (!name.equals("null")||!name.equals(null)||!name.equals("")||!name.isEmpty()){
                                 binding.edtusername.setText(name);
                             }
@@ -620,7 +627,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                                     auto_userid = response.body().getUser_details().get(0).getUser_id();
 
                                 }
-                                updateChild(auto_userid);
+
 
 
                             }
@@ -643,7 +650,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
 
     }
 
-    private void updateChild(String userid)
+    private void updateChild()
     {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
 
@@ -655,7 +662,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         String ipaddress = AppUtil.getIpAdress();
         String languageid = prefModel.getUserLanguageId();
 
-        String childid = userid;
+        String childid = prefModel.getUserId();
         String childuserid = childid;
         String gendertype = binding.etStudentGender.getText().toString();
         String parentemail = binding.editemail.getText().toString();
@@ -728,7 +735,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                                         editor1.putString("gradeforsubjectpreferencewithoutpin", "true");
                                         editor1.apply();
                                         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-                                        prefModel.setUserclass(String.valueOf(grade_c));
+                                        prefModel.setUserclass(String.valueOf(gradeid));
                                         AuroAppPref.INSTANCE.setPref(prefModel);
 
                                         Intent i = new Intent(CompleteStudentProfileWithoutPin.this, DashBoardMainActivity.class);
@@ -1443,7 +1450,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
             }
 
             else if (v.getId() == R.id.etgrade) {
-                if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
+                if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)||ExistGrade.isEmpty()){
                     binding.etgrade.showDropDown();
                 }
                 else{

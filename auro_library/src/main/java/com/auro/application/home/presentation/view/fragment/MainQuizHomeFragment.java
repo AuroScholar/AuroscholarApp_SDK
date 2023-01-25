@@ -63,6 +63,7 @@ import com.auro.application.home.data.model.response.FetchStudentPrefResModel;
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.data.model.response.InstructionsResModel;
 import com.auro.application.home.data.model.response.SlabsResModel;
+import com.auro.application.home.data.model.response.StudentKycStatusResModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
 import com.auro.application.home.presentation.view.activity.CameraActivity;
@@ -138,7 +139,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
     FragmentMainQuizHomeBinding binding;
     QuizViewModel quizViewModel;
     DashboardResModel dashboardResModel;
-
+    String getkycstatus;
     String TAG = MainQuizHomeFragment.class.getSimpleName();
     QuizResModel quizResModel;
     AssignmentReqModel assignmentReqModel;
@@ -361,10 +362,10 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
                    setAdapterChapter((SubjectResModel) commonDataModel.getObject());
                }
                else{
-                   ViewUtil.showSnackBar(binding.getRoot(),checkkycstatusmessage);
+                   checkkycstatusmessage = "Please upload your KYC.";
+                   Toast.makeText(getActivity(), checkkycstatusmessage, Toast.LENGTH_SHORT).show();
+                  // ViewUtil.showSnackBar(binding.getRoot(),checkkycstatusmessage);
                }
-
-
                 break;
 
             case BACK_CLICK:
@@ -527,7 +528,8 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
         } else if (id == R.id.cardView2) {
             ((DashBoardMainActivity) getActivity()).openProfileFragment();
         } else if (id == R.id.walleticon) {
-            openWalletInfoFragment();
+            getKYCStatus();
+           // openWalletInfoFragment();
                /* if (quizViewModel.homeUseCase.checkKycStatus(dashboardResModel)) {
                     ((DashBoardMainActivity) getActivity()).openKYCViewFragment(dashboardResModel, 0);
                 } else {
@@ -548,7 +550,75 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
         }
 
     }
+    private void getKYCStatus()
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String suserid =  AuroAppPref.INSTANCE.getModelInstance().getUserId();
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("user_id",suserid);
 
+        RemoteApi.Companion.invoke().getKYCStatus(map_data)
+                .enqueue(new Callback<StudentKycStatusResModel>()
+                {
+                    @Override
+                    public void onResponse(Call<StudentKycStatusResModel> call, Response<StudentKycStatusResModel> response)
+                    {
+                        if (response.isSuccessful())
+                        {
+                            getkycstatus = response.body().getKycStatus();
+                            String uploadedornot = response.body().getIsKycUploaded();
+                            if (uploadedornot.equals("NO")||uploadedornot=="NO"){
+                                 Toast.makeText(getActivity(), "Please upload you KYC", Toast.LENGTH_SHORT).show();
+                              //  ViewUtil.showSnackBar(binding.getRoot(),"Please upload your KYC");
+                            }
+                            else if (uploadedornot.equals("YES")||uploadedornot=="YES"){
+                                if (getkycstatus.equals("APPROVE")){
+                                    openWalletInfoFragment();
+                                }
+                                else if (getkycstatus.equals("PENDING")){
+                                     Toast.makeText(getActivity(), "Your KYC verification is pending, wait till it gets verified", Toast.LENGTH_SHORT).show();
+                                   // ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification is pending, wait till it gets verified");
+
+                                }
+                                else if (getkycstatus.equals("DISAPPROVE")){
+                                     Toast.makeText(getActivity(), "Your KYC verification has been disapprove, please reupload documents", Toast.LENGTH_SHORT).show();
+                                  //  ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification has been disapprove, please reupload documents");
+
+                                }
+                                else if (getkycstatus.equals("INPROCESS")){
+                                    //   Toast.makeText(getActivity(), "Your KYC is under verification", Toast.LENGTH_SHORT).show();
+                                    ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification is in progress, wait till it gets verified");
+
+                                }
+                                else if (getkycstatus.equals("REJECTED")){
+                                      Toast.makeText(getActivity(), "Your KYC verification has been rejected, please reupload documents", Toast.LENGTH_SHORT).show();
+                                   // ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification has been rejected, please reupload documents");
+
+                                }
+                                else{
+                                    Toast.makeText(getActivity(), "Your KYC verification is pending, wait till it gets verified", Toast.LENGTH_SHORT).show();
+
+                                   // ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification is pending, wait till it gets verified");
+
+                                }
+                            }
+
+
+                        }
+                        else
+                        {
+
+                            Log.d(TAG, "onResponser: "+response.message().toString());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<StudentKycStatusResModel> call, Throwable t)
+                    {
+                        Log.d(TAG, "onFailure: "+t.getMessage());
+                    }
+                });
+    }
     private void openWalletInfoFragment() {
         Bundle bundle = new Bundle();
         bundle.putParcelable(AppConstant.DASHBOARD_RES_MODEL, dashboardResModel);
@@ -680,7 +750,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
             binding.mainParentLayout.setVisibility(View.VISIBLE);
             binding.shimmerViewQuiz.setVisibility(View.GONE);
             binding.shimmerViewQuiz.stopShimmer();
-            binding.imageChat.setVisibility(View.VISIBLE);
+            binding.imageChat.setVisibility(View.GONE);
 
         }
 
@@ -772,9 +842,9 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
         }
 
         if (dashboardResModel != null && dashboardResModel.isChatBotEnabled()) {
-            binding.imageChat.setVisibility(View.VISIBLE);
+            binding.imageChat.setVisibility(View.GONE);
         } else {
-            binding.imageChat.setVisibility(View.VISIBLE);
+            binding.imageChat.setVisibility(View.GONE);
         }
     }
 

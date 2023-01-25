@@ -21,6 +21,7 @@ import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
+import com.auro.application.core.network.ErrorResponseModel;
 import com.auro.application.core.util.AuroScholar;
 import com.auro.application.databinding.StudentUserLayoutBinding;
 
@@ -64,6 +65,7 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
     CommonCallBackListner commonCallBackListner;
     boolean progressStatus;
     String comingFromText = "";
+    String errormismatch="";
     AuroScholarInputModel auroScholarInputModel;
 
 
@@ -106,7 +108,7 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                 String user_name =  mValues.get(position).getUser_name();
                 String partner_logo =  mValues.get(position).getPartner_logo();
                 String profile_pic =  mValues.get(position).getProfile_pic();
-
+setSDKAPIGrade();
                     SDKChildModel resModel = AuroAppPref.INSTANCE.getModelInstance().getChildData().getUser_details().get(position);
                     setDatainPref(resModel);
                     PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
@@ -198,12 +200,12 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
         String mobile = prefModel.getUserMobile();
         String partneruniueid = prefModel.getPartneruniqueid();
         String partnersource = prefModel.getPartnersource();
-
+        String apikey = prefModel.getApikey();
             HashMap<String,String> map_data = new HashMap<>();
             map_data.put("mobile_no",mobile);
             map_data.put("partner_unique_id",partneruniueid); //456456
             map_data.put("partner_source",partnersource);
-            map_data.put("partner_api_key","7611f0fafb1e3b96d1a78c57b0650b85985eace9f6aaa365c0b496e9ae1163e7");
+            map_data.put("partner_api_key",apikey);
         map_data.put("user_id",userid);
 
             RemoteApi.Companion.invoke().getSDKData(map_data)
@@ -261,11 +263,12 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 mContext.startActivity(i);
                             }
-                            else if (userclass>0){
+                            else if (errormismatch.equals("Error! Grade Mismatched")){
                                 Intent i = new Intent(mContext, ChooseGradeActivity.class);
                                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 mContext.startActivity(i);
                             }
+
                             else if (response.body().getStatename().equals("")||response.body().getStatename().equals("null")||response.body().getStatename().equals(null)||response.body().getDistrictname().equals("")||response.body().getDistrictname().equals("null")||response.body().getDistrictname().equals(null)||response.body().getStudentName().equals("")||response.body().getStudentName().equals("null")||response.body().getStudentName().equals(null)||
                                     response.body().getStudentclass().equals("")||response.body().getStudentclass().equals("null")||response.body().getStudentclass().equals(null)||response.body().getStudentclass().equals("0")||response.body().getStudentclass().equals(0)){
                                 Intent i = new Intent(mContext, CompleteStudentProfileWithoutPin.class);
@@ -274,9 +277,7 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                             }
                             else{
                                 openGenricSDK(mobileno,partnersource,parnteruniqueid);
-//                                Intent i = new Intent(mContext, DashBoardMainActivity.class);
-//                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                                mContext.startActivity(i);
+
                             }
 
                         }
@@ -293,6 +294,60 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                         Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+    private void setSDKAPIGrade()
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String mobile = prefModel.getUserMobile();
+        String uniqueid = prefModel.getPartneruniqueid();
+        String source = prefModel.getPartnersource();
+        String apikey = prefModel.getApikey();
+        String userid = prefModel.getUserId();
+        String gradeid = prefModel.getUserclass();
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("mobile_no",mobile);
+        map_data.put("partner_unique_id",uniqueid); //456456
+        map_data.put("partner_source",source);
+        map_data.put("partner_api_key",apikey);
+        map_data.put("user_id",userid);
+        map_data.put("grade",gradeid);
+
+        RemoteApi.Companion.invoke().getSDKDataerror(map_data)
+                .enqueue(new Callback<ErrorResponseModel>() {
+                    @Override
+                    public void onResponse(Call<ErrorResponseModel> call, Response<ErrorResponseModel> response)
+                    {
+                        try {
+                            if (response.code() == 400) {
+                                Toast.makeText(mContext, "Error!", Toast.LENGTH_SHORT).show();
+                            }
+                            else if (response.code() == 200) {
+                                ErrorResponseModel error = (ErrorResponseModel) response.body();
+                                errormismatch = error.getMessage();
+
+                                //  getProfile(userid,resmessage);
+
+
+
+
+                            }
+                            else {
+                                Toast.makeText(mContext, response.message(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        catch (Exception e) {
+                            Toast.makeText(mContext, "Internet connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ErrorResponseModel> call, Throwable t) {
+                        Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+
+
     }
     public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource  ) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();

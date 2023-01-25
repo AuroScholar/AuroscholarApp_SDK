@@ -82,6 +82,8 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
 
     @Override
     public Single<Response<JsonObject>> getAzureData(AssignmentReqModel azureReqModel) {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String partner_unique_id = prefModel.getPartneruniqueid();
         RequestBody registration_id = RequestBody.create(okhttp3.MultipartBody.FORM, azureReqModel.getRegistration_id());
         RequestBody exam_id = RequestBody.create(okhttp3.MultipartBody.FORM, azureReqModel.getEklavvya_exam_id());
         RequestBody exam_name = RequestBody.create(okhttp3.MultipartBody.FORM, azureReqModel.getExam_name());
@@ -92,6 +94,7 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
         RequestBody userId = RequestBody.create(okhttp3.MultipartBody.FORM, azureReqModel.getUserId());
         RequestBody langVersion = RequestBody.create(okhttp3.MultipartBody.FORM, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         RequestBody apiVersion = RequestBody.create(okhttp3.MultipartBody.FORM, AppConstant.ParamsValue.API_VERSION_VAL);
+        //RequestBody partner_unique_idvalue = RequestBody.create(okhttp3.MultipartBody.FORM, partner_unique_id);
 
         MultipartBody.Part student_photo = MultipartBody.Part.createFormData("exam_face_img", "image.jpg", requestFile);
         return homeRemoteApi.getAzureApiData(registration_id, exam_id, exam_name, quiz_attempt, subject, examAuroId, userId, langVersion, apiVersion, student_photo);
@@ -356,6 +359,8 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
         params.put(AppConstant.DashBoardParams.LANGUAGE_VERSION, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         params.put(AppConstant.DashBoardParams.API_VERSION, AppConstant.ParamsValue.API_VERSION_VAL);
         params.put(AppConstant.Language.USER_PREFERED_LANGUAGE,Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId()));
+        params.put("partner_unique_id",Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getPartneruniqueid()));
+
         return homeRemoteApi.getAssignmentId(params);
     }
 

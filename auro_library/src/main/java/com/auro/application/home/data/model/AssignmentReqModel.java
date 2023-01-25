@@ -19,6 +19,7 @@ public class AssignmentReqModel implements Parcelable {
     String examId;
     String userId;
     Integer userPreferedLanguageId;
+    String partner_unique_id;
 
     protected AssignmentReqModel(Parcel in) {
         registration_id = in.readString();
@@ -33,6 +34,7 @@ public class AssignmentReqModel implements Parcelable {
         actualScore = in.readInt();
         examId = in.readString();
         userId = in.readString();
+        partner_unique_id = in.readString();
         userPreferedLanguageId = in.readInt();
     }
 
@@ -41,6 +43,7 @@ public class AssignmentReqModel implements Parcelable {
         dest.writeString(registration_id);
         dest.writeString(exam_name);
         dest.writeString(quiz_attempt);
+        dest.writeString(partner_unique_id);
         dest.writeString(examlang);
         dest.writeString(eklavvya_exam_id);
         dest.writeByteArray(imageBytes);
@@ -51,6 +54,14 @@ public class AssignmentReqModel implements Parcelable {
         dest.writeString(examId);
         dest.writeString(userId);
         dest.writeInt(userPreferedLanguageId);
+    }
+
+    public String getPartner_unique_id() {
+        return partner_unique_id;
+    }
+
+    public void setPartner_unique_id(String partner_unique_id) {
+        this.partner_unique_id = partner_unique_id;
     }
 
     @Override

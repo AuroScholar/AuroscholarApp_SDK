@@ -31,6 +31,7 @@ import com.auro.application.home.data.model.CheckUserResModel;
 import com.auro.application.home.data.model.ParentProfileDataModel;
 import com.auro.application.home.data.model.response.UserDetailResModel;
 import com.auro.application.home.data.model.signupmodel.AddStudentStepDataModel;
+import com.auro.application.home.presentation.view.activity.AppLanguageActivity;
 import com.auro.application.home.presentation.view.activity.CompleteStudentProfileWithPinActivity;
 import com.auro.application.home.presentation.view.activity.CompleteStudentProfileWithoutPin;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
@@ -81,14 +82,71 @@ public class BottomSheetAddUserDialog extends BottomSheetDialogFragment implemen
         binding.mainLayout2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent i1 = new Intent(getActivity(), CompleteStudentProfileWithoutPin.class);
-                startActivity(i1);
+                setAutoRegister();
 
             }
         });
         return binding.getRoot();
     }
 
+    private void setAutoRegister()
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String mobileno = prefModel.getUserMobile();
+        String partnersource = prefModel.getPartnersource();
+        String partneruniqueid = prefModel.getPartneruniqueid();
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("mobile_no",mobileno);
+        map_data.put("partner_unique_id",partneruniqueid);
+        map_data.put("partner_source",partnersource);
+        map_data.put("add_new","1");
+        map_data.put("partner_api_key","7611f0fafb1e3b96d1a78c57b0650b85985eace9f6aaa365c0b496e9ae1163e7");
+        RemoteApi.Companion.invoke().getSDKData(map_data)
+                .enqueue(new Callback<SDKDataModel>() {
+                    @Override
+                    public void onResponse(Call<SDKDataModel> call, Response<SDKDataModel> response)
+                    {
+                        try {
+                            if (response.code() == 400) {
+                                Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
+                            }
+                            else if (response.code() == 200) {
+
+
+                                for (int i = 0; i<response.body().getUser_details().size(); i++){
+                                    auto_userid = response.body().getUser_details().get(0).getUser_id();
+
+                                }
+                                PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+
+                                prefModel.setUserId(auto_userid);
+                                AuroAppPref.INSTANCE.setPref(prefModel);
+                                Intent i1 = new Intent(getActivity(), AppLanguageActivity.class);
+                                i1.putExtra("auto_userid",auto_userid);
+                                startActivity(i1);
+
+
+
+
+                            }
+                            else {
+                                Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        catch (Exception e) {
+                            Toast.makeText(getActivity(), "Internet connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SDKDataModel> call, Throwable t) {
+                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+
+
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

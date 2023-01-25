@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,21 +18,31 @@ import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;
 import com.auro.application.core.database.AuroAppPref;
+import com.auro.application.core.database.PrefModel;
 import com.auro.application.databinding.BottomStudentListBinding;
+import com.auro.application.home.presentation.view.activity.AppLanguageActivity;
+import com.auro.application.home.presentation.view.activity.CompleteStudentProfileWithoutPin;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
 import com.auro.application.home.presentation.view.activity.ParentProfileActivity;
 import com.auro.application.home.presentation.view.adapter.SelectYourChildAdapter;
 
+import com.auro.application.util.RemoteApi;
 import com.auroscholar.final_auroscholarapp_sdk.SDKChildModel;
 import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class BottomSheetUsersDialog extends BottomSheetDialogFragment implements CommonCallBackListner {
     BottomStudentListBinding binding;
     SDKDataModel checkUserResModel;
+    String auto_userid;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable
@@ -39,7 +50,78 @@ public class BottomSheetUsersDialog extends BottomSheetDialogFragment implements
         binding = DataBindingUtil.inflate(inflater, R.layout.bottom_student_list, container, false);
         checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
         setAdapterAllListStudent(checkUserResModel.getUser_details());
+        binding.btnaddstudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                BottomSheetAddUserDialog bottomSheet = new BottomSheetAddUserDialog();
+//                bottomSheet.show(getActivity().getSupportFragmentManager(),
+//                        "ModalBottomSheet");
+//                Intent i1 = new Intent(getActivity(), CompleteStudentProfileWithoutPin.class);
+//                startActivity(i1);
+                setAutoRegister();
+
+            }
+        });
         return binding.getRoot();
+    }
+    private void setAutoRegister()
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String mobileno = prefModel.getUserMobile();
+        String partnersource = prefModel.getPartnersource();
+        String partneruniqueid = prefModel.getPartneruniqueid();
+        String apikey = prefModel.getApikey();
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("mobile_no",mobileno);
+        map_data.put("partner_unique_id",partneruniqueid);
+        map_data.put("partner_source",partnersource);
+        map_data.put("add_new","1");
+        map_data.put("partner_api_key",apikey);
+        RemoteApi.Companion.invoke().getSDKData(map_data)
+                .enqueue(new Callback<SDKDataModel>() {
+                    @Override
+                    public void onResponse(Call<SDKDataModel> call, Response<SDKDataModel> response)
+                    {
+                        try {
+                            if (response.code() == 400) {
+                                Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
+                            }
+                            else if (response.code() == 200) {
+
+
+                                for (int i = 0; i<response.body().getUser_details().size(); i++){
+                                    auto_userid = response.body().getUser_details().get(0).getUser_id();
+
+                                }
+                                PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+
+                                prefModel.setUserId(auto_userid);
+                                AuroAppPref.INSTANCE.setPref(prefModel);
+                                Intent i1 = new Intent(getActivity(), AppLanguageActivity.class);
+                                i1.putExtra("auto_userid",auto_userid);
+                                startActivity(i1);
+
+
+
+
+                            }
+                            else {
+                                Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        catch (Exception e) {
+                            Toast.makeText(getActivity(), "Internet connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SDKDataModel> call, Throwable t) {
+                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+
+
     }
 
     @Override
@@ -63,15 +145,7 @@ public class BottomSheetUsersDialog extends BottomSheetDialogFragment implements
        else{
            binding.btnaddstudent.setVisibility(View.GONE);
        }
-        binding.btnaddstudent.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                BottomSheetAddUserDialog bottomSheet = new BottomSheetAddUserDialog();
-                bottomSheet.show(getActivity().getSupportFragmentManager(),
-                        "ModalBottomSheet");
 
-            }
-        });
     }
     @Override
     public void commonEventListner(CommonDataModel commonDataModel) {

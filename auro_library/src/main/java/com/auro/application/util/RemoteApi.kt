@@ -8,10 +8,7 @@ import com.auro.application.core.network.URLConstant
 import com.auro.application.home.data.model.*
 import com.auro.application.home.data.model.passportmodels.PassportMonthModel
 import com.auro.application.home.data.model.passportmodels.PassportQuizMonthModel
-import com.auro.application.home.data.model.response.CertificateResModel
-import com.auro.application.home.data.model.response.ChildDetailResModel
-import com.auro.application.home.data.model.response.GetStudentUpdateProfile
-import com.auro.application.home.data.model.response.StudentKycStatusResModel
+import com.auro.application.home.data.model.response.*
 import com.auro.application.home.data.model.signupmodel.request.SetUsernamePinReqModel
 import com.auro.application.home.data.model.signupmodel.response.RegisterApiResModel
 import com.auro.application.home.data.model.signupmodel.response.SetUsernamePinResModel
@@ -104,6 +101,8 @@ interface RemoteApi
     public fun getSDKDataerror(@Body params:HashMap<String,String>): Call<ErrorResponseModel>
     @POST("get_language_master")
     public fun getLanguageAPI(@Body params:HashMap<String,String>): Call<LanguageMasterDynamic>
+    @POST("languages_list")
+    public fun getLanguageAPIList(): Call<LanguageListResModel>
 
 
 
