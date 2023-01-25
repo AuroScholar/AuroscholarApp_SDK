@@ -25,6 +25,16 @@ public class AuroScholarInputModel implements Parcelable {
     String gender="";
     int fragmentContainerUiId;
     String setDeviceToken;
+    String partner_api_key;
+
+    public String getPartner_api_key() {
+        return partner_api_key;
+    }
+
+    public void setPartner_api_key(String partner_api_key) {
+        this.partner_api_key = partner_api_key;
+    }
+
     String partner_unique_id;
     SdkCallBack sdkcallback;
     public SdkCallBack getSdkcallback() {

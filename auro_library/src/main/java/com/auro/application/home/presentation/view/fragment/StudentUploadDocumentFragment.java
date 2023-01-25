@@ -195,73 +195,7 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
 
     }
 
-    private void selectImage() {
-        final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Add Photo!");
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Take Photo"))
-                {
 
-                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString());
-                    if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                        startActivityForResult(cameraIntent, 1);
-                    }
-
-
-                }
-                else if (options[item].equals("Choose from Gallery"))
-                {
-                    ImagePicker.with(StudentUploadDocumentFragment.this)
-                            .crop()                    //Crop image(Optional), Check Customization for more option
-                            .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                            .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
-                            .start();
-//                    Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                    startActivityForResult(intent, 2);
-                }
-                else if (options[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
-    private void selectImageCamera() {
-        final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Add Photo!");
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Take Photo"))
-                {
-
-                    ImagePicker.with(StudentUploadDocumentFragment.this)
-                            .crop()                    //Crop image(Optional), Check Customization for more option
-                            .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                            .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
-                            .cameraOnly()
-                            .start();
-
-
-                }
-//                else if (options[item].equals("Choose from Gallery"))
-//                {
-//                    Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                    startActivityForResult(intent, 2);
-//                }
-                else if (options[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -272,35 +206,6 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
 
                 if (resultCode == RESULT_OK) {
                     try {
-
-
-//                        Uri uri = data.getData();
-//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-//                        AppLogger.e("StudentProfile", "image path=" + uri.getPath());
-//                        String image_path = uri.getPath();
-//                        Uri selectedImage = data.getData();
-//                        String[] filePath = { MediaStore.Images.Media.DATA };
-//                        Cursor c = getActivity().getContentResolver().query(selectedImage,filePath, null, null, null);
-//                        c.moveToFirst();
-//                        int columnIndex = c.getColumnIndex(filePath[0]);
-//                        String picturePath = c.getString(columnIndex);
-//                        c.close();
-//                        Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-//                        byte[] bytes = AppUtil.encodeToBase64(bitmap, 100);
-//                        long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                        int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//                        File f = new File("" + uri);
-//                        if (!uri.getPath().isEmpty()) {
-//                            handleUi(0);
-//                            binding.fileNameTxt.setText(f.getName());
-//                            updateKYCList(uri.getPath());
-//                        }
-//
-//                        if (file_size >= 500) {
-//                            Toast.makeText(getActivity(), "Image size is too large", Toast.LENGTH_SHORT).show();
-//
-//
-//                        }
 
                         handleData(data);
 
@@ -316,23 +221,6 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
             else if (requestCode == 1 ) {
                 if (Build.VERSION.SDK_INT > 26) {
                     handleData(data);
-//                    Bitmap photo = (Bitmap) data.getExtras().get("data");
-//                    Uri selectedImage = data.getData();
-//                    String image_path = String.valueOf(data.getExtras().get("data"));
-//                    byte[] bytes = AppUtil.encodeToBase64(photo, 100);
-//                    long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                    int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//
-//                    File f = new File("" + selectedImage);
-//                    if (!selectedImage.getPath().isEmpty()) {
-//                        handleUi(0);
-//                        binding.fileNameTxt.setText(f.getName());
-//                        updateKYCList(selectedImage.getPath());
-//                    }
-//                    if (file_size >= 500) {
-//                        Toast.makeText(getActivity(), "Image size is too large", Toast.LENGTH_SHORT).show();
-//
-//                    }
 
                 }
                 else{
@@ -357,25 +245,7 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
                     try {
 
                         handleData(data);
-//                        Uri uri = data.getData();
-//                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-//                        Uri selectedImage = data.getData();
-//                        AppLogger.e("StudentProfile", "image path=" + uri.getPath());
-//                       String image_path = uri.getPath();
-//                        Bitmap picBitmap = BitmapFactory.decodeFile(uri.getPath());
-//                        byte[] bytes = AppUtil.encodeToBase64(bitmap, 100);
-//                        long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                        int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//                        File f = new File("" + selectedImage);
-//                        if (!selectedImage.getPath().isEmpty()) {
-//                            handleUi(0);
-//                            binding.fileNameTxt.setText(f.getName());
-//                            updateKYCList(selectedImage.getPath());
-//                        }
-//                        AppLogger.e("StudentProfile", "image size=" + uri.getPath());
-//                        if (file_size >= 500) {
-//                            Toast.makeText(getActivity(), "Image size is too large", Toast.LENGTH_SHORT).show();
-//                        }
+
 
                     } catch (Exception e) {
                         AppLogger.e("StudentProfile", "fragment exception=" + e.getMessage());
@@ -392,21 +262,7 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
                 if (requestCode == 1 && resultCode == Activity.RESULT_OK)
                 {
                     handleData(data);
-//                    Bitmap photo = (Bitmap) data.getExtras().get("data");
-//                    Uri selectedImage = data.getData();
-//                  String  image_path = String.valueOf(data.getExtras().get("data"));
-//                    byte[] bytes = AppUtil.encodeToBase64(photo, 100);
-//                    long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                    int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//                    File f = new File("" + selectedImage);
-//                    if (!selectedImage.getPath().isEmpty()) {
-//                        handleUi(0);
-//                        binding.fileNameTxt.setText(f.getName());
-//                        updateKYCList(selectedImage.getPath());
-//                    }
-//                    if (file_size >= 500) {
-//                        Toast.makeText(getActivity(), "Image size is too large", Toast.LENGTH_SHORT).show();
-//                    }
+
                 }
 
             }
@@ -417,23 +273,7 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
 
 
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        AppLogger.v("StudentPradeep", "fragment  Student requestCode=" + requestCode);
-//
-//        if (requestCode == 2404) {
-//            // CropImages.ActivityResult result = CropImages.getActivityResult(data);
-//            if (resultCode == RESULT_OK) {
-//                AppLogger.v("StudentPradeep", "handleData" );
-//                handleData(data);
-//            } else if (resultCode == ImagePicker.RESULT_ERROR) {
-//                showSnackbarError(ImagePicker.getError(data));
-//            } else {
-//                // Toast.makeText(getActivity(), "Task Cancelled", Toast.LENGTH_SHORT).show();
-//            }
-//        }
-//    }
+
 
 
     private void showSnackbarError(String message) {

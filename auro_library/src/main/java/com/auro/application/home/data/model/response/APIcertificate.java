@@ -9,33 +9,32 @@ import com.google.gson.annotations.SerializedName;
 public class APIcertificate implements Parcelable {
 
 
-    @SerializedName("isSelect")
+    @SerializedName("UserId")
     @Expose
-    boolean isSelect;
-
-    @SerializedName("exam_month")
+    private String UserId="";
+    @SerializedName("CertificateNo")
     @Expose
-    private String examMonth="";
-    @SerializedName("certificate_image")
+    private String CertificateNo="";
+    @SerializedName("downloalink")
     @Expose
-    private String certificateImage="";
-    @SerializedName("certificate_file")
+    private String downloalink="";
+    @SerializedName("certificateviewlink")
     @Expose
-    private String certificateFile="";
+    private String certificateviewlink="";
 
     protected APIcertificate(Parcel in) {
-        isSelect = in.readByte() != 0;
-        examMonth = in.readString();
-        certificateImage = in.readString();
-        certificateFile = in.readString();
+        UserId = in.readString();
+        CertificateNo = in.readString();
+        downloalink = in.readString();
+        certificateviewlink = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeByte((byte) (isSelect ? 1 : 0));
-        dest.writeString(examMonth);
-        dest.writeString(certificateImage);
-        dest.writeString(certificateFile);
+        dest.writeString(UserId);
+        dest.writeString(CertificateNo);
+        dest.writeString(downloalink);
+        dest.writeString(certificateviewlink);
     }
 
     @Override
@@ -55,36 +54,35 @@ public class APIcertificate implements Parcelable {
         }
     };
 
-    public String getExamMonth() {
-        return examMonth;
+    public String getUserId() {
+        return UserId;
     }
 
-    public void setExamMonth(String examMonth) {
-        this.examMonth = examMonth;
+    public void setUserId(String userId) {
+        UserId = userId;
     }
 
-    public String getCertificateImage() {
-        return certificateImage;
+    public String getCertificateNo() {
+        return CertificateNo;
     }
 
-    public void setCertificateImage(String certificateImage) {
-        this.certificateImage = certificateImage;
+    public void setCertificateNo(String certificateNo) {
+        CertificateNo = certificateNo;
     }
 
-    public String getCertificateFile() {
-        return certificateFile;
+    public String getDownloalink() {
+        return downloalink;
     }
 
-    public void setCertificateFile(String certificateFile) {
-        this.certificateFile = certificateFile;
+    public void setDownloalink(String downloalink) {
+        this.downloalink = downloalink;
     }
 
-    public boolean isSelect() {
-        return isSelect;
+    public String getCertificateviewlink() {
+        return certificateviewlink;
     }
 
-    public void setSelect(boolean select) {
-        isSelect = select;
+    public void setCertificateviewlink(String certificateviewlink) {
+        this.certificateviewlink = certificateviewlink;
     }
-
 }

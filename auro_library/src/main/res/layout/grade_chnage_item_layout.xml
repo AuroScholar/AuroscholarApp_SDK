@@ -12,9 +12,8 @@
         android:layout_height="@dimen/_45sdp"
         android:layout_margin="@dimen/_5sdp"
         android:background="@drawable/auro_grade_background"
-
         android:text="1st"
-        android:textColor="@color/auro_grey"
+        android:textColor="@color/black"
         android:textSize="@dimen/_11sdp"
         android:gravity="center"
         app:Font="ArticulatCF-Regular.otf"

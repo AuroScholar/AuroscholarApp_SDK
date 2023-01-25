@@ -3,10 +3,12 @@ package com.auro.application.util
 import com.auro.application.core.common.ErrorStatus
 import com.auro.application.core.common.ResponseApi
 import com.auro.application.core.common.ResponseStatus
+import com.auro.application.core.network.ErrorResponseModel
 import com.auro.application.core.network.URLConstant
 import com.auro.application.home.data.model.*
 import com.auro.application.home.data.model.passportmodels.PassportMonthModel
 import com.auro.application.home.data.model.passportmodels.PassportQuizMonthModel
+import com.auro.application.home.data.model.response.CertificateResModel
 import com.auro.application.home.data.model.response.ChildDetailResModel
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile
 import com.auro.application.home.data.model.response.StudentKycStatusResModel
@@ -37,8 +39,13 @@ interface RemoteApi
 
     @POST("passport")
     public fun getPassportData(@Body params:HashMap<String,String>):Call<PassportMonthModel>
-
-
+    @POST("GeneratedCertificace")
+    public fun getGeneratedCertificace(@Body params:HashMap<String,String>):Call<PassportQuizMonthModel>
+    @Headers("Secret-Id: 2198f0011288666d3694ccf4e7d16c29",
+        "Secret-Key: f7115915ae4efc1bdab7ae9fc686348848f8cc2e7bf4a9",
+        "Lang-Code: English")
+    @POST("Getmycertificates")
+    public fun getCertificate(@Body params:HashMap<String,String>):Call<CertificateResModel>
 
     @POST("get_quiz_month_subjects")
     public fun getQuizMonthSubject(@Body params:HashMap<String,String>):Call<PassportQuizMonthModel>
@@ -93,6 +100,10 @@ interface RemoteApi
     // For SDK
     @POST("auto_login")
     public fun getSDKData(@Body params:HashMap<String,String>): Call<SDKDataModel>
+    @POST("auto_login")
+    public fun getSDKDataerror(@Body params:HashMap<String,String>): Call<ErrorResponseModel>
+    @POST("get_language_master")
+    public fun getLanguageAPI(@Body params:HashMap<String,String>): Call<LanguageMasterDynamic>
 
 
 

@@ -84,8 +84,6 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
                     }
                 }
             });
-
-
         }
     }
 

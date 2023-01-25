@@ -501,7 +501,7 @@ public class HomeUseCase {
         assignmentReqModel.setQuiz_attempt(String.valueOf((quizResModel.getAttempt() + 1)));
         assignmentReqModel.setRegistration_id(dashboardResModel.getAuroid());
         assignmentReqModel.setSubject(quizResModel.getSubjectName());
-        assignmentReqModel.setUserId(prefModel.getStudentData().getUserId());
+        assignmentReqModel.setUserId(prefModel.getUserId());
         if (ViewUtil.getLanguage().equalsIgnoreCase(AppConstant.LANGUAGE_EN)) {
             assignmentReqModel.setExamlang("E");
         } else {
@@ -940,8 +940,8 @@ public class HomeUseCase {
         List<CertificateResModel> list = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             CertificateResModel certificateResModel = new CertificateResModel();
-            certificateResModel.setPdfPath("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf");
-            certificateResModel.setSelect(false);
+            //   certificateResModel.setPdfPath("https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf");
+            //    certificateResModel.setSelect(false);
             list.add(certificateResModel);
         }
         return list;

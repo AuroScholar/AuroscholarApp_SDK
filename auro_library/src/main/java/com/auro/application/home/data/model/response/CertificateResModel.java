@@ -7,13 +7,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class CertificateResModel {
 
-    @SerializedName("pdfPath")
-    @Expose
-    String pdfPath = "";
-
-    @SerializedName("isSelect")
-    @Expose
-    boolean isSelect;
 
     @SerializedName("status")
     @Expose
@@ -21,27 +14,10 @@ public class CertificateResModel {
     @SerializedName("error")
     @Expose
     private Boolean error;
-    @SerializedName("mobile_number")
-    @Expose
-    private String mobileNumber;
-    @SerializedName("message")
-    @Expose
-    private String message;
-    @SerializedName("registration_id")
-    @Expose
-    private String registrationId;
-    @SerializedName("APIcertificate")
-    @Expose
-    private List<APIcertificate> aPIcertificate = null;
 
-    @SerializedName("student_name")
+    @SerializedName("studentuseridbasedcertificate")
     @Expose
-    private String  studentName ;
-
-    @SerializedName("student_name_verified")
-    @Expose
-    private String  studentNameVerified ;
-
+    private List<APIcertificate> studentuseridbasedcertificate = null;
 
     public String getStatus() {
         return status;
@@ -59,68 +35,11 @@ public class CertificateResModel {
         this.error = error;
     }
 
-    public String getMobileNumber() {
-        return mobileNumber;
+    public List<APIcertificate> getStudentuseridbasedcertificate() {
+        return studentuseridbasedcertificate;
     }
 
-    public void setMobileNumber(String mobileNumber) {
-        this.mobileNumber = mobileNumber;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public void setMessage(String message) {
-        this.message = message;
-    }
-
-    public String getRegistrationId() {
-        return registrationId;
-    }
-
-    public void setRegistrationId(String registrationId) {
-        this.registrationId = registrationId;
-    }
-
-    public List<APIcertificate> getAPIcertificate() {
-        return aPIcertificate;
-    }
-
-    public void setAPIcertificate(List<APIcertificate> aPIcertificate) {
-        this.aPIcertificate = aPIcertificate;
-    }
-
-
-    public String getPdfPath() {
-        return pdfPath;
-    }
-
-    public void setPdfPath(String pdfPath) {
-        this.pdfPath = pdfPath;
-    }
-
-    public boolean isSelect() {
-        return isSelect;
-    }
-
-    public void setSelect(boolean select) {
-        isSelect = select;
-    }
-
-    public String getStudentName() {
-        return studentName;
-    }
-
-    public void setStudentName(String studentName) {
-        this.studentName = studentName;
-    }
-
-    public String getStudentNameVerified() {
-        return studentNameVerified;
-    }
-
-    public void setStudentNameVerified(String studentNameVerified) {
-        this.studentNameVerified = studentNameVerified;
+    public void setStudentuseridbasedcertificate(List<APIcertificate> studentuseridbasedcertificate) {
+        this.studentuseridbasedcertificate = studentuseridbasedcertificate;
     }
 }

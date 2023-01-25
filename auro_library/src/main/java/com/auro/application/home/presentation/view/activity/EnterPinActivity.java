@@ -126,7 +126,7 @@ public class EnterPinActivity extends BaseActivity implements View.OnClickListen
             else {
             binding.progressbar.pgbar.setVisibility(View.VISIBLE);
             SetUsernamePinReqModel mreqmodel = new SetUsernamePinReqModel();
-            mreqmodel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
+            mreqmodel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getUserId());
             mreqmodel.setPin(pin);
             viewModel.checkInternet(mreqmodel, Status.LOGIN_PIN_API);
         }

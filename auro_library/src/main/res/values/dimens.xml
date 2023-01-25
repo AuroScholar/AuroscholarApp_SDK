@@ -12,9 +12,9 @@
     <dimen name="filter_text_selected_default_size">18sp</dimen>
     <dimen name="filter_text_default_size">16sp</dimen>
     <dimen name="filter_text_arrow_default_padding">8dp</dimen>
-
+    <dimen name="_10ssp">10.00sp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
-
+    <dimen name="_100ssp">100.00sp</dimen>
     <dimen name="toolbar_nav_button_left_margin">5dp</dimen>
     <dimen name="toolbar_title_left_margin">59dp</dimen>
     <dimen name="toolbar_title_right_margin">59dp</dimen>
@@ -40,6 +40,7 @@
     <dimen name="text_toolbar">17sp</dimen>
     <dimen name="logo_size">100dp</dimen>
     <dimen name="_12ssp">12dp</dimen>
+    <dimen name="_5ssp">5.00sp</dimen>
     <dimen name="_3ssp">3dp</dimen>
     <dimen name="_2ssp">2dp</dimen>
     <dimen name="_11ssp">11dp</dimen>

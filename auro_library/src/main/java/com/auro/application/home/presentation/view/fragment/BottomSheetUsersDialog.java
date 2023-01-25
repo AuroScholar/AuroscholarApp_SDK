@@ -57,6 +57,21 @@ public class BottomSheetUsersDialog extends BottomSheetDialogFragment implements
        binding.studentList.setHasFixedSize(true);
        SelectYourChildAdapter studentListAdapter = new SelectYourChildAdapter(getActivity(), list, this);
        binding.studentList.setAdapter(studentListAdapter);
+       if(list.size()<5){
+           binding.btnaddstudent.setVisibility(View.VISIBLE);
+       }
+       else{
+           binding.btnaddstudent.setVisibility(View.GONE);
+       }
+        binding.btnaddstudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                BottomSheetAddUserDialog bottomSheet = new BottomSheetAddUserDialog();
+                bottomSheet.show(getActivity().getSupportFragmentManager(),
+                        "ModalBottomSheet");
+
+            }
+        });
     }
     @Override
     public void commonEventListner(CommonDataModel commonDataModel) {

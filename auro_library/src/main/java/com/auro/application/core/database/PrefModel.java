@@ -4,6 +4,7 @@ package com.auro.application.core.database;
 import com.auro.application.core.common.NotificationDataModel;
 import com.auro.application.home.data.model.AssignmentReqModel;
 import com.auro.application.home.data.model.AssignmentResModel;
+import com.auro.application.home.data.model.AuroScholarInputModel;
 import com.auro.application.home.data.model.CheckUserResModel;
 import com.auro.application.home.data.model.DashboardResModel;
 import com.auro.application.home.data.model.FbGoogleUserModel;
@@ -33,7 +34,8 @@ public class PrefModel implements Serializable {
     private String userCountry;
     private String countryNameCode;
     private String countryPhoneCode;
-
+    private String partnersource;
+    private String partneruniqueid;
     private String currentLatitude;
     private String currentLongitude;
     private boolean isDashboardaApiNeedToCall;
@@ -66,6 +68,8 @@ public class PrefModel implements Serializable {
     private String userLanguageCode;
     private String userLanguageId;
     private  String userLanguageShortCode;
+    private  String userclass;
+    private  String userprofilepic;
 
     private DashboardResModel dashboardResModel;
 
@@ -74,12 +78,54 @@ public class PrefModel implements Serializable {
     private DynamiclinkResModel dynamiclinkResModel;
     private NotificationDataModel notificationDataModel;
     private String refferalLink;
+    private String user_class;
+    private String apikey;
+
+    public String getApikey() {
+        return apikey;
+    }
+
+    public void setApikey(String apikey) {
+        this.apikey = apikey;
+    }
+
+    public String getPartnersource() {
+        return partnersource;
+    }
+
+    public void setPartnersource(String partnersource) {
+        this.partnersource = partnersource;
+    }
+
+    public String getPartneruniqueid() {
+        return partneruniqueid;
+    }
+
+    public void setPartneruniqueid(String partneruniqueid) {
+        this.partneruniqueid = partneruniqueid;
+    }
+
+    public String getUser_class() {
+        return user_class;
+    }
+
+    public void setUser_class(String user_class) {
+        this.user_class = user_class;
+    }
+
     private LanguageListResModel languageListResModel;
 
     private MyProfileResModel teacherProfileResModel;
     private GetAllChildDetailResModel childDetailResModel;
     private UserDetailResModel userDetailResModel;
 
+    public String getUserprofilepic() {
+        return userprofilepic;
+    }
+
+    public void setUserprofilepic(String userprofilepic) {
+        this.userprofilepic = userprofilepic;
+    }
 
     public UserDetailResModel getUserDetailResModel() {
         return userDetailResModel;
@@ -120,6 +166,7 @@ public class PrefModel implements Serializable {
     private String studentName;
 
     private String srId;
+    private String kycstatus;
 
     private boolean forgotPassword;
 
@@ -153,9 +200,43 @@ public class PrefModel implements Serializable {
     UserDetailResModel studentData;
 
     UserDetailResModel parentData;
+   AuroScholarInputModel auroScholarInputModel;
+
+    public AuroScholarInputModel getAuroScholarInputModel() {
+        return auroScholarInputModel;
+    }
+
+    public void setAuroScholarInputModel(AuroScholarInputModel auroScholarInputModel) {
+        this.auroScholarInputModel = auroScholarInputModel;
+    }
 
     SDKDataModel childData;
     SDKChildModel childrenData;
+    private String partner_logo;
+
+    public String getPartner_logo() {
+        return partner_logo;
+    }
+
+    public void setPartner_logo(String partner_logo) {
+        this.partner_logo = partner_logo;
+    }
+
+    public String getKycstatus() {
+        return kycstatus;
+    }
+
+    public void setKycstatus(String kycstatus) {
+        this.kycstatus = kycstatus;
+    }
+
+    public String getUserclass() {
+        return userclass;
+    }
+
+    public void setUserclass(String userclass) {
+        this.userclass = userclass;
+    }
 
     public SDKChildModel getChildrenData() {
         return childrenData;
@@ -455,8 +536,8 @@ public class PrefModel implements Serializable {
 
     public int getStudentClass() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        if (prefModel != null && prefModel.getStudentData() != null && !prefModel.getStudentData().getGrade().isEmpty()) {
-            return ConversionUtil.INSTANCE.convertStringToInteger(prefModel.getStudentData().getGrade());
+        if (prefModel != null && prefModel.getChildData() != null) {
+            return ConversionUtil.INSTANCE.convertStringToInteger(String.valueOf(prefModel.getStudentClass()));
         }
         return 0;
     }

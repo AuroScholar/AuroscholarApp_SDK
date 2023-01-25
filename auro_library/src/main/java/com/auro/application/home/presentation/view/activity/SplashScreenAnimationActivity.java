@@ -742,8 +742,6 @@ public class SplashScreenAnimationActivity extends BaseActivity {
         if (prefModel.getUserLanguageId()!=null && !prefModel.getUserLanguageId().isEmpty()) {
             languageMasterReqModel.setLanguageId(prefModel.getUserLanguageId());
         } else {
-
-
             languageMasterReqModel.setLanguageId("1");
 
         }

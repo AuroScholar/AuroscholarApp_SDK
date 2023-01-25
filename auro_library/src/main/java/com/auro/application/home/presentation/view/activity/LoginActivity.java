@@ -827,7 +827,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
             }
                 else{
                     AppLogger.e("whichScreenOpen step 1-", "" + prefModel.isLogin());
-                    int studentClass = prefModel.getStudentClass();
+                    int studentClass = Integer.parseInt(prefModel.getUserclass());
                     AppLogger.e("whichScreenOpen step 2-", "" + studentClass);
                     if (studentClass > 0) {
                         startDashboardActivity(loginResModel.getUserMobile());

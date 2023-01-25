@@ -454,6 +454,7 @@
                                 android:id="@+id/tilteachertxt"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:visibility="gone"
                                 android:layout_below="@+id/tiaddusername"
                                 android:layout_marginTop="8dp"
                                 android:layout_marginRight="@dimen/_10sdp"
@@ -500,6 +501,7 @@
                                 android:id="@+id/usernametxt"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
+                                android:visibility="gone"
                                 android:layout_marginRight="@dimen/_10sdp"
                                 android:layout_weight="3.5"
                                 android:hint="@string/login_id">

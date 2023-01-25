@@ -13,7 +13,10 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
         <RelativeLayout
             android:id="@+id/mainParentLayout"
             android:layout_width="match_parent"
@@ -26,15 +29,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
-
-
-                    <ImageView
-                        android:id="@+id/imageView5"
-                        android:layout_width="@dimen/_70sdp"
-                        android:layout_height="@dimen/_70sdp"
-                        android:src="@drawable/ic_bg_left_rangoli"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="@dimen/_70sdp"
+                    android:layout_height="@dimen/_70sdp"
+                    android:src="@drawable/ic_bg_left_rangoli"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <ImageView
                     android:id="@+id/switchProfile"
@@ -443,6 +444,7 @@
                                 android:layout_marginRight="@dimen/_10sdp"
                                 android:layout_weight="3.5"
                                 android:hint="@string/student_phone_number"
+                                android:visibility="gone"
                                 android:theme="@style/MyEditText">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -489,6 +491,7 @@
                                 android:layout_marginRight="@dimen/_10sdp"
                                 android:layout_weight="3.5"
                                 android:hint="@string/username"
+                                android:visibility="gone"
                                 android:theme="@style/MyEditText">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -533,6 +536,7 @@
                                 android:layout_marginRight="@dimen/_10sdp"
                                 android:layout_weight="3.5"
                                 android:hint="@string/user_id"
+                                android:visibility="gone"
                                 android:theme="@style/MyEditText">
 
                                 <com.google.android.material.textfield.TextInputEditText
@@ -1324,7 +1328,7 @@
 
 
         </RelativeLayout>
-
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/errorConstraint"

@@ -100,19 +100,13 @@ public class FriendsLeaderBoardListFragment extends BaseFragment implements View
     List<GetAllReferChildDetailResModel> list = new ArrayList<>();
     List<GetAllReferChildDetailResModel> listchilds1 = new ArrayList<>();
     List<GetAllReferChildDetailResModel> list1= new ArrayList<>();
-    RecyclerView referalstudentList;
-    private static final int REQUEST_CODE_PICK_CONTACTS = 1;
     private static final String TAG = FriendsLeaderBoardListFragment.class.getSimpleName();
     FriendsLeoboardListLayoutBinding binding;
     FriendsLeaderShipViewModel viewModel;
-    InviteFriendDialog mInviteBoxDialog;
     FriendListResDataModel resModel;
 
     LeaderBoardAdapter leaderBoardAdapter;
     boolean isFriendList = true;
-    Resources resources;
-    boolean isStateRestore;
-
     FriendsLeaderBoardModel boardModel;
     DashboardResModel dashboardResModel;
     AssignmentReqModel assignmentReqModel;
@@ -180,6 +174,7 @@ public class FriendsLeaderBoardListFragment extends BaseFragment implements View
 
     @Override
     protected void setListener() {
+        DashBoardMainActivity.setListingActiveFragment(DashBoardMainActivity.LEADERBOARD_FRAGMENT);
         binding.inviteNow.setOnClickListener(this);
         binding.toolbarLayout.backArrow.setOnClickListener(this);
 
@@ -275,7 +270,6 @@ public class FriendsLeaderBoardListFragment extends BaseFragment implements View
     private void handleProgress(int i, String msg) {
         switch (i) {
             case 0:
-
                 binding.progressBar.setVisibility(View.VISIBLE);
                 binding.errorConstraint.setVisibility(View.GONE);
                 binding.noFriendLayout.setVisibility(View.GONE);
@@ -370,16 +364,10 @@ public class FriendsLeaderBoardListFragment extends BaseFragment implements View
     public void onClick(View v) {
         if (v.getId() == R.id.back_arrow) {
             getActivity().onBackPressed();
-            //openFragment(new QuizHomeFragment());
+
         } else if (v.getId() == R.id.invite_button) {
-         /*   ((DashBoardMainActivity) getActivity()).setListner(this);
-            ((DashBoardMainActivity) getActivity()).callRefferApi();
-            handleRefferProgress(0);*/
             callLinkGenerateApi();
         } else if (v.getId() == R.id.invite_now) {
-           /* ((DashBoardMainActivity) getActivity()).setListner(this);
-            ((DashBoardMainActivity) getActivity()).callRefferApi();
-            handleRefferProgress(0);*/
             callLinkGenerateApi();
         }
     }
@@ -621,25 +609,9 @@ public class FriendsLeaderBoardListFragment extends BaseFragment implements View
 
 
     private void askPermission() {
-//        String rationale = getString(R.string.permission_error_msg);
-//        Permissions.Options options = new Permissions.Options()
-//                .setRationaleDialogTitle("Info")
-//                .setSettingsDialogTitle("Warning");
-//        Permissions.check(getActivity(), PermissionUtil.mCameraPermissions, rationale, options, new PermissionHandler() {
-//            @Override
-//            public void onGranted() {
 
-                //   openQuizTestFragment(dashboardResModel);
                 openCameraPhotoFragment();
 
-//            }
-//
-//            @Override
-//            public void onDenied(Context context, ArrayList<String> deniedPermissions) {
-//                // permission denied, block the feature.
-//                ViewUtil.showSnackBar(binding.getRoot(), rationale);
-//            }
-//        });
     }
 
     public void openCameraPhotoFragment() {
@@ -651,24 +623,19 @@ public class FriendsLeaderBoardListFragment extends BaseFragment implements View
         AlertDialog.Builder alertDialog2 = new AlertDialog.Builder(
                 getActivity());
 
-// Setting Dialog Title
         alertDialog2.setTitle("Info");
 
-// Setting Dialog Message
         alertDialog2.setMessage("You have taken all your quizzes for the month. \nPractise more and come back next month.");
 
-// Setting Icon to Dialog
-        // alertDialog2.setIcon(R.drawable.);
         alertDialog2.setNegativeButton("OK",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
-                        // Write your code here to execute after dialog
-                        // ViewUtil.showToast("You clicked on NO");
+
                         dialog.cancel();
                     }
                 });
 
-// Showing Alert Dialog
+
         alertDialog2.show();
     }
 
@@ -682,7 +649,7 @@ public class FriendsLeaderBoardListFragment extends BaseFragment implements View
     private void callLinkGenerateApi() {
         binding.inviteProgress.setVisibility(View.VISIBLE);
         DynamiclinkResModel dynamiclinkResModel = new DynamiclinkResModel();
-        dynamiclinkResModel.setReffeUserId(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
+        dynamiclinkResModel.setReffeUserId(AuroAppPref.INSTANCE.getModelInstance().getUserId());
         dynamiclinkResModel.setSource(AppConstant.AURO_ID);
         dynamiclinkResModel.setNavigationTo(AppConstant.NavigateToScreen.STUDENT_DASHBOARD);
         dynamiclinkResModel.setReffer_type("" + AppConstant.UserType.STUDENT);
@@ -693,7 +660,7 @@ public class FriendsLeaderBoardListFragment extends BaseFragment implements View
     private void getAddedChild()
     {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String suserid = AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId();
+        String suserid = AuroAppPref.INSTANCE.getModelInstance().getChildData().getUser_details().get(0).getUser_id();
 
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("user_id",suserid);
@@ -736,7 +703,7 @@ public class FriendsLeaderBoardListFragment extends BaseFragment implements View
     private void getRefferedAddedChild()
     {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String suserid = AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId();
+        String suserid =AuroAppPref.INSTANCE.getModelInstance().getUserId();
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("user_id",suserid);
         RemoteApi.Companion.invoke().getAllChildRefer(map_data)

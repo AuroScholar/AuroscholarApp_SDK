@@ -19,6 +19,16 @@
             android:id="@+id/grid_recycler"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/downloadcert"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/_5ssp"
+            android:gravity="right"
+            android:visibility="visible"
+            android:text="@string/download_certificate"
+            android:textColor="@color/blue_color">
+        </androidx.appcompat.widget.AppCompatTextView>
 
         <View
             android:layout_width="match_parent"

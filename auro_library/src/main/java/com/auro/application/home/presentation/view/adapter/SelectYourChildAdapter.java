@@ -3,6 +3,7 @@ package com.auro.application.home.presentation.view.adapter;
 import static android.content.Context.MODE_PRIVATE;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,14 +21,19 @@ import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
+import com.auro.application.core.util.AuroScholar;
 import com.auro.application.databinding.StudentUserLayoutBinding;
 
 
+import com.auro.application.home.data.model.AuroScholarInputModel;
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.data.model.response.UserDetailResModel;
+import com.auro.application.home.presentation.view.activity.AppLanguageActivity;
+import com.auro.application.home.presentation.view.activity.ChooseGradeActivity;
 import com.auro.application.home.presentation.view.activity.CompleteStudentProfileWithoutPin;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
 import com.auro.application.home.presentation.view.activity.EnterPinActivity;
+import com.auro.application.home.presentation.view.activity.SDKActivity;
 import com.auro.application.util.RemoteApi;
 
 
@@ -52,11 +58,14 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
 
     List<SDKChildModel> mValues;
     Context mContext;
-    SDKDataModel checkUserResModel;
+    SDKChildModel checkUserResModel;
+    SDKDataModel checkUserResModel2;
     StudentUserLayoutBinding binding;
     CommonCallBackListner commonCallBackListner;
     boolean progressStatus;
     String comingFromText = "";
+    AuroScholarInputModel auroScholarInputModel;
+
 
     public SelectYourChildAdapter(Context mContext, List<SDKChildModel> mValues, CommonCallBackListner commonCallBackListner) {
         this.mValues = mValues;
@@ -78,13 +87,6 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
         Vholder.binding.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                //  if (mValues.get(0).getPin().isEmpty() || mValues.get(0).getPin().equals("")){
-//                    Intent intent = new Intent(mContext, DashBoardMainActivity.class);
-//                    mContext.startActivity(intent);
-                //   binding.cardView.setVisibility(View.GONE);
-                //  }
-//                else{
                 String userid = mValues.get(position).getUser_id();
                 String gradeid = mValues.get(position).getGrade();
                 SharedPreferences.Editor editor = mContext.getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
@@ -92,26 +94,38 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                 editor.putString("studentuserid", userid);
                 editor.putString("studentgradeid", gradeid);
                 editor.apply();
-                checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
-                int newposition = position;
-                checkUserForOldStudentUser(checkUserResModel, newposition);
-//                    Intent intent = new Intent(mContext, EnterStudentPinActivity.class);
-//                    intent.putExtra(AppConstant.USER_PROFILE_DATA_MODEL, resModel);
-//                    mContext.startActivity(intent);
-                //  }
+                checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData().getUser_details().get(position);
+                checkUserResModel2 = AuroAppPref.INSTANCE.getModelInstance().getChildData();
+
+                    String userid_child =  mValues.get(position).getUser_id();
+                    String user_mobile =  mValues.get(position).getMobile_no();
+                    String student_name =  mValues.get(position).getStudent_name();
+                    String user_language =  mValues.get(position).getUser_prefered_language_id();
+                    String user_grade =  mValues.get(position).getGrade();
+                    String user_kyc =  mValues.get(position).getKyc_status();
+                String user_name =  mValues.get(position).getUser_name();
+                String partner_logo =  mValues.get(position).getPartner_logo();
+                String profile_pic =  mValues.get(position).getProfile_pic();
+
+                    SDKChildModel resModel = AuroAppPref.INSTANCE.getModelInstance().getChildData().getUser_details().get(position);
+                    setDatainPref(resModel);
+                    PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+                    prefModel.setChildData(checkUserResModel2);
+                    prefModel.setUserId(userid_child);
+                    prefModel.setUserMobile(user_mobile);
+                    prefModel.setUserLanguageId(user_language);
+                    prefModel.setStudentName(student_name);
+                    prefModel.setUserclass(user_grade);
+                    prefModel.setKycstatus(user_kyc);
+                prefModel.setUserprofilepic(profile_pic);
+                prefModel.setUserName(user_name);
+                prefModel.setPartner_logo(partner_logo);
+                AuroAppPref.INSTANCE.setPref(prefModel);
+                setSDKAPI(userid_child,user_language);
 
             }
         });
-//        if(!AuroAppPref.INSTANCE.getModelInstance().isLogin()) {
-//            Vholder.itemView.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (commonCallBackListner != null) {
-//                        commonCallBackListner.commonEventListner(AppUtil.getCommonClickModel(position, Status.CLICK_BACK, mValues.get(position)));
-//                    }
-//                }
-//            });
-//        }
+
     }
 
     @Override
@@ -133,26 +147,20 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
         }
 
         public void setData(List<SDKChildModel> mValues, int position) {
-//            if (mValues.size() - 1 == position) {
-//                binding.cardView.setVisibility(View.GONE);
-//                binding.cardViewButton.setVisibility(View.VISIBLE);
-//            } else {
-
-
-            //   String userName = details.getUsername()!=null ? details.getUsername() : AuroApp.getAppContext().getResources().getString(R.string.username);
-            //   String name = details.getName()!=null ? details.getName() : AuroApp.getAppContext().getResources().getString(R.string.name);;
-            //   String grade = details.getGradeStudent()!=null ? details.getGradeStudent() : AuroApp.getAppContext().getResources().getString(R.string.grade_student_new);
-
-
-
-            Glide.with(mContext).load(mValues.get(position).getProfile_pic())
-                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))
-                            .circleCrop()).into(binding.studentImage);
-
+            if (mValues.get(position).getProfile_pic().isEmpty()){
+                Glide.with(mContext).load(R.drawable.ic_profile)
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))
+                                .circleCrop()).into(binding.studentImage);
+            }
+            else{
+                Glide.with(mContext).load(mValues.get(position).getProfile_pic())
+                        .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))
+                                .circleCrop()).into(binding.studentImage);
+            }
             binding.txtchangepin.setVisibility(View.GONE);
             binding.cardView.setVisibility(View.VISIBLE);
             binding.cardViewButton.setVisibility(View.GONE);
-            binding.tvStudentUserName.setText("Username: " + mValues.get(position).getStudent_name());
+            binding.tvStudentUserName.setText("Username: " + mValues.get(position).getUser_name());
             binding.tvStudentName.setText("Name: " + mValues.get(position).getStudent_name());
             binding.tvStudentGrade.setText("Grade: " + mValues.get(position).getGrade());
             //  }
@@ -160,37 +168,85 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
     }
 
     void checkUserForOldStudentUser(SDKDataModel checkUserResModel, int position) {
-        if (checkUserResModel != null && !checkUserResModel.getUser_details().isEmpty() ) { //&& checkUserResModel.getUserDetails().size() == 1
+        if ((checkUserResModel != null)  && checkUserResModel.getUser_details().size() == 1){
             SDKChildModel resModel = checkUserResModel.getUser_details().get(position);
-            // if (checkUserResModel.getUser_details().get(position).getIsMaster().equalsIgnoreCase(AppConstant.UserType.USER_TYPE_STUDENT)) {
             setDatainPref(resModel);
-            // if (checkUserResModel.getUser_details().size() == 2){
-
-            //  getProfile();
+            PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+            prefModel.setChildData(checkUserResModel);
+            AuroAppPref.INSTANCE.setPref(prefModel);
             Intent i = new Intent(mContext, DashBoardMainActivity.class);
             i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             mContext.startActivity(i);
-            //  }
-            //  else{
 
-            //  openEnterPinActivity(resModel);
-            //   }
-
-
-
-            //  }
 
         }
 
 
     }
 
-    private void getProfile()
+
+
+    private void setDatainPref(SDKChildModel resModel) {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        prefModel.setChildrenData(resModel);
+        AuroAppPref.INSTANCE.setPref(prefModel);
+
+    }
+    private void setSDKAPI(String userid, String langid)
     {
-        String suserid = AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId();
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String mobile = prefModel.getUserMobile();
+        String partneruniueid = prefModel.getPartneruniqueid();
+        String partnersource = prefModel.getPartnersource();
+
+            HashMap<String,String> map_data = new HashMap<>();
+            map_data.put("mobile_no",mobile);
+            map_data.put("partner_unique_id",partneruniueid); //456456
+            map_data.put("partner_source",partnersource);
+            map_data.put("partner_api_key","7611f0fafb1e3b96d1a78c57b0650b85985eace9f6aaa365c0b496e9ae1163e7");
+        map_data.put("user_id",userid);
+
+            RemoteApi.Companion.invoke().getSDKData(map_data)
+                    .enqueue(new Callback<SDKDataModel>() {
+                        @Override
+                        public void onResponse(Call<SDKDataModel> call, Response<SDKDataModel> response)
+                        {
+                            try {
+                                if (response.code() == 400) {
+                                    Toast.makeText(mContext, "Error!", Toast.LENGTH_SHORT).show();
+                                }
+                                else if (response.code() == 200) {
+
+                                    getProfile(userid,langid);
+
+
+                                }
+                                else {
+                                    Toast.makeText(mContext, response.message(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            catch (Exception e) {
+                                Toast.makeText(mContext, "Internet connection", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<SDKDataModel> call, Throwable t) {
+                            Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    });
+
+    }
+    private void getProfile(String userid, String lang_id)
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String partnersource = prefModel.getPartnersource();
+        String parnteruniqueid = prefModel.getPartneruniqueid();
+        int userclass = Integer.parseInt(prefModel.getUserclass());
+        String mobileno = prefModel.getUserMobile();
         HashMap<String,String> map_data = new HashMap<>();
-        map_data.put("user_id",suserid);
-        //0000898904,123456
+        map_data.put("user_id",userid);
 
         RemoteApi.Companion.invoke().getStudentData(map_data)
                 .enqueue(new Callback<GetStudentUpdateProfile>()
@@ -200,20 +256,28 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                     {
                         if (response.isSuccessful())
                         {
-                            if (response.body().getStatename().equals("")||response.body().getStatename().equals("null")||response.body().getStatename().equals(null)||response.body().getDistrictname().equals("")||response.body().getDistrictname().equals("null")||response.body().getDistrictname().equals(null)||response.body().getStudentName().equals("")||response.body().getStudentName().equals("null")||response.body().getStudentName().equals(null)||
+                            if (lang_id==null||lang_id.equals("null")||lang_id.equals(null)||lang_id.equals("0")||lang_id=="0"||lang_id.equals("")||lang_id.isEmpty()){
+                                Intent i = new Intent(mContext, AppLanguageActivity.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                mContext.startActivity(i);
+                            }
+                            else if (userclass>0){
+                                Intent i = new Intent(mContext, ChooseGradeActivity.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                mContext.startActivity(i);
+                            }
+                            else if (response.body().getStatename().equals("")||response.body().getStatename().equals("null")||response.body().getStatename().equals(null)||response.body().getDistrictname().equals("")||response.body().getDistrictname().equals("null")||response.body().getDistrictname().equals(null)||response.body().getStudentName().equals("")||response.body().getStudentName().equals("null")||response.body().getStudentName().equals(null)||
                                     response.body().getStudentclass().equals("")||response.body().getStudentclass().equals("null")||response.body().getStudentclass().equals(null)||response.body().getStudentclass().equals("0")||response.body().getStudentclass().equals(0)){
-
                                 Intent i = new Intent(mContext, CompleteStudentProfileWithoutPin.class);
                                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                 mContext.startActivity(i);
                             }
                             else{
-
-                                Intent i = new Intent(mContext, DashBoardMainActivity.class);
-                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                mContext.startActivity(i);
+                                openGenricSDK(mobileno,partnersource,parnteruniqueid);
+//                                Intent i = new Intent(mContext, DashBoardMainActivity.class);
+//                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//                                mContext.startActivity(i);
                             }
-
 
                         }
                         else
@@ -230,26 +294,17 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                     }
                 });
     }
-
-    private void setDatainPref(SDKChildModel resModel) {
-        // if (resModel.getIsMaster().equalsIgnoreCase(AppConstant.UserType.USER_TYPE_STUDENT)) {
+    public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource  ) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        prefModel.setChildrenData(resModel);
-        //   prefModel.setStudentClasses(checkUserResModel.getClasses());
-        AuroAppPref.INSTANCE.setPref(prefModel);
-        //  }
-//        else {
-//            PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-//            prefModel.setParentData(resModel);
-//            prefModel.setStudentClasses(checkUserResModel.getClasses());
-//            AuroAppPref.INSTANCE.setPref(prefModel);
-//        }
-    }
-    private void openEnterPinActivity(UserDetailResModel resModel) {
-
-        Intent intent = new Intent(mContext, EnterPinActivity.class);
-        intent.putExtra(AppConstant.USER_PROFILE_DATA_MODEL, resModel);
-        mContext.startActivity(intent);
-
+        String userclass = prefModel.getUserclass();
+        AuroScholarInputModel inputModel = new AuroScholarInputModel();
+        inputModel.setMobileNumber(mobileNumber);
+        inputModel.setStudentClass(userclass);
+        inputModel.setPartner_unique_id(partneruniqueid);
+        inputModel.setPartnerSource(partnersource);
+        inputModel.setPartner_api_key("");
+        inputModel.setActivity((Activity) mContext);
+        AuroScholar.startAuroSDK(inputModel);
+        //  AuroScholar.startAuroSDK(inputModel);
     }
 }

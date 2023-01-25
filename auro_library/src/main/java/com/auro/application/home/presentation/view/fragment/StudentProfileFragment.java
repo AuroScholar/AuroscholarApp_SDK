@@ -1,5 +1,7 @@
 package com.auro.application.home.presentation.view.fragment;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -29,6 +31,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -41,10 +44,12 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -99,6 +104,7 @@ import com.auro.application.home.presentation.view.adapter.TutionTypeSpinnerAdap
 import com.auro.application.home.presentation.viewmodel.StudentProfileViewModel;
 import com.auro.application.teacher.data.model.common.DistrictDataModel;
 import com.auro.application.teacher.data.model.common.StateDataModel;
+
 import com.auro.application.teacher.presentation.view.adapter.DistrictSpinnerAdapter;
 import com.auro.application.teacher.presentation.view.adapter.StateSpinnerAdapter;
 import com.auro.application.util.AppLogger;
@@ -127,6 +133,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.InstanceIdResult;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -156,6 +163,9 @@ import static com.auro.application.core.common.Status.TUTION;
 import static com.auro.application.core.common.Status.TUTIONTYPE;
 import static com.auro.application.core.common.Status.UPDATE_STUDENT;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -169,14 +179,10 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
     ViewModelFactory viewModelFactory;
     FragmentStudentProfile2Binding binding;
     StudentProfileViewModel viewModel;
-    List<String> genderLines;
-    List<String> schooltypeLines;
-    List<String> boardLines;
-    List<String> languageLines;
-    List<String> privateTutionList;
-    List<String> privateTutionTypeList;
+    String getkycstatus;
     DashboardResModel dashboardResModel;
     List<GenderData> genderList = new ArrayList<>();
+    List<String> genderListString = new ArrayList<>();
     List<TutionData> tutiontypeList = new ArrayList<>();
     List<PrivateTutionData> privatetutionList = new ArrayList<>();
     List<SchoolTypeData> schooltypeList = new ArrayList<>();
@@ -204,7 +210,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
     String districtCode = "";
     String Schoolsearch = "";
     String fullname,studentemail,filename,image_path,SchoolName,gradeid,fbnewToken,state_Code,district_code;
-  String gender_pass,tutiontype_pass,tution_pass,schoolmedium_pass,board_pass, final_state_id,final_district_id,f_state,f_district;
+    String gender_pass,tutiontype_pass,tution_pass,schoolmedium_pass,board_pass, final_state_id,final_district_id,f_state,f_district;
     RequestBody lRequestBody;
     String schooltype_pass = "";
     String GenderName="";
@@ -213,9 +219,13 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
     String boardtype="";
     String Schoolmedium="";
     String Tution="";
+    String getschool_id;
+    String schoolnameprofile;
     RequestBody  schoolname;
     MultipartBody.Part lFile;
     StudentKycStatusResModel studentKycStatusResModel;
+    Details details;
+    List<SchoolData> districtList = new ArrayList<>();
 
 
     public StudentProfileFragment() {
@@ -237,9 +247,11 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-
+        getActivity().getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE|WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
-        ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+//        ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+        DaggerWrapper.getComponent(getActivity()).doInjection(this);
+
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(StudentProfileViewModel.class);
         binding.setLifecycleOwner(this);
         setRetainInstance(true);
@@ -247,21 +259,81 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
             @Override
             public void onSuccess(InstanceIdResult instanceIdResult) {
                 fbnewToken = instanceIdResult.getToken();
+                Log.v("fbtoken", fbnewToken);
 
             }
         });
-
+        details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
 
         init();
-       // getChildProfile();
-      setListener();
+        // getChildProfile();
+        setListener();
         setToolbar();
-        binding.etstate.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("stateid", parent.getItemAtPosition(position).toString());
-            }
-        });
+
+
+
+
+
+        return binding.getRoot();
+
+    }
+
+    @Override
+    protected void init() {
+        prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String language_id = prefModel.getUserLanguageId();
+        firstTimeCome = true;
+        DashBoardMainActivity.setListingActiveFragment(DashBoardMainActivity.STUDENT_PROFILE_FRAGMENT);
+        AppLogger.e("setDashboardResModelToPref--5", "step 1");
+        GetStudentUpdateProfile studentProfileModel = new GetStudentUpdateProfile();
+
+        if (getArguments() != null) {
+            dashboardResModel = getArguments().getParcelable(AppConstant.DASHBOARD_RES_MODEL);
+            comingFrom = getArguments().getString(AppConstant.COMING_FROM);
+
+        }
+
+        if (viewModel != null && viewModel.serviceLiveData().hasObservers()) {
+            viewModel.serviceLiveData().removeObservers(this);
+        } else {
+            observeServiceResponse();
+        }
+
+
+
+
+
+        callingStudentUpdateProfile();
+
+        AppUtil.commonCallBackListner = this;
+
+
+        checkYCApprovedOrNot();
+        AppUtil.loadAppLogo(binding.auroScholarLogo, getActivity());
+
+
+
+        binding.editUsername.setText(AuroAppPref.INSTANCE.getModelInstance().getUserName());
+        binding.editProfile.setText(AuroAppPref.INSTANCE.getModelInstance().getStudentName());
+        binding.editUserid.setText(AuroAppPref.INSTANCE.getModelInstance().getUserId());
+        String studentname = AuroAppPref.INSTANCE.getModelInstance().getStudentName();
+        binding.UserName.setText(studentname);
+
+
+        getGrade();
+        getAllStateList();
+        getGender();
+        getTutiontype();
+        getPrivatetype();
+        getSchooltype();
+        getBoardtype();
+        getSchoolmedium(language_id);
+
+        AppStringDynamic.setStudentProfilePageStrings(binding);
+
+
+
+
         binding.etstate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -297,104 +369,48 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         binding.etSchoolname.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                binding.etSchoolname.showDropDown();
+                if (districtList!=null||!districtList.isEmpty()){
+                    binding.etSchoolname.showDropDown();
+
+                    addDropDownSchool(districtList);
+                }
+
+
                 return false;
             }
         });
+
         binding.etSchoolname.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus)
                 {
-                    binding.etSchoolname.showDropDown();
+                    if (districtList!=null||!districtList.isEmpty()){
+                        binding.etSchoolname.showDropDown();
+
+                        addDropDownSchool(districtList);
+                    }
+
+
                 }
             }
         });
-//        binding.etSchoolname.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                Schoolsearch = s.toString();
-//                getSchool(stateCode,districtCode,s.toString());
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
-
-        return binding.getRoot();
-
-    }
-
-    @Override
-    protected void init() {
-         prefModel = AuroAppPref.INSTANCE.getModelInstance();
-         String language_id = prefModel.getUserLanguageId();
-        firstTimeCome = true;
-        DashBoardMainActivity.setListingActiveFragment(DashBoardMainActivity.STUDENT_PROFILE_FRAGMENT);
-        AppLogger.e("setDashboardResModelToPref--5", "step 1");
-        GetStudentUpdateProfile studentProfileModel = new GetStudentUpdateProfile();
-       // AppLogger.e("setDashboardResModelToPref--6", AuroAppPref.INSTANCE.getModelInstance().getDashboardResModel().getEmail_id());
-
-        if (getArguments() != null) {
-            dashboardResModel = getArguments().getParcelable(AppConstant.DASHBOARD_RES_MODEL);
-            comingFrom = getArguments().getString(AppConstant.COMING_FROM);
-          //  AppLogger.v("studentprofile", dashboardResModel + "");
-
-        }
-
-        if (viewModel != null && viewModel.serviceLiveData().hasObservers()) {
-            viewModel.serviceLiveData().removeObservers(this);
-        } else {
-            observeServiceResponse();
-        }
-
-//        viewModel.getStateListData();
-//        viewModel.getDistrictListData();
+        binding.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                binding.swipeRefreshLayout.setRefreshing(true);
+                observeServiceResponse();
+            }
+        });
+        Details details1 = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
 
 
 
-        callingStudentUpdateProfile();
-
-        AppUtil.commonCallBackListner = this;
 
 
-        checkYCApprovedOrNot();
-        AppUtil.loadAppLogo(binding.auroScholarLogo, getActivity());
 
-        callGetStudentKycStatus();
 
-        UserDetailResModel userDetailResModel = AuroAppPref.INSTANCE.getModelInstance().getStudentData();
-        String userName = userDetailResModel.getUserName() == null ? userDetailResModel.getUserName() : userDetailResModel.getUserMobile();
-        binding.editUsername.setText(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserName());
-        binding.editProfile.setText(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getStudentName());
-        binding.editUserid.setText(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
-        String studentname = userDetailResModel.getStudentName() == null ? userDetailResModel.getStudentName() : "Child";
-        binding.UserName.setText(studentname);
-//        binding.etStudentGender.setText(studentProfileModel.getGender());
-//        binding.etSchooltype.setText(studentProfileModel.getSchoolType());
-//        binding.etSchoolboard.setText(studentProfileModel.getBoardType());
-//        binding.etSchoolmedium.setText(studentProfileModel.getLanguage());
-//        binding.ettution.setText(studentProfileModel.getIsPrivateTution());
-//        binding.ettutiontype.setText(studentProfileModel.getPrivateTutionType());
-//        binding.etSchoolname.setText(studentProfileModel.getSchoolName());
 
-        getGrade();
-        getAllStateList();
-        getGender();
-        getTutiontype();
-        getPrivatetype();
-        getSchooltype();
-        getBoardtype();
-        getSchoolmedium(language_id);
-
-        AppStringDynamic.setStudentProfilePageStrings(binding);
     }
 
     private void checkForAddStudentVisibility() {
@@ -448,6 +464,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
     @Override
     protected void setListener() {
+        DashBoardMainActivity.setListingActiveFragment(DashBoardMainActivity.STUDENT_PROFILE_FRAGMENT);
         binding.languageLayout.setOnClickListener(this);
         binding.profileImage.setOnClickListener(this);
         binding.editImage.setOnClickListener(this);
@@ -474,14 +491,11 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         binding.editemail.setOnTouchListener(this);
         binding.editSubjectIcon.setOnClickListener(this);
         binding.switchProfile.setOnClickListener(this);
-
-
         binding.etdistrict.setOnFocusChangeListener(this);
         binding.etdistrict.setOnTouchListener(this);
         binding.etgrade.setOnFocusChangeListener(this);
         binding.etgrade.setOnTouchListener(this);
-//        binding.etSchoolname.setOnFocusChangeListener(this);
-//        binding.etSchoolname.setOnTouchListener(this);
+
         binding.ettution.setOnFocusChangeListener(this);
         binding.ettution.setOnTouchListener(this);
         binding.ettutiontype.setOnFocusChangeListener(this);
@@ -494,7 +508,6 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         binding.etSchooltype.setOnTouchListener(this);
         binding.etSchoolboard.setOnFocusChangeListener(this);
         binding.etSchoolboard.setOnTouchListener(this);
-
 
 
 
@@ -528,6 +541,8 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                 changeTheEditText();
             }
         });
+
+
 
         binding.SpinnerLanguageMedium.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -622,6 +637,16 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         setListener();*/
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        //init();
+        //  setListener();
+    }
+
+
+
+
     private void setSubjectAdapter(SubjectPreferenceResModel subjectPreferenceResModel) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         List<CategorySubjectResModel> categorySubjectResModelList = new ArrayList<>();
@@ -675,7 +700,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
     void callFetchUserPreference() {
         handleProgress(0, "");
         FetchStudentPrefReqModel fetchStudentPrefReqModel = new FetchStudentPrefReqModel();
-        fetchStudentPrefReqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
+        fetchStudentPrefReqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getUserId());
         viewModel.checkInternetForApi(FETCH_STUDENT_PREFERENCES_API, fetchStudentPrefReqModel);
     }
 
@@ -709,13 +734,13 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                 Toast.makeText(getActivity(), details1.getEnter_your_name(), Toast.LENGTH_SHORT).show();
 
             } else if (binding.editProfile.getText().toString().startsWith(" ")) {
-                Toast.makeText(getActivity(), "Can not enter space in name", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), details1.getEnter_space_name(), Toast.LENGTH_SHORT).show();
             } else if (!binding.editemail.getText().toString().isEmpty() && !binding.editemail.getText().toString().equals("") && !email.matches(emailPattern)) {
 
-                Toast.makeText(getActivity(), "Please enter valid email", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), details1.getPlease_enter_valid_email(), Toast.LENGTH_SHORT).show();
 
             } else if (binding.editemail.getText().toString().startsWith(" ")) {
-                Toast.makeText(getActivity(), "Can not enter space in email", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), details1.getEnter_space_email(), Toast.LENGTH_SHORT).show();
             } else if (binding.etStudentGender.getText().toString().equals("Student Gender") || binding.etStudentGender.getText().toString().equals("Please Select Your Gender") || binding.etStudentGender.getText().toString().equals("") || binding.etStudentGender.getText().toString().equals("Select Your Gender") || binding.etStudentGender.getText().toString().equals("Please Select Gender") || binding.etStudentGender.getText().toString().equals("Select Gender") || genderList.get(0).getTranslatedName().equals(binding.etStudentGender.getText().toString())) {
                 Toast.makeText(getActivity(), details1.getPlease_select_gender(), Toast.LENGTH_SHORT).show();
 
@@ -725,38 +750,42 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
             } else if (binding.etdistrict.getText().toString().equals("") || binding.etdistrict.getText().toString().isEmpty() || binding.etdistrict.getText().toString().equals("District")) {
                 Toast.makeText(getActivity(), details1.getPlease_select_district(), Toast.LENGTH_SHORT).show();
 
-            } else if (binding.etSchoolname.getText().toString().isEmpty() || binding.etSchoolname.getText().toString().equals("")) {
-                Toast.makeText(getActivity(), details1.getPlease_select_school(), Toast.LENGTH_SHORT).show();
+            }
 
-            } else if (getStudentUpdateProfile.getProfilePic() == null || getStudentUpdateProfile.getProfilePic().equals("") || getStudentUpdateProfile.getProfilePic().equals("null") || getStudentUpdateProfile.getProfilePic().equals(null)) {
+
+            else if (binding.etSchoolname.getText().toString().isEmpty() || binding.etSchoolname.getText().toString().equals("")) {
+
+                Toast.makeText(getActivity(), details1.getPlease_select_school(), Toast.LENGTH_SHORT).show();
+            }
+
+//
+
+            else if (getStudentUpdateProfile.getProfilePic() == null || getStudentUpdateProfile.getProfilePic().equals("") || getStudentUpdateProfile.getProfilePic().equals("null") || getStudentUpdateProfile.getProfilePic().equals(null)) {
                 if (image_path == null || image_path.equals("null") || image_path.equals("") || image_path.isEmpty()) {
                     Toast.makeText(getActivity(), details1.getUploadProfilePic(), Toast.LENGTH_SHORT).show();
 
                 } else if (binding.editProfile.getText().toString().startsWith(" ")) {
-                    Toast.makeText(getActivity(), "Can not enter space in name", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(getActivity(), details1.getEnter_space_name(), Toast.LENGTH_SHORT).show();
                 } else {
                     changeTheEditText();
                     ((DashBoardMainActivity) getActivity()).setProgressVal();
-
                     updateChild();
-                    //sendProfileScreenApi();
+
                 }
             } else {
-//                        changeTheEditText();
+
                 ((DashBoardMainActivity) getActivity()).setProgressVal();
 
                 updateChild();
-                //sendProfileScreenApi();
+
             }
         } else if (id == R.id.editUserNameIcon) {
             AppLogger.v("TextEdit", "   UserName");
-
             binding.UserName.setVisibility(View.GONE);
             binding.editUserNameIcon.setVisibility(View.GONE);
             binding.editProfileName.setVisibility(View.VISIBLE);
             binding.cancelUserNameIcon.setImageResource(R.drawable.ic_cancel_icon);
-            // binding.editProfile.setText(binding.UserName.getText().toString());
+
             binding.editProfile.requestFocus();
             InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.showSoftInput(binding.editProfile, InputMethodManager.SHOW_IMPLICIT);
@@ -784,12 +813,8 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         } else if (id == R.id.wallet_bal_text) {
             if (!TextUtil.isEmpty(binding.editProfile.getText().toString())) {
                 changeTheEditText();
-                openFragment(new WalletInfoDetailFragment());
-                   /* if (viewModel.homeUseCase.checkKycStatus(dashboardResModel)) {
-                        openKYCViewFragment(dashboardResModel);
-                    } else {
-                        openKYCFragment(dashboardResModel);
-                    }*/
+                getKYCStatus();
+
             } else {
                 binding.editProfileName.setError("Enter Student Name");
             }
@@ -828,7 +853,68 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         }
 
     }
+    private void getKYCStatus()
+    {
 
+        String suserid =  AuroAppPref.INSTANCE.getModelInstance().getUserId();
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("user_id",suserid);
+
+        RemoteApi.Companion.invoke().getKYCStatus(map_data)
+                .enqueue(new Callback<StudentKycStatusResModel>()
+                {
+                    @Override
+                    public void onResponse(Call<StudentKycStatusResModel> call, Response<StudentKycStatusResModel> response)
+                    {
+                        if (response.isSuccessful())
+                        {
+                            getkycstatus = response.body().getKycStatus();
+                            String uploadedornot = response.body().getIsKycUploaded();
+                            if (uploadedornot.equals("NO")||uploadedornot=="NO"){
+                                ViewUtil.showSnackBar(binding.getRoot(),"Please upload your KYC");
+                            }
+                            else if (uploadedornot.equals("YES")||uploadedornot=="YES"){
+                                if (getkycstatus.equals("APPROVE")){
+                                    openFragment(new WalletInfoDetailFragment());
+                                }
+                                else if (getkycstatus.equals("PENDING")){
+                                    ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification is pending, wait till it gets verified");
+
+                                }
+                                else if (getkycstatus.equals("DISAPPROVE")){
+                                    ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification has been disapprove, please reupload documents");
+
+                                }
+                                else if (getkycstatus.equals("INPROCESS")){
+                                    ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification is in progress, wait till it gets verified");
+
+                                }
+                                else if (getkycstatus.equals("REJECTED")){
+                                    ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification has been rejected, please reupload documents");
+
+                                }
+                                else{
+                                    ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification is pending, wait till it gets verified");
+
+                                }
+                            }
+
+
+                        }
+                        else
+                        {
+
+                            Log.d(TAG, "onResponser: "+response.message().toString());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<StudentKycStatusResModel> call, Throwable t)
+                    {
+                        Log.d(TAG, "onFailure: "+t.getMessage());
+                    }
+                });
+    }
 
     private void openAddStudentDialog() {
         AddStudentDialog userNotRegisterDialog = new AddStudentDialog(getActivity(), this);
@@ -871,34 +957,10 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                 RoundedBitmapDrawableFactory.create(binding.profileimage.getContext().getResources(), picBitmap);
         circularBitmapDrawable.setCircular(true);
         binding.profileimage.setImageDrawable(circularBitmapDrawable);
+
     }
 
-    private void selectImage(Context context) {
-        final CharSequence[] options = {"Take Photo", "Choose from Gallery", "Cancel"};
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("Choose your profile picture");
-
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-
-                if (options[item].equals("Take Photo")) {
-                    Intent takePicture = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                    openActivity();
-
-                } else if (options[item].equals("Choose from Gallery")) {
-                    Intent pickPhoto = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(pickPhoto, 1);
-
-                } else if (options[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
 
     private void observeServiceResponse() {
         viewModel.serviceLiveData().observeForever(responseApi -> {
@@ -924,6 +986,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                             if (!TextUtil.checkListIsEmpty(subjectPreferenceResModel.getSubjects())) {
                                 setSubjectListVisibility(true);
                                 setSubjectAdapter(subjectPreferenceResModel);
+                                binding.swipeRefreshLayout.setRefreshing(false);
                             } else {
                                 setSubjectListVisibility(false);
                             }
@@ -933,6 +996,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                             prefModel.setFetchStudentPrefResModel(fetchStudentPrefResModel);
                             AuroAppPref.INSTANCE.setPref(prefModel);
                             callSubjectListPreference();
+
                         } else if (responseApi.apiTypeStatus == GET_USER_PROFILE_DATA) {
                             AppLogger.v("GET_USER_PROFILE_DATA callApi", firstTimeCome + "   main");
                             handleProgress(1, "");
@@ -971,7 +1035,6 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
                 default:
                     if (isVisible()) {
-                        // handleProgress(1, (String) responseApi.data);
                         AppLogger.v("apiData", responseApi.data + "   pradeep");
                         handleProgress(2, (String) responseApi.data);
                         showSnackbarError(prefModel.getLanguageMasterDynamic().getDetails().getDefaultError() != null ? prefModel.getLanguageMasterDynamic().getDetails().getDefaultError() : getActivity().getString(R.string.default_error));
@@ -1083,7 +1146,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
 
             if (!TextUtil.isEmpty(getStudentUpdateProfile.getPhonenumber())) {
-                binding.icteachername.setVisibility(View.VISIBLE);
+                binding.icteachername.setVisibility(View.GONE);
             } else {
                 binding.icteachername.setVisibility(View.GONE);
             }
@@ -1162,56 +1225,18 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
     private void updateChild() {
         fullname = binding.editProfile.getText().toString();
-            studentemail = binding.editemail.getText().toString();
-            String mobileversion = DeviceUtil.getVersionName();
+        studentemail = binding.editemail.getText().toString();
+        String mobileversion = DeviceUtil.getVersionName();
         String mobilemanufacture = DeviceUtil.getManufacturer(getActivity());
         String modelname = DeviceUtil.getModelName(getActivity());
         String buildversion = AppUtil.getAppVersionName();
-         String ipaddress = AppUtil.getIpAdress();
-        String username = prefModel.getStudentData().getUserName();
-        String languageid = ViewUtil.getLanguageId();
-        String childid = binding.editUserid.getText().toString();
-        String tution = binding.ettution.getText().toString();
-        String tutiontype = binding.ettutiontype.getText().toString();
-       // String schooltype = binding.etSchooltype.getText().toString();
-        String gendertype = binding.etStudentGender.getText().toString();
-      ///  String boardtype = binding.etSchoolboard.getText().toString();
-        String schoolname = binding.etSchoolname.getText().toString();
-//        if (binding.etSchooltype.getText().toString().equals("")||binding.etSchooltype.getText().toString().isEmpty()) {
-//            schooltype = "null";
-//        }
-//
-//        if (binding.etSchoolboard.getText().toString().equals("")||binding.etSchoolboard.getText().toString().isEmpty()) {
-//            boardtype = "null";
-//        }
-//
-//        if (binding.etSchoolmedium.getText().toString().equals("")||binding.etSchoolmedium.getText().toString().isEmpty()) {
-//            Schoolmedium = "null";
-//        }
-//
-//
-//        if (binding.ettution.getText().toString().equals("")||binding.ettution.getText().toString().isEmpty()) {
-//            Tution = "null";
-//        }
-//
-//
-//        if (binding.ettutiontype.getText().toString().equals("")||binding.ettutiontype.getText().toString().isEmpty()) {
-//            Tutiontype = "null";
-//        }
-//
-//
-//
-//
-//        if (binding.editemail.getText().toString().isEmpty()||binding.editemail.getText().toString().equals("")){
-//            email_c = RequestBody.create(MediaType.parse("text/plain"), "null");
-//        }
-//
-//
-//
-//        if (binding.etSchoolname.getText().toString().isEmpty() || binding.etSchoolname.getText().toString().equals("")) {
-//
-//            schoolname = RequestBody.create(MediaType.parse("text/plain"), "null");
-//        }
+        String ipaddress = AppUtil.getIpAdress();
+        String username = prefModel.getUserName();
+        String languageid = prefModel.getUserLanguageId();
+        String childid = prefModel.getUserId();
+
+
+        schoolnameprofile = binding.etSchoolname.getText().toString();
         if (GenderName.equals("")){
             gender_pass = "Please Select Your Gender";
         }
@@ -1247,7 +1272,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
             tutiontype_pass = "Please Select Tution Type";
         }
         else{
-           tutiontype_pass =  Tutiontype;
+            tutiontype_pass =  Tutiontype;
         }
         if (stateCode.equals("")||stateCode.isEmpty()){
             final_state_id = state_Code;
@@ -1287,8 +1312,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         RequestBody privatetutiontype_c = RequestBody.create(MediaType.parse("text/plain"), tutiontype_pass);
         RequestBody stateid_c = RequestBody.create(MediaType.parse("text/plain"), final_state_id);
         RequestBody districtid_c = RequestBody.create(MediaType.parse("text/plain"), final_district_id);
-        RequestBody schoolname_c = RequestBody.create(MediaType.parse("text/plain"), schoolname);
-
+        RequestBody schoolname_c = RequestBody.create(MediaType.parse("text/plain"), schoolnameprofile);
 
         if (image_path == null || image_path.equals("null") || image_path.equals("") || image_path.isEmpty()) {
             lRequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), "");
@@ -1301,109 +1325,64 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         MultipartBody.Part lFile = MultipartBody.Part.createFormData("user_profile_image", filename, lRequestBody);
 
         RemoteApi.Companion.invoke()
-                    .updateexistchilddetail(buildversion_c, prtnersource, schoolname_c, student_emailid, schoolboard_c,
-                            gender_c, regsource, sharetype, devicetoken, emptyfield,
-                            emptyfield, emptyfield, ipaddress_c, mobileversion_c, modelname_c, privatetutiontype_c, privatetution_c,
-                            emptyfield, emptyfield, languagemedium_c, mobilemanufacture_c, stateid_c, districtid_c, name_c, schooltype_c,
-                            userid_c, language_veriosn,languagemedium_c,api_veriosn,languageid_c,student_name, lFile)
-                    .enqueue(new Callback<StudentResponselDataModel>() {
-                        @Override
-                        public void onResponse(Call<StudentResponselDataModel> call, Response<StudentResponselDataModel> response) {
-                           try {
+                .updateexistchilddetail(buildversion_c, prtnersource, schoolname_c, student_emailid, schoolboard_c,
+                        gender_c, regsource, sharetype, devicetoken, emptyfield,
+                        emptyfield, emptyfield, ipaddress_c, mobileversion_c, modelname_c, privatetutiontype_c, privatetution_c,
+                        emptyfield, emptyfield, languagemedium_c, mobilemanufacture_c, stateid_c, districtid_c, name_c, schooltype_c,
+                        userid_c, language_veriosn,languagemedium_c,api_veriosn,languageid_c,student_name, lFile)
+                .enqueue(new Callback<StudentResponselDataModel>() {
+                    @Override
+                    public void onResponse(Call<StudentResponselDataModel> call, Response<StudentResponselDataModel> response) {
+                        try {
 
-                               if (response.code() == 400) {
-                                   Toast.makeText(getActivity(), "Something went wrong", Toast.LENGTH_SHORT).show();
-//                                Intent i = new Intent(getActivity(), DashBoardMainActivity.class);
-//                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//                                startActivity(i);
-                               } else if (response.isSuccessful()) {
-                                   Log.d(TAG, "onImageResponse: ");
-                                   String status = response.body().getStatus().toString();
-                                   String msg = response.body().getMessage();
-                                   if (status.equalsIgnoreCase("success")) {
-                                       Toast.makeText(getActivity(), "Updated Success", Toast.LENGTH_SHORT).show();
+                            if (response.code()==400){
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(response.errorBody().string());
+                                    String message = jsonObject.getString("message");
+                                    Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
 
-                                      // showSnackbarError(msg);
-                                       Intent i = new Intent(getActivity(), DashBoardMainActivity.class);
-                                       i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                       startActivity(i);
-                                   }
-                               } else {
-                                   Toast.makeText(getActivity(), response.errorBody().toString(), Toast.LENGTH_SHORT).show();
-                                   Log.d(TAG, "onImageerrorResponse: " + response.errorBody().toString());
-                                   showSnackbarError(response.message());
-                               }
-                           } catch (Exception e) {
-                               Toast.makeText(getActivity(), "Internet connection", Toast.LENGTH_SHORT).show();
-                           }
-                        }
-
-                        @Override
-                        public void onFailure(Call<StudentResponselDataModel> call, Throwable t) {
-                            Toast.makeText(getActivity(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
-
-                            Log.d(TAG, "onImgFailure: " + t.getMessage());
-                        }
-                    });
-        }
+                                } catch (JSONException | IOException e) {
+                                    e.printStackTrace();
+                                }
 
 
-    private void getChildProfile()
-    {
 
-        String userid = AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId();
-        RequestBody requestBody = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("user_id", String.valueOf(userid))
-                .build();
-
-        RemoteApi.Companion.invoke().get_user_details(requestBody).enqueue(
-                new Callback<ChildDetailResModel>() {
-                        @Override
-                        public void onResponse(Call<ChildDetailResModel> call, Response<ChildDetailResModel> response)
-                        {
-
-                            if (response.isSuccessful())
-                            {
+                            }
+                            else if (response.isSuccessful()) {
                                 Log.d(TAG, "onImageResponse: ");
-                                String status = response.body().getStatus();
-                                if (status.equalsIgnoreCase("success"))
-                                {
-
-                                        String gender = response.body().getGender();
-                                        binding.etStudentGender.setText(gender);
-                                        String schooltype = response.body().getSchool_type();
-                                        binding.etSchooltype.setText(schooltype);
-                                        String schoolboard = response.body().getBoard_type();
-                                        binding.etSchoolboard.setText(schoolboard);
-                                        String medium = response.body().getLanguage();
-                                        binding.etSchoolmedium.setText(medium);
-                                        String istution = response.body().getIs_private_tution();
-                                        binding.ettution.setText(istution);
-                                        String tutiontype = response.body().getPrivate_tution_type();
-                                        binding.ettutiontype.setText(tutiontype);
-                                        String schoolname = response.body().getSchool_name();
-                                        binding.etSchoolname.setText(schoolname);
-
-                                    }
+                                String status = response.body().getStatus().toString();
+                                String msg = response.body().getMessage();
+                                if (status.equalsIgnoreCase("success")) {
+                                    Toast.makeText(getActivity(), msg.toString(), Toast.LENGTH_SHORT).show();
+                                    Intent i = new Intent(getActivity(), DashBoardMainActivity.class);
+                                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(i);
+                                }
                             }
-                            else
-                            {
-
-                                Log.d(TAG, "onImageerrorResponse: "+response.errorBody().toString());
-                                showSnackbarError(response.message());
+                            else {
+                                Toast.makeText(getActivity(), response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+                                Log.d(TAG, "onImageerrorResponse: " + response.errorBody().toString());
+                                //  showSnackbarError(response.message());
                             }
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), details.getInternetCheck(), Toast.LENGTH_SHORT).show();
                         }
+                    }
 
-                        @Override
-                        public void onFailure(Call<ChildDetailResModel> call, Throwable t)
-                        {
-                            Log.d(TAG, "onImgFailure: "+t.getMessage());
-                        }
-                    });
+                    @Override
+                    public void onFailure(Call<StudentResponselDataModel> call, Throwable t) {
+                        Toast.makeText(getActivity(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
 
-
+                        Log.d(TAG, "onImgFailure: " + t.getMessage());
+                    }
+                });
     }
+
+
+
+
+
 
     public void sendProfileScreenApi() {
         firstTimeCome = false;
@@ -1476,12 +1455,13 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         if (dashboardResModel != null) {
             PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
             int studentClass = 0;
-            studentClass = ConversionUtil.INSTANCE.convertStringToInteger(prefModel.getStudentData().getGrade());
+            studentClass = ConversionUtil.INSTANCE.convertStringToInteger(prefModel.getUserclass());
             SharedPreferences prefs = getActivity().getSharedPreferences("My_Pref", MODE_PRIVATE);
             String gradeforsubjectpreferencefinalprofile = prefs.getString("gradeforsubjectpreferencefinalprofile", "");
             if (studentClass > 10 || gradeforsubjectpreferencefinalprofile.equals("11")||gradeforsubjectpreferencefinalprofile.equals("12")||gradeforsubjectpreferencefinalprofile.equals(11)||gradeforsubjectpreferencefinalprofile.equals(12)) {
                 if (prefModel.getFetchStudentPrefResModel() != null && !TextUtil.checkListIsEmpty(prefModel.getFetchStudentPrefResModel().getSubjects())) {
-                    callSubjectListPreference();
+                    // callSubjectListPreference();
+                    callFetchUserPreference();
                 } else {
                     callFetchUserPreference();
                 }
@@ -1489,10 +1469,8 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                 setSubjectListVisibility(false);
             }
             handleProgress(0, "");
-         /*   StudentProfileModel studentProfileModel = new StudentProfileModel();
-            studentProfileModel.setPhonenumber(dashboardResModel.getPhonenumber());*/
 
-            viewModel.getUserProfileApi(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
+            viewModel.getUserProfileApi(AuroAppPref.INSTANCE.getModelInstance().getUserId());
 
         }
 
@@ -1534,9 +1512,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
             else if (v.getId() == R.id.etSchoolboard) {
                 binding.etSchoolboard.showDropDown();
             }
-//            else if (v.getId() == R.id.etschool) {
-//                binding.etSchoolname.showDropDown();
-//            }
+
             else if (v.getId() == R.id.etgrade) {
                 binding.etgrade.showDropDown();
             }
@@ -1556,379 +1532,16 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
     }
 
     private void askPermission() {
-//        String rationale = "For Upload Profile Picture. Camera and Storage Permission is Must.";
-//        Permissions.Options options = new Permissions.Options()
-//                .setRationaleDialogTitle("Info")
-//                .setSettingsDialogTitle("Warning");
-//        Permissions.check(getActivity(), PermissionUtil.mCameraPermissions, rationale, options, new PermissionHandler() {
-//            @Override
-//            public void onGranted() {
-                ImagePicker.with(getActivity())
-                        .crop()                    //Crop image(Optional), Check Customization for more option
-                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
-                        .start();
-//            }
-//
-//            @Override
-//            public void onDenied(Context context, ArrayList<String> deniedPermissions) {
-//                // permission denied, block the feature.
-//                ViewUtil.showSnackBar(binding.getRoot(), rationale);
-//            }
-//        });
+
+        ImagePicker.with(getActivity())
+                .crop()                    //Crop image(Optional), Check Customization for more option
+                .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
+                .start();
+
     }
-    private void selectImage() {
-        final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("Add Photo!");
-        builder.setItems(options, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int item) {
-                if (options[item].equals("Take Photo"))
-                {
-
-                    Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT,
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI.toString());
-                    if (cameraIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-                        startActivityForResult(cameraIntent, 1);
-                    }
 
 
-                }
-                else if (options[item].equals("Choose from Gallery"))
-                {
-                    Intent intent = new   Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                    startActivityForResult(intent, 2);
-                }
-                else if (options[item].equals("Cancel")) {
-                    dialog.dismiss();
-                }
-            }
-        });
-        builder.show();
-    }
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        AppLogger.e("StudentProfile", "fragment requestCode=" + requestCode);
-//        if (Build.VERSION.SDK_INT > 26) {
-//            if (requestCode == 2) {
-//
-//
-//                if (resultCode == RESULT_OK) {
-//                    try {
-//
-//
-//                        Uri uri = data.getData();
-//                        AppLogger.e("StudentProfile", "image path=" + uri.getPath());
-//                        image_path = uri.getPath();
-//
-//                        Uri selectedImage = data.getData();
-//                        String[] filePath = { MediaStore.Images.Media.DATA };
-//                        Cursor c = getActivity().getContentResolver().query(selectedImage,filePath, null, null, null);
-//                        c.moveToFirst();
-//                        int columnIndex = c.getColumnIndex(filePath[0]);
-//                        String picturePath = c.getString(columnIndex);
-//                        c.close();
-//                        Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-//                        byte[] bytes = AppUtil.encodeToBase64(thumbnail, 100);
-//                        long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                        int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//                        if (file_size >= 500) {
-//                            studentProfileModel.setImageBytes(AppUtil.encodeToBase64(thumbnail, 50));
-//
-//                        } else {
-//                            studentProfileModel.setImageBytes(bytes);
-//                        }
-//                        loadimage(thumbnail);
-//
-//
-//
-//
-//                    } catch (Exception e) {
-//                        AppLogger.e("StudentProfile", "fragment exception=" + e.getMessage());
-//                    }
-//
-//                }
-//
-//            }
-//            else if (requestCode == 1 ) {
-//                if (Build.VERSION.SDK_INT > 27) {
-//                    Bitmap photo = (Bitmap) data.getExtras().get("data");
-//                    image_path = String.valueOf(data.getExtras().get("data"));
-//                    byte[] bytes = AppUtil.encodeToBase64(photo, 100);
-//                    long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                    int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//
-//
-//                    if (file_size >= 500) {
-//                        studentProfileModel.setImageBytes(AppUtil.encodeToBase64(photo, 50));
-//                    } else {
-//                        studentProfileModel.setImageBytes(bytes);
-//                    }
-//                    loadimage(photo);
-//                }
-//                else{
-//                    if (resultCode == RESULT_OK) {
-//                        AppLogger.v("BigDes", "Sdk step 4");
-//                        try {
-//                            CropImages.ActivityResult result = CropImages.getActivityResult(data);
-//                            Uri resultUri = result.getUri();
-//                            image_path =  resultUri.getPath();
-//                            Bitmap picBitmap = BitmapFactory.decodeFile(resultUri.getPath());
-//                            byte[] bytes = AppUtil.encodeToBase64(picBitmap, 100);
-//                            long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                            int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//
-//                            AppLogger.e("StudentProfile", "image size=" + resultUri.getPath());
-//                            if (file_size >= 500) {
-//                                studentProfileModel.setImageBytes(AppUtil.encodeToBase64(picBitmap, 50));
-//                            } else {
-//                                studentProfileModel.setImageBytes(bytes);
-//                            }
-//
-//                            loadimage(picBitmap);
-//                        } catch (Exception e) {
-//
-//                        }
-//
-//                    }
-//                }
-//            }
-//        }
-//        else{
-//            if (requestCode == 2404) {
-//                if (resultCode == RESULT_OK) {
-//                    try {
-//
-//
-//                        Uri uri = data.getData();
-//                        AppLogger.e("StudentProfile", "image path=" + uri.getPath());
-//                        image_path = uri.getPath();
-//                        Bitmap picBitmap = BitmapFactory.decodeFile(uri.getPath());
-//                        byte[] bytes = AppUtil.encodeToBase64(picBitmap, 100);
-//                        long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                        int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//
-//                        AppLogger.e("StudentProfile", "image size=" + uri.getPath());
-//                        if (file_size >= 500) {
-//                            studentProfileModel.setImageBytes(AppUtil.encodeToBase64(picBitmap, 50));
-//                        } else {
-//                            studentProfileModel.setImageBytes(bytes);
-//                        }
-//
-//
-//                        loadimage(picBitmap);
-//                    } catch (Exception e) {
-//                        AppLogger.e("StudentProfile", "fragment exception=" + e.getMessage());
-//                    }
-//
-//                }
-//
-//
-//
-//                else {
-//
-//                }
-//            }
-//            else if (requestCode == CAMERA_REQUEST ) {
-//
-//                if (requestCode == CAMERA_REQUEST && resultCode == Activity.RESULT_OK)
-//                {
-//                    Bitmap photo = (Bitmap) data.getExtras().get("data");
-//                    image_path = String.valueOf(data.getExtras().get("data"));
-//                    byte[] bytes = AppUtil.encodeToBase64(photo, 100);
-//                    long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                    int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//                    // Toast.makeText(this, image_path.toString(), Toast.LENGTH_SHORT).show();
-//
-//                    if (file_size >= 500) {
-//                        studentProfileModel.setImageBytes(AppUtil.encodeToBase64(photo, 50));
-//                    } else {
-//                        studentProfileModel.setImageBytes(bytes);
-//                    }
-//                    loadimage(photo);
-//                }
-//
-//
-//
-//            }
-//        }
-//
-//
-//
-//
-//
-//
-//
-//
-//    }
-//@Override
-//public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//    super.onActivityResult(requestCode, resultCode, data);
-//    AppLogger.e("StudentProfile", "fragment requestCode=" + requestCode);
-//    if (Build.VERSION.SDK_INT > 26) {
-//        if (requestCode == 2) {
-//
-//
-//            if (resultCode == RESULT_OK) {
-//                try {
-//
-//
-//                    Uri uri = data.getData();
-//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-//                    AppLogger.e("StudentProfile", "image path=" + uri.getPath());
-//                    image_path = uri.getPath();
-//
-//                    Uri selectedImage = data.getData();
-//                    String[] filePath = { MediaStore.Images.Media.DATA };
-//                    Cursor c = getActivity().getContentResolver().query(selectedImage,filePath, null, null, null);
-//                    c.moveToFirst();
-//                    int columnIndex = c.getColumnIndex(filePath[0]);
-//                    String picturePath = c.getString(columnIndex);
-//                    c.close();
-//                    Bitmap thumbnail = (BitmapFactory.decodeFile(picturePath));
-//                    loadimage(bitmap);
-//                    byte[] bytes = AppUtil.encodeToBase64(bitmap, 100);
-//                    long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                    int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//                    if (file_size >= 500) {
-//                        Toast.makeText(getActivity(), "Image size is too large", Toast.LENGTH_SHORT).show();
-//
-//                        studentProfileModel.setImageBytes(AppUtil.encodeToBase64(bitmap, 50));
-//
-//                    } else {
-//
-//                        studentProfileModel.setImageBytes(bytes);
-//                    }
-//
-//
-//
-//
-//
-//                } catch (Exception e) {
-//                    AppLogger.e("StudentProfile", "fragment exception=" + e.getMessage());
-//                }
-//
-//            }
-//
-//        }
-//        else if (requestCode == 1 ) {
-//            if (Build.VERSION.SDK_INT > 26) {
-//                Bitmap photo = (Bitmap) data.getExtras().get("data");
-//                image_path = String.valueOf(data.getExtras().get("data"));
-//                byte[] bytes = AppUtil.encodeToBase64(photo, 100);
-//                long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//
-//
-//                if (file_size >= 500) {
-//                    Toast.makeText(getActivity(), "Image size is too large", Toast.LENGTH_SHORT).show();
-//
-//                    studentProfileModel.setImageBytes(AppUtil.encodeToBase64(photo, 50));
-//                } else {
-//                    studentProfileModel.setImageBytes(bytes);
-//                }
-//                loadimage(photo);
-//            }
-//            else{
-//                if (resultCode == RESULT_OK) {
-//                    AppLogger.v("BigDes", "Sdk step 4");
-//                    try {
-//                        CropImages.ActivityResult result = CropImages.getActivityResult(data);
-//                        Uri resultUri = result.getUri();
-//                        image_path =  resultUri.getPath();
-//                        Bitmap picBitmap = BitmapFactory.decodeFile(resultUri.getPath());
-//                        byte[] bytes = AppUtil.encodeToBase64(picBitmap, 100);
-//                        long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                        int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//
-//                        AppLogger.e("StudentProfile", "image size=" + resultUri.getPath());
-//                        if (file_size >= 500) {
-//                            Toast.makeText(getActivity(), "Image size is too large", Toast.LENGTH_SHORT).show();
-//
-//                            studentProfileModel.setImageBytes(AppUtil.encodeToBase64(picBitmap, 50));
-//                        } else {
-//                            studentProfileModel.setImageBytes(bytes);
-//                        }
-//
-//                        loadimage(picBitmap);
-//                    } catch (Exception e) {
-//
-//                    }
-//
-//                }
-//            }
-//        }
-//    }
-//    else{
-//        if (requestCode == 2) {  //2404
-//
-//            if (resultCode == RESULT_OK) {
-//                try {
-//
-//
-//                    Uri uri = data.getData();
-//                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), uri);
-//                    AppLogger.e("StudentProfile", "image path=" + uri.getPath());
-//                    image_path = uri.getPath();
-//                    Bitmap picBitmap = BitmapFactory.decodeFile(uri.getPath());
-//                    byte[] bytes = AppUtil.encodeToBase64(bitmap, 100);
-//                    long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                    int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//
-//                    AppLogger.e("StudentProfile", "image size=" + uri.getPath());
-//                    if (file_size >= 500) {
-//                        Toast.makeText(getActivity(), "Image size is too large", Toast.LENGTH_SHORT).show();
-//
-//                        studentProfileModel.setImageBytes(AppUtil.encodeToBase64(bitmap, 50));
-//                    } else {
-//                        studentProfileModel.setImageBytes(bytes);
-//                    }
-//                    loadimage(bitmap);
-//                } catch (Exception e) {
-//                    AppLogger.e("StudentProfile", "fragment exception=" + e.getMessage());
-//                }
-//
-//            }
-//
-//
-//
-//
-//        }
-//        else if (requestCode == 1 ) {
-//
-//            if (requestCode == 1 && resultCode == Activity.RESULT_OK)
-//            {
-//                Bitmap photo = (Bitmap) data.getExtras().get("data");
-//                image_path = String.valueOf(data.getExtras().get("data"));
-//                byte[] bytes = AppUtil.encodeToBase64(photo, 100);
-//                long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//                // Toast.makeText(this, image_path.toString(), Toast.LENGTH_SHORT).show();
-//
-//                if (file_size >= 500) {
-//                    Toast.makeText(getActivity(), "Image size is too large", Toast.LENGTH_SHORT).show();
-//
-//                    studentProfileModel.setImageBytes(AppUtil.encodeToBase64(photo, 50));
-//                } else {
-//                    studentProfileModel.setImageBytes(bytes);
-//                }
-//                loadimage(photo);
-//            }
-//
-//        }
-//    }
-//
-//
-//
-//
-//
-//
-//
-//
-//}
 
 
     @Override
@@ -1957,25 +1570,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                         studentProfileModel.setImageBytes(bytes);
                     }
 
-                    //     new_file_size = Integer.parseInt(String.valueOf(studentProfileModel.getImageBytes().length / 1024));
-//                    AppLogger.d(TAG, "Image Path  new Size kb- " + mb + "-bytes-" + new_file_size);
 
-//                    Uri selectedImage = data.getData();
-//                    String[] filePath = { MediaStore.Images.Media.DATA };
-//                    Cursor c = getContentResolver().query(selectedImage,filePath, null, null, null);
-//                    c.moveToFirst();
-//                    int columnIndex = c.getColumnIndex(filePath[0]);
-//                    image_path = c.getString(columnIndex);
-//                    c.close();
-//                    Bitmap thumbnail = (BitmapFactory.decodeFile(image_path));
-//                    byte[] bytes = AppUtil.encodeToBase64(thumbnail, 100);
-//                    long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                    int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//                    if (file_size >= 500) {
-//                        studentProfileModel.setImageBytes(AppUtil.encodeToBase64(thumbnail, 50));
-//                    } else {
-//                        studentProfileModel.setImageBytes(bytes);
-//                    }
                     loadimage(picBitmap);
                 } catch (Exception e) {
                     AppLogger.e("StudentProfile", "fragment exception=" + e.getMessage());
@@ -2007,34 +1602,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
             }
 
 
-//            CropImages.ActivityResult result = CropImages.getActivityResult(data);
-//            if (resultCode == RESULT_OK) {
-//                AppLogger.v("BigDes", "Sdk step 4");
-//                try {
-//                    Uri resultUri = result.getUri();
-//                    image_path =  resultUri.getPath();
-//                    Bitmap picBitmap = BitmapFactory.decodeFile(resultUri.getPath());
-//                    byte[] bytes = AppUtil.encodeToBase64(picBitmap, 100);
-//                    long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
-//                    int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-//
-//                    AppLogger.e("StudentProfile", "image size=" + resultUri.getPath());
-//                    if (file_size >= 500) {
-//                        studentProfileModel.setImageBytes(AppUtil.encodeToBase64(picBitmap, 50));
-//                    } else {
-//                        studentProfileModel.setImageBytes(bytes);
-//                    }
-//
-//                    loadimage(picBitmap);
-//                } catch (Exception e) {
-//
-//                }
-//
-//            }
-//            else if (resultCode == CropImages.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-//                Exception error = result.getError();
-//                AppLogger.e("chhonker", "Exception error=" + error.getMessage());
-//            }
+
         }
     }
 
@@ -2046,91 +1614,92 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         }
 
         else if (commonDataModel.getClickType()==STATE)
-            {
-                StateData stateDataModel = (StateData) commonDataModel.getObject();
-                binding.etstate.setText(stateDataModel.getState_name());
-                getAllDistrict(stateDataModel.getState_id());
-                Log.d("state_id", stateDataModel.getState_id());
-                binding.etdistrict.setText("");
-                binding.etSchoolname.setText("");
-                stateCode = stateDataModel.getState_id();
-                f_state = stateDataModel.getState_id();;
+        {
+            StateData stateDataModel = (StateData) commonDataModel.getObject();
+            binding.etstate.setText(stateDataModel.getState_name());
+            getAllDistrict(stateDataModel.getState_id());
+            Log.d("state_id", stateDataModel.getState_id());
+            binding.etdistrict.setText("");
+            binding.etSchoolname.setText("");
+            stateCode = stateDataModel.getState_id();
+            f_state = stateDataModel.getState_id();
+            binding.etSchoolname.dismissDropDown();
 
+        }
+        else if (commonDataModel.getClickType()==DISTRICT)
+        {
+            DistrictData districtData = (DistrictData) commonDataModel.getObject();
+            binding.etdistrict.setText(districtData.getDistrict_name());
+            districtCode = districtData.getDistrict_id();
+            f_district = districtData.getDistrict_id();;
+            binding.etSchoolname.setText("");
+            getSchool(stateCode,districtCode,Schoolsearch);
+
+        }
+        else if (commonDataModel.getClickType()==SCHOOL)
+        {
+            SchoolData gData = (SchoolData) commonDataModel.getObject();
+            binding.etSchoolname.setText(gData.getSCHOOL_NAME());
+            SchoolName = gData.getSCHOOL_NAME();
+
+
+        }
+        else if (commonDataModel.getClickType()==GENDER)
+        {
+            GenderData gData = (GenderData) commonDataModel.getObject();
+            binding.etStudentGender.setText(gData.getTranslatedName());
+            GenderName = gData.getName();
+
+        }
+        else if (commonDataModel.getClickType()==TUTIONTYPE)
+        {
+            TutionData gData = (TutionData) commonDataModel.getObject();
+            binding.ettutiontype.setText(gData.getTranslatedName());
+            Tutiontype = gData.getName();
+
+        }
+        else if (commonDataModel.getClickType()==TUTION)
+        {
+            PrivateTutionData gData = (PrivateTutionData) commonDataModel.getObject();
+            binding.ettution.setText(gData.getTranslatedName());
+            Tution = gData.getName();
+            if (privatetutionList.get(1).getTranslatedName().equals(binding.ettution.getText().toString())){
+                binding.tltutiontype.setVisibility(View.VISIBLE);
             }
-            else if (commonDataModel.getClickType()==DISTRICT)
-            {
-                DistrictData districtData = (DistrictData) commonDataModel.getObject();
-                binding.etdistrict.setText(districtData.getDistrict_name());
-                districtCode = districtData.getDistrict_id();
-                f_district = districtData.getDistrict_id();;
-                binding.etSchoolname.setText("");
-                getSchool(stateCode,districtCode,Schoolsearch);
-
+            else{
+                binding.tltutiontype.setVisibility(View.GONE);
             }
-            else if (commonDataModel.getClickType()==SCHOOL)
-            {
-                SchoolData gData = (SchoolData) commonDataModel.getObject();
-                binding.etSchoolname.setText(gData.getSCHOOL_NAME());
-                SchoolName = gData.getSCHOOL_NAME();
 
 
-            }
-            else if (commonDataModel.getClickType()==GENDER)
-            {
-                GenderData gData = (GenderData) commonDataModel.getObject();
-                binding.etStudentGender.setText(gData.getTranslatedName());
-                GenderName = gData.getName();
+        }
+        else if (commonDataModel.getClickType()==SCHHOLMEDIUM)
+        {
+            SchoolLangData gData = (SchoolLangData) commonDataModel.getObject();
+            binding.etSchoolmedium.setText(gData.getTranslated_language());
+            Schoolmedium = String.valueOf(gData.getLanguage_id());
 
-            }
-            else if (commonDataModel.getClickType()==TUTIONTYPE)
-            {
-                TutionData gData = (TutionData) commonDataModel.getObject();
-                binding.ettutiontype.setText(gData.getTranslatedName());
-                Tutiontype = gData.getName();
+        }
+        else if (commonDataModel.getClickType()==SCHHOLTYPE)
+        {
+            SchoolTypeData gData = (SchoolTypeData) commonDataModel.getObject();
+            binding.etSchooltype.setText(gData.getTranslatedName());
+            schooltype = gData.getName();
 
-            }
-            else if (commonDataModel.getClickType()==TUTION)
-            {
-                PrivateTutionData gData = (PrivateTutionData) commonDataModel.getObject();
-                binding.ettution.setText(gData.getTranslatedName());
-                Tution = gData.getName();
-                if (privatetutionList.get(1).getTranslatedName().equals(binding.ettution.getText().toString())){
-                    binding.tltutiontype.setVisibility(View.VISIBLE);
-                }
-                else{
-                    binding.tltutiontype.setVisibility(View.GONE);
-                }
+        }
+        else if (commonDataModel.getClickType()==BOARD)
+        {
+            BoardData gData = (BoardData) commonDataModel.getObject();
+            binding.etSchoolboard.setText(gData.getTranslatedName());
+            boardtype = gData.getName();
 
+        }
+        else if (commonDataModel.getClickType()==GRADE)
+        {
+            GradeData gData = (GradeData) commonDataModel.getObject();
+            binding.etgrade.setText(gData.getGrade_id());
+            gradeid = String.valueOf(gData.getGrade_id());
 
-            }
-            else if (commonDataModel.getClickType()==SCHHOLMEDIUM)
-            {
-                SchoolLangData gData = (SchoolLangData) commonDataModel.getObject();
-                binding.etSchoolmedium.setText(gData.getTranslated_language());
-                Schoolmedium = String.valueOf(gData.getLanguage_id());
-
-            }
-            else if (commonDataModel.getClickType()==SCHHOLTYPE)
-            {
-                SchoolTypeData gData = (SchoolTypeData) commonDataModel.getObject();
-                binding.etSchooltype.setText(gData.getTranslatedName());
-                schooltype = gData.getName();
-
-            }
-            else if (commonDataModel.getClickType()==BOARD)
-            {
-                BoardData gData = (BoardData) commonDataModel.getObject();
-                binding.etSchoolboard.setText(gData.getTranslatedName());
-                boardtype = gData.getName();
-
-            }
-            else if (commonDataModel.getClickType()==GRADE)
-            {
-                GradeData gData = (GradeData) commonDataModel.getObject();
-                binding.etgrade.setText(gData.getGrade_id());
-                gradeid = String.valueOf(gData.getGrade_id());
-
-            }
+        }
     }
 
     public void addStudent() {
@@ -2209,7 +1778,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         else if (view.getId() == R.id.etstate) {
             binding.etstate.showDropDown();
         }
-        else if (view.getId() == R.id.etDistict) {
+        else if (view.getId() == R.id.etdistrict) {
             binding.etdistrict.showDropDown();
         }
         else if (view.getId() == R.id.ettution) {
@@ -2238,9 +1807,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         else if (view.getId() == R.id.etSchoolboard) {
             binding.etSchoolboard.showDropDown();
         }
-//        else if (view.getId() == R.id.etSchoolname) {
-//            binding.etSchoolname.showDropDown();
-//        }
+
         else if (view.getId() == R.id.etgrade) {
             binding.etgrade.showDropDown();
         }
@@ -2249,10 +1816,10 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
 
         else if (view.getId() == R.id.grade_layout) {
-        changeTheEditText();
-        if (!binding.editProfile.getText().toString().equalsIgnoreCase("")) {
-            binding.UserName.setText(binding.editProfile.getText().toString());
-        }}
+            changeTheEditText();
+            if (!binding.editProfile.getText().toString().equalsIgnoreCase("")) {
+                binding.UserName.setText(binding.editProfile.getText().toString());
+            }}
         else if (view.getId() == R.id.linearLayout8) {
             changeTheEditText();
             if (!binding.editProfile.getText().toString().equalsIgnoreCase("")) {
@@ -2277,71 +1844,6 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
 
 
-//        switch (view.getId()) {
-//            case R.id.SpinnerGender:
-//
-//                changeTheEditText();
-//                if (!binding.editProfile.getText().toString().equalsIgnoreCase("")) {
-//                    binding.UserName.setText(binding.editProfile.getText().toString());
-//                }
-//                break;
-//
-//            case R.id.SpinnerSchoolType:
-//                changeTheEditText();
-//                if (!binding.editProfile.getText().toString().equalsIgnoreCase("")) {
-//                    binding.UserName.setText(binding.editProfile.getText().toString());
-//                }
-//                break;
-//            case R.id.SpinnerBoard:
-//                changeTheEditText();
-//                if (!binding.editProfile.getText().toString().equalsIgnoreCase("")) {
-//                    binding.UserName.setText(binding.editProfile.getText().toString());
-//                }
-//                break;
-//            case R.id.SpinnerLanguageMedium:
-//                changeTheEditText();
-//                if (!binding.editProfile.getText().toString().equalsIgnoreCase("")) {
-//                    binding.UserName.setText(binding.editProfile.getText().toString());
-//                }
-//                break;
-//            case R.id.spinnerPrivateTution:
-//                changeTheEditText();
-//                if (!binding.editProfile.getText().toString().equalsIgnoreCase("")) {
-//                    binding.UserName.setText(binding.editProfile.getText().toString());
-//                }
-//                break;
-//            case R.id.spinnerPrivateType:
-//                changeTheEditText();
-//                if (!binding.editProfile.getText().toString().equalsIgnoreCase("")) {
-//                    binding.UserName.setText(binding.editProfile.getText().toString());
-//                }
-//                break;
-//            case R.id.grade_layout:
-//                changeTheEditText();
-//                if (!binding.editProfile.getText().toString().equalsIgnoreCase("")) {
-//                    binding.UserName.setText(binding.editProfile.getText().toString());
-//                }
-//                break;
-//            case R.id.linearLayout8:
-//                changeTheEditText();
-//                if (!binding.editProfile.getText().toString().equalsIgnoreCase("")) {
-//                    binding.UserName.setText(binding.editProfile.getText().toString());
-//                }
-//                break;
-//            case R.id.editPhone:
-//                changeTheEditText();
-//                if (!binding.editProfile.getText().toString().equalsIgnoreCase("")) {
-//                    binding.UserName.setText(binding.editProfile.getText().toString());
-//                }
-//                break;
-//            case R.id.editemail:
-//                changeTheEditText();
-//                if (!binding.editProfile.getText().toString().equalsIgnoreCase("")) {
-//                    binding.UserName.setText(binding.editProfile.getText().toString());
-//                }
-//                break;
-
-      //  }
 
         return false;
     }
@@ -2370,8 +1872,8 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         CheckUserApiReqModel checkUserApiReqModel = new CheckUserApiReqModel();
         checkUserApiReqModel.setEmailId("");
         checkUserApiReqModel.setMobileNo("");
-        checkUserApiReqModel.setUserType("" + prefModel.getUserType());
-        checkUserApiReqModel.setUserName(prefModel.getStudentData().getUserMobile());
+        checkUserApiReqModel.setUserType("0");
+        checkUserApiReqModel.setUserName(prefModel.getUserMobile());
         viewModel.checkInternetForApi(Status.CHECKVALIDUSER, checkUserApiReqModel);
     }
 
@@ -2379,45 +1881,45 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
     {
         Details details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
 
-        ProgressDialog progress = new ProgressDialog(getActivity());
-        progress.setTitle(details.getProcessing());
-        progress.setMessage(details.getProcessing());
-        progress.setCancelable(true); // disable dismiss by tapping outside of the dialog
-        progress.show();
-        List<SchoolData> districtList = new ArrayList<>();
+
         districtList.clear();
         HashMap<String,String> map_data = new HashMap<>();
-            map_data.put("state_id",f_state);
-            map_data.put("district_id",f_district);
-            map_data.put("search",search);
+        map_data.put("state_id",f_state);
+        map_data.put("district_id",f_district);
+        map_data.put("search",search);
 
 
-            RemoteApi.Companion.invoke().getSchool(map_data)
+        RemoteApi.Companion.invoke().getSchool(map_data)
                 .enqueue(new Callback<com.auro.application.home.data.model.SchoolDataModel>() {
                     @Override
                     public void onResponse(Call<com.auro.application.home.data.model.SchoolDataModel> call, Response<com.auro.application.home.data.model.SchoolDataModel> response)
                     {
-                        if (response.isSuccessful())
-                        {
-                            Log.d(TAG, "onDistrictResponse: "+response.message());
-                            for ( int i=0 ;i < response.body().getSchools().size();i++)
-                            {
-                                int school_id = response.body().getSchools().get(i).getID();
-                                String school_name = response.body().getSchools().get(i).getSCHOOL_NAME();
+                        if (response.isSuccessful()) {
+                            districtList.clear();
+                            genderListString.clear();
 
-                                Log.d(TAG, "onDistrictResponse: "+school_name);
-                                SchoolData districtData = new  SchoolData(school_name,school_id);
-                                districtList.add(districtData);
+                            if (response.body().getSchools() != null || !response.body().getSchools().isEmpty()) {
+                                Log.d(TAG, "onDistrictResponse: " + response.message());
+                                for (int i = 0; i < response.body().getSchools().size(); i++) {
+                                    int school_id = response.body().getSchools().get(i).getID();
+                                    String school_name = response.body().getSchools().get(i).getSCHOOL_NAME();
+                                    genderListString.add(school_name);
+                                    Log.d(TAG, "onDistrictResponse: " + school_name);
+                                    SchoolData districtData = new SchoolData(school_name, school_id);
+                                    districtList.add(districtData);
 
+
+                                }
 
                             }
-                            addDropDownSchool(districtList);
-                            progress.dismiss();
+                            else {
+
+                                Toast.makeText(getActivity(), details.getNo_data_found(), Toast.LENGTH_SHORT).show();
+                            }
+
+
                         }
-                        else
-                        {
-                            Log.d(TAG, "onResponseError: "+response.message());
-                        }
+
                     }
 
                     @Override
@@ -2427,6 +1929,8 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                     }
                 });
     }
+
+
     private void getAllStateList()
     {
 
@@ -2447,10 +1951,8 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                                 Log.d(TAG, "onStateResponse: "+state_name);
                                 StateData stateData = new StateData(state_name,state_id);
                                 statelist.add(stateData);
-
-
                             }
-                        //   getAllDistrict(stateCode);
+
                             addDropDownState(statelist);
 
 
@@ -2487,6 +1989,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                             {
                                 String state_id = response.body().getResult().get(i).getGrade_id();
 
+
                                 GradeData stateData = new GradeData(state_id);
                                 gradelist.add(stateData);
 
@@ -2514,7 +2017,6 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
     private void getAllDistrict(String state_id)
     {
         Details details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
-
         ProgressDialog progress = new ProgressDialog(getActivity());
         progress.setTitle(details.getProcessing());
         progress.setMessage(details.getProcessing());
@@ -2541,7 +2043,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                                 districtList.add(districtData);
 
                             }
-                          //  getSchool(stateCode,districtCode,Schoolsearch);
+
                             addDropDownDistrict(districtList);
                             progress.dismiss();
                         }
@@ -2806,14 +2308,14 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                 });
     }
 
-
     public void addDropDownSchool(List<SchoolData> districtList) {
         AppLogger.v("StatePradeep", "addDropDownState    " + districtList.size());
         SchoolSpinnerAdapter districtSpinnerAdapter = new SchoolSpinnerAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, districtList, this);
         binding.etSchoolname.setAdapter(districtSpinnerAdapter);//setting the adapter data into the AutoCompleteTextView
         binding.etSchoolname.setThreshold(1);//will start working from first character
         binding.etSchoolname.setTextColor(Color.BLACK);
-       // binding.etSchoolname.setBackgroundColor(Color.WHITE);
+
+        // binding.etSchoolname.setBackgroundColor(Color.WHITE);
     }
     private void addDropDownGender()
     {
@@ -2885,4 +2387,6 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         binding.etstate.setThreshold(1);//will start working from first character
         binding.etstate.setTextColor(Color.BLACK);
     }
+
+
 }

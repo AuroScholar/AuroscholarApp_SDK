@@ -79,7 +79,7 @@ public class PaymentRemoteDataSourceImp implements PaymentRepo.PaymentRemoteData
     @Override
     public Single<Response<JsonObject>> paymentTransferApi(PaytmWithdrawalByBankAccountReqModel reqModel) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(AppConstant.paytmApiParam.USERID, AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
+        params.put(AppConstant.paytmApiParam.USERID, AuroAppPref.INSTANCE.getModelInstance().getUserId());
         params.put(AppConstant.paytmApiParam.STUDENT_MOBILE_NUM, reqModel.getMobileNo());
         params.put(AppConstant.paytmApiParam.STUDENT_ID, reqModel.getStudentId());
         params.put(AppConstant.paytmApiParam.PAYMENT_MODE, reqModel.getPaymentMode());

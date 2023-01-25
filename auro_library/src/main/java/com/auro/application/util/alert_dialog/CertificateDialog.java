@@ -64,7 +64,7 @@ public class CertificateDialog extends DialogFragment implements View.OnClickLis
         ImageView download = (ImageView) view.findViewById(R.id.download_icon);
         closeButton.setOnClickListener(this);
         download.setOnClickListener(this);
-        ImageUtil.loadCropImage(imageView, apIcertificate.getCertificateImage());
+        //   ImageUtil.loadCropImage(imageView, apIcertificate.getCertificateImage());
         dialog.setContentView(view);
         dialog.show();
         return dialog;
@@ -111,12 +111,12 @@ public class CertificateDialog extends DialogFragment implements View.OnClickLis
         Permissions.check(getActivity(), PermissionUtil.mStorage, rationale, options, new PermissionHandler() {
             @Override
             public void onGranted() {
-                if(!TextUtil.isEmpty(apIcertificate.getCertificateFile())) {
-                    downloadFile(apIcertificate.getCertificateFile());
-                }else
-                {
-                    ViewUtil.showToast("File not avaible for Download.");
-                }
+//                if(!TextUtil.isEmpty(apIcertificate.getCertificateFile())) {
+//                    downloadFile(apIcertificate.getCertificateFile());
+//                }else
+//                {
+//                    ViewUtil.showToast("File not avaible for Download.");
+//                }
             }
 
             @Override

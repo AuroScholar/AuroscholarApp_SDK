@@ -23,7 +23,7 @@ public interface URLConstant {
     String GET_DISTRICT = BASE_URL + "districts";
 
     String TEST_URL = "https://assessment.eklavvya.com/exam/StartExam?";
-    String PRIVACY_POLICY = "https://auroscholar.com/privacy_policy.php";
+    String PRIVACY_POLICY = "https://auroscholar.com/privacy_policy";
     String STUDENT_SUBJECT_PREFERENCE_API = BASE_URL + "fetch_subject_list";
     String FETCH_STUDENT_PREFERENCE_API = BASE_URL + "fetch_student_preference";
     String UPDATE_USER_PREFERENCE = BASE_URL + "update_student_preference";
@@ -65,7 +65,7 @@ public interface URLConstant {
 
     String FRIEND_ACCEPT_API = BASE_URL + "friend_accepted.php";
 
-    String TERM_CONDITION = "https://auroscholar.com/terms-of-use.php";
+    String TERM_CONDITION = "https://auroscholar.com/terms_of_use";
 
 
     String REFFER_API = BASE_URL + "reffer";
