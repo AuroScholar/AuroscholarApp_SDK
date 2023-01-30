@@ -50,7 +50,6 @@ android {
 }
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.aar'])
     // DEVELOPMENT Dependencies
     api supportDependencies.values()
     // NETWORK Dependencies
@@ -75,7 +74,7 @@ dependencies {
     implementation 'com.github.faruktoptas:FancyShowCaseView:1.3.9'
     implementation 'com.robinhood.ticker:ticker:2.0.2'
     implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0'
-    // implementation files('libs/yubobotsdk_debug')
+    //implementation files('libs/yubobotsdk-debug.aar')
 
     annotationProcessor googleDependencies.daggerCompiler
     //Rx Dependencies
@@ -110,6 +109,7 @@ dependencies {
     implementation 'io.github.chaosleung:pinview:1.4.4'
     implementation 'com.github.fueled:snippety:1.1.1'
     implementation 'com.google.android.material:material:1.1.0-alpha06'
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
     annotationProcessor 'com.gabrielittner.auto.value:auto-value-with:1.1.1'
 }
 apply plugin: 'com.google.gms.google-services'

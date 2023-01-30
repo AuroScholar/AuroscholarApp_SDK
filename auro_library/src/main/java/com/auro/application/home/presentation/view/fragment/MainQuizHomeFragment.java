@@ -34,6 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.auro.application.ChatActivity;
 import com.auro.application.R;
 import com.auro.application.RealTimeFaceDetection.CameraxActivity;
 import com.auro.application.core.application.AuroApp;
@@ -98,7 +99,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.instabug.apm.APM;
 import com.instabug.bug.BugReporting;
-import com.instabug.chat.ui.ChatActivity;
 import com.instabug.crash.CrashReporting;
 import com.instabug.library.Feature;
 import com.instabug.library.Instabug;
@@ -536,7 +536,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
                     ((DashBoardMainActivity) getActivity()).openKYCFragment(dashboardResModel, 0);
                 }*/
         } else if (id == R.id.float_chat) {// openYuboChatActivty();
-            startActivity(new Intent(getContext(), ChatActivity.class));
+            //startActivity(new Intent(getContext(), ChatActivity.class));
 
             //  Toast.makeText(getContext(),"clicked",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.privacy_policy) {
