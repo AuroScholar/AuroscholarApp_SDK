@@ -133,6 +133,7 @@ public interface AppConstant {
         String DATE_OF_BIRTH = "date_of_birth";
         String LANGUAGE_VERSION = "language_version";
         String API_VERSION = "api_version";
+        String partner_unique_id = "partner_unique_id";
         String REGISTRATION_SOURCE_NEW = "registration_source";
         String INSTRUCTIONS_CODE = "instruction_code";
         String IS_AGREE = "is_agree";

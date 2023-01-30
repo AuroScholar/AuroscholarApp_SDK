@@ -31,13 +31,18 @@ import com.auro.application.home.data.model.CheckUserResModel;
 import com.auro.application.home.data.model.ParentProfileDataModel;
 import com.auro.application.home.data.model.response.UserDetailResModel;
 import com.auro.application.home.data.model.signupmodel.AddStudentStepDataModel;
+import com.auro.application.home.presentation.view.activity.AppLanguageActivity;
 import com.auro.application.home.presentation.view.activity.CompleteStudentProfileWithPinActivity;
+import com.auro.application.home.presentation.view.activity.CompleteStudentProfileWithoutPin;
+import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
+import com.auro.application.home.presentation.view.activity.SDKActivity;
 import com.auro.application.home.presentation.view.activity.SetPinActivity;
 import com.auro.application.home.presentation.view.adapter.StepsAddChildAdapter;
 import com.auro.application.util.AppLogger;
 import com.auro.application.util.AppUtil;
 import com.auro.application.util.RemoteApi;
 import com.auro.application.util.strings.AppStringDynamic;
+import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
 import com.bumptech.glide.Glide;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
@@ -54,6 +59,7 @@ public class BottomSheetAddUserDialog extends BottomSheetDialogFragment implemen
     CheckUserResModel checkUserResModel;
     StepsAddChildAdapter studentListAdapter;
     List<AddStudentStepDataModel> list;
+    String auto_userid;
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable
@@ -62,9 +68,85 @@ public class BottomSheetAddUserDialog extends BottomSheetDialogFragment implemen
         AppStringDynamic.setBottomSheetAddUserStrings(binding);
         checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getCheckUserResModel();
         setAdapterAllListStudent(checkUserResModel.getUserDetails());
+        if (AuroAppPref.INSTANCE.getModelInstance().getCheckUserResModel().getUserDetails().size()>2){
+            binding.mainLayout.setVisibility(View.GONE);
+        }
+        binding.mainLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                UserDetailResModel resModel = AuroAppPref.INSTANCE.getModelInstance().getStudentData();
+                UserDetailResModel userDetailResModel = AuroAppPref.INSTANCE.getModelInstance().getStudentData();
+                openSetPinActivity(resModel, AppConstant.ComingFromStatus.COMING_FROM_ADD_STUDENT_STEP_2);
+            }
+        });
+        binding.mainLayout2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setAutoRegister();
+
+            }
+        });
         return binding.getRoot();
     }
 
+    private void setAutoRegister()
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String mobileno = prefModel.getUserMobile();
+        String partnersource = prefModel.getPartnersource();
+        String partneruniqueid = prefModel.getPartneruniqueid();
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("mobile_no",mobileno);
+        map_data.put("partner_unique_id",partneruniqueid);
+        map_data.put("partner_source",partnersource);
+        map_data.put("add_new","1");
+        map_data.put("partner_api_key","7611f0fafb1e3b96d1a78c57b0650b85985eace9f6aaa365c0b496e9ae1163e7");
+        RemoteApi.Companion.invoke().getSDKData(map_data)
+                .enqueue(new Callback<SDKDataModel>() {
+                    @Override
+                    public void onResponse(Call<SDKDataModel> call, Response<SDKDataModel> response)
+                    {
+                        try {
+                            if (response.code() == 400) {
+                                Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
+                            }
+                            else if (response.code() == 200) {
+
+
+                                for (int i = 0; i<response.body().getUser_details().size(); i++){
+                                    auto_userid = response.body().getUser_details().get(0).getUser_id();
+
+                                }
+                                PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+
+                                prefModel.setUserId(auto_userid);
+                                AuroAppPref.INSTANCE.setPref(prefModel);
+                                Intent i1 = new Intent(getActivity(), AppLanguageActivity.class);
+                                i1.putExtra("auto_userid",auto_userid);
+                                startActivity(i1);
+
+
+
+
+                            }
+                            else {
+                                Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        catch (Exception e) {
+                            Toast.makeText(getActivity(), "Internet connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SDKDataModel> call, Throwable t) {
+                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+
+
+    }
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -83,45 +165,14 @@ public class BottomSheetAddUserDialog extends BottomSheetDialogFragment implemen
         model2.setDescription(AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails().getSet_your_pin()+"");
         model2.setStatus(false);
         list.add(model2);
-
         UserDetailResModel userDetailResModel = AuroAppPref.INSTANCE.getModelInstance().getParentData();
         String parentusername = AuroAppPref.INSTANCE.getModelInstance().getCheckUserResModel().getUserDetails().get(0).getUserName();
-        getProfile(parentusername);
+     //   getProfile(parentusername);
         binding.studentList.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         binding.studentList.setHasFixedSize(true);
 //        studentListAdapter = new StepsAddChildAdapter(getActivity(),list, this);
 //        binding.studentList.setAdapter(studentListAdapter);
 
-
-        if (AuroAppPref.INSTANCE.getModelInstance().getCheckUserResModel().getUserDetails().size()>2){
-            binding.mainLayout.setVisibility(View.GONE);
-        }
-        binding.mainLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                UserDetailResModel resModel = AuroAppPref.INSTANCE.getModelInstance().getStudentData();
-                UserDetailResModel userDetailResModel = AuroAppPref.INSTANCE.getModelInstance().getStudentData();
-                        openSetPinActivity(resModel, AppConstant.ComingFromStatus.COMING_FROM_ADD_STUDENT_STEP_2);
-            }
-        });
-        binding.mainLayout2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-                Intent intent = new Intent(getActivity(), CompleteStudentProfileWithPinActivity.class);
-                startActivity(intent);
-//                Bundle bundle = new Bundle();
-//                bundle.putParcelable(AppConstant.DASHBOARD_RES_MODEL, prefModel.getDashboardResModel());
-//                bundle.putString(AppConstant.COMING_FROM, AppConstant.SENDING_DATA.STUDENT_PROFILE);
-//                StudentProfileFragment bottomSheet = new StudentProfileFragment();
-//                bottomSheet.setArguments(bundle);
-//                bottomSheet.getActivity().getFragmentManager();
-
-
-
-
-            }
-        });
     }
 
 
@@ -165,7 +216,7 @@ public class BottomSheetAddUserDialog extends BottomSheetDialogFragment implemen
         super.onResume();
         UserDetailResModel userDetailResModel = AuroAppPref.INSTANCE.getModelInstance().getParentData();
         String parentusername = AuroAppPref.INSTANCE.getModelInstance().getCheckUserResModel().getUserDetails().get(0).getUserName();
-        getProfile(parentusername);
+      //  getProfile(parentusername);
 //        UserDetailResModel userDetailResModel = AuroAppPref.INSTANCE.getModelInstance().getStudentData();
 //        if (userDetailResModel.isUsername()) {
 //            list.get(0).setStatus(true);

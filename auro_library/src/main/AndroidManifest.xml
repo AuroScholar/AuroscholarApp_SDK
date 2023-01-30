@@ -276,6 +276,7 @@
             android:name=".home.presentation.view.activity.AppLanguageActivity"
             android:configChanges="locale"
             android:exported="true"
+            android:theme="@style/AppTheme"
             android:resizeableActivity="false"
             android:screenOrientation="portrait" />
         <activity
@@ -347,7 +348,7 @@
             android:exported="true"
             android:resizeableActivity="false"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeNew" />
+            android:theme="@style/AppTheme" />
         <activity
             android:name=".home.presentation.view.activity.SetParentPinActivity"
             android:configChanges="locale"
@@ -369,7 +370,7 @@
             android:exported="true"
             android:resizeableActivity="false"
             android:screenOrientation="portrait"
-            android:theme="@style/AppThemeNew" />
+            android:theme="@style/AppTheme" />
 
 <!--        <provider-->
 <!--            android:name="androidx.core.content.FileProvider"-->

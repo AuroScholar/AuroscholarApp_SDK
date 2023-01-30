@@ -155,6 +155,7 @@ public interface HomeRemoteApi {
             @Part(AppConstant.DashBoardParams.USER_ID) RequestBody userId,
             @Part(AppConstant.DashBoardParams.LANGUAGE_VERSION) RequestBody langVersion,
             @Part(AppConstant.DashBoardParams.API_VERSION) RequestBody apiVersion,
+           // @Part(AppConstant.DashBoardParams.partner_unique_id) RequestBody partner_unique_id,
             @Part MultipartBody.Part exam_face_img);
 
 

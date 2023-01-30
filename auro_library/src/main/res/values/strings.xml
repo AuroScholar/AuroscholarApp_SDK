@@ -8,10 +8,10 @@
 
     <string name="internet_check">Oops, No internet found.Please check your connection or try again.</string>
     <string name="default_error">Unable to connect. Please try after sometime.</string>
-
+    <string name="continue_addstudent" translatable="false">Add New Child</string>
     <string name="terms_of_service">Terms &amp; Conditions</string>
     <string name="privacy_policy">Privacy Policy</string>
-
+    <string name="download_certificate" translatable="false"><u>Download Certificate</u></string>
     <string name="back_button">BACK</string>
     <string name="confirm_otp">CONFIRM OTP</string>
     <string name="not_receive_resend">Not Receive ? Resend</string>

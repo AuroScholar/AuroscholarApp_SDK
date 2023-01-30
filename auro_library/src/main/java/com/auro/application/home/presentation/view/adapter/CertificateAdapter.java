@@ -1,6 +1,9 @@
 package com.auro.application.home.presentation.view.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,16 +55,15 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
             this.binding = binding;
         }
 
-        public void setData(APIcertificate resModel, int position) {
-            if (resModel.isSelect()) {
-                binding.selectImg.setImageDrawable(AuroApp.getAppContext().getResources().getDrawable(R.drawable.ic_check));
-            } else {
-                binding.selectImg.setImageDrawable(AuroApp.getAppContext().getResources().getDrawable(R.drawable.ic_uncheck));
-            }
-            //resModel.setCertificateImage("https://image.slidesharecdn.com/b1c107f5-eaf4-4dd9-8acc-df180578c33c-160501092731/95/ismail-british-council-certificate-1-638.jpg?cb=1462094874");
-            ImageUtil.loadNormalImage(binding.certificateImg, resModel.getCertificateImage());
-
-        }
+//        public void setData(APIcertificate resModel, int position) {
+//            if (resModel.isSelect()) {
+//                binding.selectImg.setImageDrawable(AuroApp.getAppContext().getResources().getDrawable(R.drawable.ic_check));
+//            } else {
+//                binding.selectImg.setImageDrawable(AuroApp.getAppContext().getResources().getDrawable(R.drawable.ic_uncheck));
+//            }
+//            ImageUtil.loadNormalImage(binding.certificateImg, resModel.getCertificateImage());
+//
+//        }
 
     }
 
@@ -74,27 +76,50 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
 
 
     @Override
-    public void onBindViewHolder(ViewHolder Vholder, int position) {
-        Vholder.setData(mValues.get(position), position);
-        Vholder.itemView.setOnClickListener(new View.OnClickListener() {
+    public void onBindViewHolder(ViewHolder Vholder, @SuppressLint("RecyclerView") int position) {
+        // Vholder.setData(mValues.get(position), position);
+//        Vholder.itemView.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                if (listner != null) {
+//                    listner.commonEventListner(AppUtil.getCommonClickModel(1, Status.ITEM_CLICK, mValues.get(position)));
+//                }
+//            }
+//        });
+        binding.sharelink.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (listner != null) {
-                    listner.commonEventListner(AppUtil.getCommonClickModel(1, Status.ITEM_CLICK, mValues.get(position)));
-                }
+                Intent sendIntent = new Intent();
+                sendIntent.setAction(Intent.ACTION_SEND);
+                sendIntent.putExtra(Intent.EXTRA_TEXT, "Certificate shareable link "+mValues.get(position).getDownloalink());
+                sendIntent.setType("text/plain");
+
+                Intent shareIntent = Intent.createChooser(sendIntent, null);
+                mContext.startActivity(shareIntent);
+//               if (listner != null) {
+//                   listner.commonEventListner(AppUtil.getCommonClickModel(position, Status.DOCUMENT_CLICK, mValues.get(position)));
+//               }
+                notifyDataSetChanged();
             }
         });
-
-        Vholder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+//        Vholder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                APIcertificate icertificate = mValues.get(position);
+//              //  icertificate.setSelect(!icertificate.isSelect());
+//                if (listner != null) {
+//                    listner.commonEventListner(AppUtil.getCommonClickModel(position, Status.ITEM_LONG_CLICK, icertificate));
+//                }
+//                notifyDataSetChanged();
+//                return false;
+//            }
+//        });
+        binding.viewlink.setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                APIcertificate icertificate = mValues.get(position);
-                icertificate.setSelect(!icertificate.isSelect());
-                if (listner != null) {
-                    listner.commonEventListner(AppUtil.getCommonClickModel(position, Status.ITEM_LONG_CLICK, icertificate));
-                }
-                notifyDataSetChanged();
-                return false;
+            public void onClick(View v) {
+                Intent browseintent=new Intent(Intent.ACTION_VIEW,
+                        Uri.parse(mValues.get(position).getCertificateviewlink()));
+                mContext.startActivity(browseintent);
             }
         });
 
@@ -105,8 +130,6 @@ public class CertificateAdapter extends RecyclerView.Adapter<CertificateAdapter.
         return mValues.size();
     }
 
-    private void updateData() {
 
-    }
 
 }

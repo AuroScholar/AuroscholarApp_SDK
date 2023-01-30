@@ -3,24 +3,80 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
     <RelativeLayout
-        android:layout_margin="@dimen/_15sdp"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/_200sdp">
+        android:gravity="center"
+        android:layout_height="wrap_content">
+
 
         <androidx.cardview.widget.CardView
             android:id="@+id/profileCard"
-            android:layout_width="@dimen/_150sdp"
-            android:layout_height="@dimen/_170sdp"
-            app:cardCornerRadius="@dimen/_4sdp"
-            app:cardElevation="@dimen/_4sdp"
+            android:layout_width="wrap_content"
+            android:layout_margin="@dimen/_2ssp"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/_3sdp"
+            app:cardElevation="@dimen/_2sdp"
             app:cardUseCompatPadding="false">
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:padding="@dimen/_5ssp"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_centerHorizontal="true"
+                    android:id="@+id/certificate_img"
+                    android:layout_width="@dimen/_100ssp"
+                    android:layout_height="@dimen/_100ssp"
+                    android:src="@drawable/certificate">
 
-            <ImageView
-                android:id="@+id/certificate_img"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-            </ImageView>
+                </ImageView>
+                <LinearLayout
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/certificate_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Download Certificate"
+                        android:textSize="@dimen/_10ssp"
+                        android:textColor="@color/black"></androidx.appcompat.widget.AppCompatTextView>
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_8sdp"
+                        android:orientation="horizontal">
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/sharelink"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:text="Share"
+                            android:textSize="@dimen/_10sdp"
+                            android:drawablePadding="@dimen/_5ssp"
+                            app:drawableTint="@color/blue_color"
+                            android:drawableTop="@drawable/ic_auro_share"
+                            android:layout_gravity="left"
+                            android:gravity="left"
+                            android:textColor="@color/grey">
+                        </androidx.appcompat.widget.AppCompatTextView>
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:id="@+id/viewlink"
+                            android:layout_alignParentRight="true"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="View"
+                            android:layout_marginLeft="@dimen/_15sdp"
+                            android:textSize="@dimen/_10sdp"
+                            android:drawablePadding="@dimen/_5ssp"
+                            app:drawableTint="@color/blue_color"
+                            android:drawableTop="@drawable/ic_red_eye"
+                            android:layout_gravity="right"
+                            android:gravity="right"
+                            android:textColor="@color/grey">
+                        </androidx.appcompat.widget.AppCompatTextView>
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
 
         </androidx.cardview.widget.CardView>
 
@@ -29,10 +85,10 @@
             android:id="@+id/select_img"
             android:layout_width="@dimen/_40sdp"
             android:layout_height="@dimen/_40sdp"
-            android:layout_alignParentBottom="true"
+            android:layout_below="@+id/profileCard"
             android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/_8sdp"
             android:elevation="@dimen/_8sdp"
+            android:visibility="gone"
             android:src="@drawable/ic_check" />
 
     </RelativeLayout>

@@ -47,6 +47,7 @@ import com.auro.application.R;
 import com.auro.application.RealTimeFaceDetection.MLKitFacesAnalyzer;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -194,7 +195,9 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (binding == null) {
             binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
-            ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+          //  ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+            DaggerWrapper.getComponent(getActivity()).doInjection(this);
+
             viewModel = ViewModelProviders.of(this, viewModelFactory).get(QuizTestNativeViewModel.class);
             binding.setLifecycleOwner(this);
         }
@@ -265,7 +268,6 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
 
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         prefModel.getDashboardResModel().setIs_native_image_capturing(true);
-        AppLogger.e("checkNativeCameraEnableOrNot--", "" + prefModel.getDashboardResModel().isIs_native_image_capturing());
         if (prefModel.getDashboardResModel() != null && prefModel.getDashboardResModel().isIs_native_image_capturing()) {
             ImageAnalysis imageAnalysis = new ImageAnalysis(iac);
             imageAnalysis.setAnalyzer(Runnable::run, new MLKitFacesAnalyzer(tv, iv, lens, getActivity(), this, null, false));
@@ -1084,7 +1086,7 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
                 saveQuestionResModel.setQuestionID("" + quizQuestionList.get(countQuiz).getQuestionID());
                 saveQuestionResModel.setQuestionSerialNo("" + (countQuiz + 1));
                 saveQuestionResModel.setExamId(assignmentResModel.getExamId());
-                saveQuestionResModel.setUserPreferedLanguage_id(Integer.parseInt(prefModel.getUserLanguageId()));
+                saveQuestionResModel.setUserPreferedLanguage_id(Integer.parseInt(prefModel.getChildData().getUser_details().get(0).getUser_prefered_language_id()));
                 viewModel.saveQuizData(saveQuestionResModel);
             } catch (Exception e) {
 
@@ -1321,7 +1323,7 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
                 PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
                 DashboardResModel dashboardResModel = prefModel.getDashboardResModel();
                 saveQuestionResModel.setRegistration_id(dashboardResModel.getAuroid());
-                saveQuestionResModel.setUserId(prefModel.getStudentData().getUserId());
+                saveQuestionResModel.setUserId(prefModel.getChildData().getUser_details().get(0).getUser_id());
                 AppLogger.v("QuizNew", "Call send exam api STEP 1");
                 viewModel.uploadExamFace(saveQuestionResModel);
             }
@@ -1477,7 +1479,7 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
 
     public void openDialogForQuit() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage(prefModel.getLanguageMasterDynamic().getDetails().getPlease_confirm_if_you_want() != null ?prefModel.getLanguageMasterDynamic().getDetails().getPlease_confirm_if_you_want()  : AuroApp.getAppContext().getResources().getString(R.string. want_to_quit_quiz));
+        builder.setMessage(AuroApp.getAppContext().getResources().getString(R.string. want_to_quit_quiz));
         // Set the alert dialog yes button click listener
         String yes = getActivity().getResources().getString(R.string.yes);
         String no = getActivity().getResources().getString(R.string.no);

@@ -12,6 +12,9 @@ public class PassportQuizDetailModel {
 
     List<PassportQuizGridModel> passportQuizGridModelList;
 
+    @SerializedName("quiz_id")
+    @Expose
+    private String quiz_id;
     @SerializedName("quiz_name")
     @Expose
     private String quizName;
@@ -83,6 +86,25 @@ public class PassportQuizDetailModel {
     @SerializedName("level2_remark")
     @Expose
     private String level2_remark;
+    @SerializedName("subject_id")
+    @Expose
+    private String subject_id;
+
+    public String getSubject_id() {
+        return subject_id;
+    }
+
+    public void setSubject_id(String subject_id) {
+        this.subject_id = subject_id;
+    }
+
+    public String getQuiz_id() {
+        return quiz_id;
+    }
+
+    public void setQuiz_id(String quiz_id) {
+        this.quiz_id = quiz_id;
+    }
 
     public String getLevel2_remark() {
         return level2_remark;

@@ -319,7 +319,7 @@ public class SubjectPreferencesActivity extends BaseActivity implements CommonCa
         UpdatePrefReqModel reqModel = new UpdatePrefReqModel();
 
 
-        reqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
+        reqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getUserId());
         reqModel.setPreference(preference);
         homeViewModel.checkInternetForApi(Status.UPDATE_PREFERENCE_API, reqModel);
     }
@@ -328,7 +328,7 @@ public class SubjectPreferencesActivity extends BaseActivity implements CommonCa
     void callFetchUserPreference() {
         handleProgress(0, "");
         FetchStudentPrefReqModel fetchStudentPrefReqModel = new FetchStudentPrefReqModel();
-        fetchStudentPrefReqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
+        fetchStudentPrefReqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getChildData().getUser_details().get(0).getUser_id());
         homeViewModel.checkInternetForApi(FETCH_STUDENT_PREFERENCES_API, fetchStudentPrefReqModel);
     }
 

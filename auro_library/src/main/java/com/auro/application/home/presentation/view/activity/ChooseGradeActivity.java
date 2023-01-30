@@ -1,10 +1,15 @@
 package com.auro.application.home.presentation.view.activity;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
@@ -13,28 +18,41 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseActivity;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
+import com.auro.application.core.network.ErrorResponseModel;
+import com.auro.application.core.util.AuroScholar;
 import com.auro.application.databinding.ActivityChooseGradeBinding;
+import com.auro.application.home.data.model.AuroScholarInputModel;
 import com.auro.application.home.data.model.SelectLanguageModel;
 import com.auro.application.home.data.model.response.CheckUserValidResModel;
+import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.presentation.view.adapter.GradeChangeAdapter;
 import com.auro.application.home.presentation.viewmodel.ChooseGradeViewModel;
 import com.auro.application.util.AppUtil;
 import com.auro.application.util.ConversionUtil;
+import com.auro.application.util.RemoteApi;
 import com.auro.application.util.TextUtil;
 import com.auro.application.util.ViewUtil;
 import com.auro.application.util.strings.AppStringDynamic;
+import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
+import com.truecaller.android.sdk.ErrorResponse;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ChooseGradeActivity extends BaseActivity implements View.OnClickListener, CommonCallBackListner {
 
@@ -60,8 +78,9 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
 
         binding = DataBindingUtil.setContentView(this, getLayout());
-        ((AuroApp) this.getApplication()).getAppComponent().doInjection(this);
+//        ((AuroApp) this.getApplication()).getAppComponent().doInjection(this);
         //view model and handler setup
+        DaggerWrapper.getComponent(this).doInjection(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(ChooseGradeViewModel.class);
         binding.setLifecycleOwner(this);
         prefModel = AuroAppPref.INSTANCE.getModelInstance();
@@ -116,8 +135,8 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
             if (grade == 0) {
                 ViewUtil.showSnackBar(binding.getRoot(), prefModel.getLanguageMasterDynamic().getDetails().getPlease_select_the_grade());
             } else {
-
-                callChangeGradeApi();
+                setSDKAPIGrade(String.valueOf(grade),"1");
+                //callChangeGradeApi();
 
             }
         }
@@ -182,22 +201,219 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
                 for (int i = 0; i < laugList.size(); i++) {
                     laugList.get(i).setCheck(i == commonDataModel.getSource());
                 }
-                buttonSelect();
+                setSDKAPI(String.valueOf(grade));
+
                 //    reqModel.setNotification_message(list.get(commonDataModel.getSource()).getMessage());
                 adapter.setData(laugList);
 
                 break;
         }
     }
+    private void setSDKAPI(String gradeid)
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String mobile = prefModel.getUserMobile();
+        String uniqueid = prefModel.getPartneruniqueid();
+        String source = prefModel.getPartnersource();
+        String apikey = prefModel.getApikey();
+        String userid = prefModel.getUserId();
+        HashMap<String,String> map_data = new HashMap<>();
+            map_data.put("mobile_no",mobile);
+            map_data.put("partner_unique_id",uniqueid); //456456
+            map_data.put("partner_source",source);
+            map_data.put("partner_api_key",apikey);
+            map_data.put("user_id",userid);
+            map_data.put("grade",gradeid);
 
-    public void buttonSelect() {
-        binding.userSelectionSheet.buttonSelect.setTextColor(AuroApp.getAppContext().getResources().getColor(R.color.white));
-        binding.userSelectionSheet.buttonSelect.setBackground(AuroApp.getAppContext().getResources().getDrawable(R.drawable.button_submit));
+            RemoteApi.Companion.invoke().getSDKDataerror(map_data)
+                    .enqueue(new Callback<ErrorResponseModel>() {
+                        @Override
+                        public void onResponse(Call<ErrorResponseModel> call, Response<ErrorResponseModel> response)
+                        {
+                            try {
+                                if (response.code() == 400) {
+                                    Toast.makeText(ChooseGradeActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                                }
+                                else if (response.code() == 200) {
+                                    ErrorResponseModel error = (ErrorResponseModel) response.body();
+                                    String resmessage = error.getMessage();
+                                    if (resmessage.equals("Error! Grade Mismatched")){
+                                        buttonSelect(gradeid);
+                                    }
+
+
+
+                                }
+                                else {
+                                    Toast.makeText(ChooseGradeActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            catch (Exception e) {
+                                Toast.makeText(ChooseGradeActivity.this, "Internet connection", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ErrorResponseModel> call, Throwable t) {
+                            Toast.makeText(ChooseGradeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
+                    });
+
+
     }
 
+    private void setSDKAPIGrade(String gradeid, String gradestatus)
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String mobile = prefModel.getUserMobile();
+        String uniqueid = prefModel.getPartneruniqueid();
+        String source = prefModel.getPartnersource();
+        String apikey = prefModel.getApikey();
+        String userid = prefModel.getUserId();
+
+
+
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("mobile_no",mobile);
+        map_data.put("partner_unique_id",uniqueid); //456456
+        map_data.put("partner_source",source);
+        map_data.put("partner_api_key",apikey);
+        map_data.put("user_id",userid);
+        map_data.put("grade",gradeid);
+        map_data.put("update_grade",gradestatus);
+
+        RemoteApi.Companion.invoke().getSDKDataerror(map_data)
+                .enqueue(new Callback<ErrorResponseModel>() {
+                    @Override
+                    public void onResponse(Call<ErrorResponseModel> call, Response<ErrorResponseModel> response)
+                    {
+                        try {
+                            if (response.code() == 400) {
+                                Toast.makeText(ChooseGradeActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                            }
+                            else if (response.code() == 200) {
+                                if (gradestatus.equals("1")){
+                                    PrefModel prefModel1 = AuroAppPref.INSTANCE.getModelInstance();
+                                    prefModel1.setUserclass(gradeid);
+                                }
+
+                                getProfile();
+                            }
+                            else {
+                                Toast.makeText(ChooseGradeActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        catch (Exception e) {
+                            Toast.makeText(ChooseGradeActivity.this, "Internet connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ErrorResponseModel> call, Throwable t) {
+                        Toast.makeText(ChooseGradeActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+
+
+    }
+    public void buttonSelect(String userclass) {
+
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Your grade is mismatching with our record. Do you want to update ?");
+        builder.setMessage("warning : if yes your existing monthly quiz assessment & wallet amount will be erased.");
+
+        builder.setPositiveButton(Html.fromHtml("<font color='#00A1DB'>" + this.getString(R.string.yes) + "</font>"), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                binding.userSelectionSheet.buttonSelect.setTextColor(AuroApp.getAppContext().getResources().getColor(R.color.white));
+                binding.userSelectionSheet.buttonSelect.setBackground(AuroApp.getAppContext().getResources().getDrawable(R.drawable.button_submit));
+
+               // dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(Html.fromHtml("<font color='#00A1DB'>" + this.getString(R.string.no) + "</font>"), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+                setSDKAPIGrade(userclass,"2");
+
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+
+
+    }
+    private void getProfile()
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String partnersource = prefModel.getPartnersource();
+        String parnteruniqueid = prefModel.getPartneruniqueid();
+        String mobileno = prefModel.getUserMobile();
+        String userid = prefModel.getUserId();
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("user_id",userid);
+
+        RemoteApi.Companion.invoke().getStudentData(map_data)
+                .enqueue(new Callback<GetStudentUpdateProfile>()
+                {
+                    @Override
+                    public void onResponse(Call<GetStudentUpdateProfile> call, Response<GetStudentUpdateProfile> response)
+                    {
+                        if (response.isSuccessful())
+                        {
+
+
+
+                             if (response.body().getStatename().equals("")||response.body().getStatename().equals("null")||response.body().getStatename().equals(null)||response.body().getDistrictname().equals("")||response.body().getDistrictname().equals("null")||response.body().getDistrictname().equals(null)||response.body().getStudentName().equals("")||response.body().getStudentName().equals("null")||response.body().getStudentName().equals(null)||
+                                    response.body().getStudentclass().equals("")||response.body().getStudentclass().equals("null")||response.body().getStudentclass().equals(null)||response.body().getStudentclass().equals("0")||response.body().getStudentclass().equals(0)){
+                                Intent i = new Intent(mContext, CompleteStudentProfileWithoutPin.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                mContext.startActivity(i);
+                            }
+                            else{
+
+                                openGenricSDK(mobileno,partnersource,parnteruniqueid);
+
+                            }
+
+                        }
+                        else
+                        {
+                            Toast.makeText(mContext, response.message(), Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetStudentUpdateProfile> call, Throwable t)
+                    {
+                        Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource  ) {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String userclass = prefModel.getUserclass();
+        AuroScholarInputModel inputModel = new AuroScholarInputModel();
+
+        inputModel.setMobileNumber(mobileNumber);
+        inputModel.setStudentClass(userclass);
+
+        inputModel.setPartner_unique_id(partneruniqueid);
+        inputModel.setPartnerSource(partnersource);
+        inputModel.setPartner_api_key("");
+        inputModel.setActivity((Activity) mContext);
+
+        AuroScholar.startAuroSDK(inputModel);
+    }
     private void setClassInPref(int studentClass) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        prefModel.getStudentData().setGrade("" + studentClass);
+        prefModel.getUserclass();
         AuroAppPref.INSTANCE.setPref(prefModel);
 
     }
@@ -277,7 +493,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
         handleProgress(0);
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         CheckUserValidResModel reqModel = new CheckUserValidResModel();
-        reqModel.setMobileNo(prefModel.getStudentData().getUserId());
+        reqModel.setMobileNo(prefModel.getUserId());
         reqModel.setStudentClass("" + grade);
         viewModel.changeGrade(reqModel);
     }

@@ -64,6 +64,7 @@ import com.auro.application.home.data.model.response.FetchStudentPrefResModel;
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.data.model.response.InstructionsResModel;
 import com.auro.application.home.data.model.response.SlabsResModel;
+import com.auro.application.home.data.model.response.StudentKycStatusResModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
 import com.auro.application.home.presentation.view.activity.CameraActivity;
@@ -91,6 +92,10 @@ import com.auro.application.util.permission.PermissionHandler;
 import com.auro.application.util.permission.PermissionUtil;
 import com.auro.application.util.permission.Permissions;
 import com.auro.application.util.strings.AppStringDynamic;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.instabug.apm.APM;
 import com.instabug.bug.BugReporting;
@@ -134,7 +139,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
     FragmentMainQuizHomeBinding binding;
     QuizViewModel quizViewModel;
     DashboardResModel dashboardResModel;
-
+    String getkycstatus;
     String TAG = MainQuizHomeFragment.class.getSimpleName();
     QuizResModel quizResModel;
     AssignmentReqModel assignmentReqModel;
@@ -175,16 +180,17 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
         if (binding != null) {
             return binding.getRoot();
         }
-        if (!AuroApp.getAuroScholarModel().isApplicationLang()) {
-            String lang = AuroApp.getAuroScholarModel().getLanguage();
-            if (!TextUtil.isEmpty(lang)) {
-                if (lang.equalsIgnoreCase(AppConstant.LANGUAGE_HI) || lang.equalsIgnoreCase(AppConstant.LANGUAGE_EN)) {
+//        if (!AuroApp.getAuroScholarModel().isApplicationLang()) {
+//            String lang = AuroApp.getAuroScholarModel().getLanguage();
+//            if (!TextUtil.isEmpty(lang)) {
+//                if (lang.equalsIgnoreCase(AppConstant.LANGUAGE_HI) || lang.equalsIgnoreCase(AppConstant.LANGUAGE_EN)) {
+//
+//                }
+//            } else {
+//        AuroApp.getAuroScholarModel().setLanguage(AppConstant.LANGUAGE_EN);
+//            }
+//        }
 
-                }
-            } else {
-                AuroApp.getAuroScholarModel().setLanguage(AppConstant.LANGUAGE_EN);
-            }
-        }
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
 
         //((AuroApp) requireActivity().getApplication()).getAppComponent().doInjection(this);
@@ -210,7 +216,15 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
     @Override
     protected void init() {
      prefModel = AuroAppPref.INSTANCE.getModelInstance();
-   //  details = prefModel.getLanguageMasterDynamic().getDetails();
+     String partnerlogo = prefModel.getPartner_logo();
+        Glide.with(this).load(partnerlogo)
+                .apply(RequestOptions.placeholderOf(R.drawable.ic_auro_scholar_logo)
+                        .dontAnimate()
+                        .priority(Priority.IMMEDIATE)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL))
+                .into(binding.partnerLogo);
+
+     details = prefModel.getLanguageMasterDynamic().getDetails();
         try {
             binding.RPTextView9.setText(DateUtil.getMonthName() + " " + getActivity().getResources().getString(R.string.scholarship));
             Details details = prefModel.getLanguageMasterDynamic().getDetails();
@@ -240,8 +254,8 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
 
     void checkScreenPreferences() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        AppLogger.e("checkScreenPreferences --", "" + prefModel.getStudentClass());
-        int studentClass = 12;
+
+        int studentClass = Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserclass());
         AppLogger.e("checkScreenPreferences --", "" + studentClass);
         if (studentClass > 10) {
             FetchStudentPrefResModel fetchStudentPrefResModel = prefModel.getFetchStudentPrefResModel();
@@ -348,10 +362,10 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
                    setAdapterChapter((SubjectResModel) commonDataModel.getObject());
                }
                else{
-                   ViewUtil.showSnackBar(binding.getRoot(),checkkycstatusmessage);
+                   checkkycstatusmessage = "Please upload your KYC.";
+                   Toast.makeText(getActivity(), checkkycstatusmessage, Toast.LENGTH_SHORT).show();
+                  // ViewUtil.showSnackBar(binding.getRoot(),checkkycstatusmessage);
                }
-
-
                 break;
 
             case BACK_CLICK:
@@ -406,7 +420,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
 
     private void getKYCChecked()
     {
-        String suserid = "971738";
+        String suserid = AuroAppPref.INSTANCE.getModelInstance().getUserId();
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("user_id",suserid);
         RemoteApi.Companion.invoke().getCheckKYC(map_data)
@@ -415,8 +429,6 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
                     @Override
                     public void onResponse(Call<GetStudentUpdateProfile> call, Response<GetStudentUpdateProfile> response)
                     {
-
-
                         if (response.isSuccessful())
                         {
                          String success = response.body().getStatus();
@@ -433,12 +445,9 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
                              editor.apply();
                          }
 
-
-
                         }
                         else
                         {
-
                             Log.d(TAG, "onResponser: "+response.message().toString());
                         }
                     }
@@ -453,29 +462,10 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
 
 
     private void askPermission() {
-//        String rationale = getString(R.string.permission_error_msg);
-//        Permissions.Options options = new Permissions.Options()
-//                .setRationaleDialogTitle("Info")
-//                .setSettingsDialogTitle("Warning");
-//        Permissions.check(getActivity(), PermissionUtil.mCameraPermissions, rationale, options, new PermissionHandler() {
-//            @Override
-//            public void onGranted() {
+
                 PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
                 callStartQuizActionApi();
-              //   openCameraPhotoFragment();
-              /*  if (prefModel.isPreQuizDisclaimer()) {  for one time open
 
-                } else {
-                    checkPreQuizDisclaimer();
-                }*/
-//            }
-//
-//            @Override
-//            public void onDenied(Context context, ArrayList<String> deniedPermissions) {
-//                // permission denied, block the feature.
-//                ViewUtil.showSnackBar(binding.getRoot(), rationale);
-//            }
-//        });
     }
 
 
@@ -538,7 +528,8 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
         } else if (id == R.id.cardView2) {
             ((DashBoardMainActivity) getActivity()).openProfileFragment();
         } else if (id == R.id.walleticon) {
-            openWalletInfoFragment();
+            getKYCStatus();
+           // openWalletInfoFragment();
                /* if (quizViewModel.homeUseCase.checkKycStatus(dashboardResModel)) {
                     ((DashBoardMainActivity) getActivity()).openKYCViewFragment(dashboardResModel, 0);
                 } else {
@@ -559,7 +550,75 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
         }
 
     }
+    private void getKYCStatus()
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String suserid =  AuroAppPref.INSTANCE.getModelInstance().getUserId();
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("user_id",suserid);
 
+        RemoteApi.Companion.invoke().getKYCStatus(map_data)
+                .enqueue(new Callback<StudentKycStatusResModel>()
+                {
+                    @Override
+                    public void onResponse(Call<StudentKycStatusResModel> call, Response<StudentKycStatusResModel> response)
+                    {
+                        if (response.isSuccessful())
+                        {
+                            getkycstatus = response.body().getKycStatus();
+                            String uploadedornot = response.body().getIsKycUploaded();
+                            if (uploadedornot.equals("NO")||uploadedornot=="NO"){
+                                 Toast.makeText(getActivity(), "Please upload you KYC", Toast.LENGTH_SHORT).show();
+                              //  ViewUtil.showSnackBar(binding.getRoot(),"Please upload your KYC");
+                            }
+                            else if (uploadedornot.equals("YES")||uploadedornot=="YES"){
+                                if (getkycstatus.equals("APPROVE")){
+                                    openWalletInfoFragment();
+                                }
+                                else if (getkycstatus.equals("PENDING")){
+                                     Toast.makeText(getActivity(), "Your KYC verification is pending, wait till it gets verified", Toast.LENGTH_SHORT).show();
+                                   // ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification is pending, wait till it gets verified");
+
+                                }
+                                else if (getkycstatus.equals("DISAPPROVE")){
+                                     Toast.makeText(getActivity(), "Your KYC verification has been disapprove, please reupload documents", Toast.LENGTH_SHORT).show();
+                                  //  ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification has been disapprove, please reupload documents");
+
+                                }
+                                else if (getkycstatus.equals("INPROCESS")){
+                                    //   Toast.makeText(getActivity(), "Your KYC is under verification", Toast.LENGTH_SHORT).show();
+                                    ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification is in progress, wait till it gets verified");
+
+                                }
+                                else if (getkycstatus.equals("REJECTED")){
+                                      Toast.makeText(getActivity(), "Your KYC verification has been rejected, please reupload documents", Toast.LENGTH_SHORT).show();
+                                   // ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification has been rejected, please reupload documents");
+
+                                }
+                                else{
+                                    Toast.makeText(getActivity(), "Your KYC verification is pending, wait till it gets verified", Toast.LENGTH_SHORT).show();
+
+                                   // ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification is pending, wait till it gets verified");
+
+                                }
+                            }
+
+
+                        }
+                        else
+                        {
+
+                            Log.d(TAG, "onResponser: "+response.message().toString());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<StudentKycStatusResModel> call, Throwable t)
+                    {
+                        Log.d(TAG, "onFailure: "+t.getMessage());
+                    }
+                });
+    }
     private void openWalletInfoFragment() {
         Bundle bundle = new Bundle();
         bundle.putParcelable(AppConstant.DASHBOARD_RES_MODEL, dashboardResModel);
@@ -691,7 +750,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
             binding.mainParentLayout.setVisibility(View.VISIBLE);
             binding.shimmerViewQuiz.setVisibility(View.GONE);
             binding.shimmerViewQuiz.stopShimmer();
-            binding.imageChat.setVisibility(View.VISIBLE);
+            binding.imageChat.setVisibility(View.GONE);
 
         }
 
@@ -783,9 +842,9 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
         }
 
         if (dashboardResModel != null && dashboardResModel.isChatBotEnabled()) {
-            binding.imageChat.setVisibility(View.VISIBLE);
+            binding.imageChat.setVisibility(View.GONE);
         } else {
-            binding.imageChat.setVisibility(View.VISIBLE);
+            binding.imageChat.setVisibility(View.GONE);
         }
     }
 
@@ -916,7 +975,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
             assignmentReqModel.setEklavvya_exam_id(testAssignmentResModel.getExamAssignmentID());
             assignmentReqModel.setSubject(quizResModel.getSubjectName());
             assignmentReqModel.setExamId(testAssignmentResModel.getExamId());
-            assignmentReqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
+            assignmentReqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getUserId());
             AppLogger.e("chhonker-", "azureImage  setp 2" + new Gson().toJson(assignmentReqModel));
 
             Bitmap picBitmap = BitmapFactory.decodeFile(path);
@@ -1024,7 +1083,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
     public void showProgress() {
         int THREE_SECONDS = 20 * 1000;
         quizProgressDialog = new ProgressDialog(getActivity());
-        quizProgressDialog.setMessage(details.getFetch_quiz_data() != null ? details.getFetch_quiz_data() :AuroApp.getAppContext().getResources().getString(R.string.fetch_quiz_data));
+        quizProgressDialog.setMessage(AuroApp.getAppContext().getResources().getString(R.string.fetch_quiz_data));
         quizProgressDialog.setCancelable(false);
         quizProgressDialog.show();
         new Handler().postDelayed(new Runnable() {
@@ -1055,8 +1114,6 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
         instructionModel.setLanguageId(Integer.parseInt(prefModel.getUserLanguageId()));
         quizViewModel.checkInternet(instructionModel, GET_INSTRUCTIONS_API);
     }
-
-
     private void makeQuizInfoAdapter() {//pradeep
         // slabsResModel = getDummyJson();
         AppLogger.e("GET_SLABS_API","MainQuizHomeFragment - "+slabsResModel.getSlabs());

@@ -19,9 +19,9 @@ public class FetchStudentPrefResModel implements Parcelable {
     @SerializedName("is_set")
     @Expose
     private Boolean isSet;
-    @SerializedName("mobile_no")
-    @Expose
-    private String mobileNo;
+//    @SerializedName("mobile_no")
+//    @Expose
+//    private String mobileNo;
     @SerializedName("message")
     @Expose
     private String message;
@@ -39,7 +39,7 @@ public class FetchStudentPrefResModel implements Parcelable {
         error = tmpError == 0 ? null : tmpError == 1;
         byte tmpIsSet = in.readByte();
         isSet = tmpIsSet == 0 ? null : tmpIsSet == 1;
-        mobileNo = in.readString();
+       // mobileNo = in.readString();
         message = in.readString();
         preference = in.createStringArrayList();
     }
@@ -49,7 +49,7 @@ public class FetchStudentPrefResModel implements Parcelable {
         dest.writeString(status);
         dest.writeByte((byte) (error == null ? 0 : error ? 1 : 2));
         dest.writeByte((byte) (isSet == null ? 0 : isSet ? 1 : 2));
-        dest.writeString(mobileNo);
+     //   dest.writeString(mobileNo);
         dest.writeString(message);
         dest.writeStringList(preference);
     }
@@ -95,13 +95,13 @@ public class FetchStudentPrefResModel implements Parcelable {
         this.isSet = isSet;
     }
 
-    public String getMobileNo() {
-        return mobileNo;
-    }
+//    public String getMobileNo() {
+//        return mobileNo;
+//    }
 
-    public void setMobileNo(String mobileNo) {
-        this.mobileNo = mobileNo;
-    }
+//    public void setMobileNo(String mobileNo) {
+//        this.mobileNo = mobileNo;
+//    }
 
     public String getMessage() {
         return message;

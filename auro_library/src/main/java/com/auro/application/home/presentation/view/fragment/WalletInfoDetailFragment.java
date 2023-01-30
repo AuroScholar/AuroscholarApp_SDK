@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -70,7 +71,8 @@ public class WalletInfoDetailFragment extends BaseFragment implements View.OnCli
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
-        ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+      //  ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+        DaggerWrapper.getComponent(getActivity()).doInjection(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(WalletAmountViewModel.class);
         binding.setLifecycleOwner(this);
         setRetainInstance(true);
@@ -289,8 +291,8 @@ public class WalletInfoDetailFragment extends BaseFragment implements View.OnCli
         AppLogger.e("callGetWalletStatus-", "step 1");
         handleProgress(0, "");
         SetPasswordReqModel reqModel = new SetPasswordReqModel();
-        reqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
-        reqModel.setUserPreferedLanguageId(Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId()));
+        reqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getUserId());
+        reqModel.setUserPreferedLanguageId(Integer.valueOf(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId()));
         viewModel.checkInternet(reqModel, Status.WALLET_STATUS_API);
     }
 

@@ -44,6 +44,7 @@ import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
 import com.auro.application.home.data.model.Details;
 import com.auro.application.home.data.model.response.LanguageResModel;
+import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
 import com.auro.application.home.presentation.view.activity.SplashScreenAnimationActivity;
 import com.auro.application.util.alert_dialog.ErrorSnackbar;
 import com.auro.application.util.alert_dialog.InstallSnackbar;
@@ -387,9 +388,9 @@ public class ViewUtil {
 
     public static String getLanguage() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        if (prefModel != null && prefModel.getUserLanguageCode() != null && !prefModel.getUserLanguageCode().isEmpty()) {
-            AppLogger.e("getLanguage-", prefModel.getUserLanguageCode());
-            return prefModel.getUserLanguageCode();
+        if (prefModel != null && prefModel.getUserLanguageId() != null && !prefModel.getUserLanguageId().isEmpty()) {
+            AppLogger.e("getLanguage-", prefModel.getUserLanguageId());
+            return prefModel.getUserLanguageId();
         }
         return AppConstant.LANGUAGE_EN;
     }
@@ -447,7 +448,7 @@ public class ViewUtil {
         config.setLocale(locale);*/
         activity.finish();
 
-        Intent refresh = new Intent(activity, SplashScreenAnimationActivity.class);
+        Intent refresh = new Intent(activity, DashBoardMainActivity.class);
         activity.startActivity(refresh);
 
     }
@@ -482,9 +483,9 @@ public class ViewUtil {
 
     public static void setProfilePic(ImageView imageView) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        if (prefModel != null && prefModel.getDashboardResModel() != null && !TextUtil.isEmpty(prefModel.getDashboardResModel().getProfilePic())) {
+        if (prefModel != null && prefModel.getUserprofilepic() != null && !TextUtil.isEmpty(prefModel.getUserprofilepic())) {
 
-            Glide.with(imageView.getContext()).load(prefModel.getDashboardResModel().getProfilePic())
+            Glide.with(imageView.getContext()).load(prefModel.getUserprofilepic())
                     .apply(RequestOptions.placeholderOf(R.drawable.imageplaceholder_ico)
                             .error(R.drawable.imageplaceholder_ico)
                             .dontAnimate()

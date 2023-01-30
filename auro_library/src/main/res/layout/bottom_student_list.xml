@@ -46,6 +46,7 @@
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="10dp"
                 android:text="My Account"
+                android:visibility="gone"
                 android:textColor="@color/auro_buton_text_blue"
                 android:textSize="16sp"></TextView>
 
@@ -54,9 +55,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:scrollbars="vertical"
+                android:visibility="gone"
                 android:layout_below="@+id/txtmyaccount"
                 android:layout_marginTop="@dimen/_10sdp"
-
                 />
 
                 <TextView
@@ -81,6 +82,23 @@
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_marginBottom="20dp"
                     />
+                <com.auro.application.core.util.uiwidget.RPTextView
+                    android:id="@+id/btnaddstudent"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginEnd="@dimen/_20sdp"
+                    android:layout_marginBottom="@dimen/_20sdp"
+                    android:layout_below="@+id/studentList"
+                    android:background="@drawable/button_submit"
+                    android:gravity="center"
+                    android:padding="@dimen/_11sdp"
+                    android:text="@string/continue_addstudent"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/_11sdp"
+                    android:visibility="visible"
+                    app:Font="ArticulatCF-Regular.otf" />
 
 
                 <ImageView

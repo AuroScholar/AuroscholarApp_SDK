@@ -6,75 +6,69 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_margin="@dimen/_10sdp"
+        android:gravity="center"
+        android:padding="@dimen/_10sdp"
         android:orientation="vertical">
-
-
-        <TextView
-            android:id="@+id/bt_sdk"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:background="#F44336"
-            android:padding="10dp"
-            android:text="Student SDK"
-            android:visibility="visible"
-            android:textColor="@color/white" />
-
 
 
         <EditText
             android:id="@+id/mobile_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="10dp"
-         android:layout_margin="10dp"
+            android:textSize="16dp"
             android:inputType="phone"
             android:maxLength="10"
-            android:hint="Please Enter Your Mobile Number"
-            android:layout_below="@+id/bt_sdk"/>
+            android:hint="Please Enter Your Mobile Number" />
 
         <EditText
-            android:id="@+id/user_class"
+            android:id="@+id/partner_source"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="10dp"
-        android:layout_margin="10dp"
-            android:inputType="phone"
-            android:maxLength="2"
-            android:visibility="visible"
-            android:hint="Please Enter class"
+            android:textSize="16dp"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:hint="Please Enter Partner Source"
             android:layout_below="@+id/mobile_number"/>
 
         <EditText
-            android:id="@+id/language"
+            android:id="@+id/partner_unique_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="10dp"
-          android:layout_margin="10dp"
-            android:inputType="text"
-            android:maxLength="2"
-            android:visibility="visible"
-            android:hint="Please select Language"
-            android:layout_below="@+id/user_class"/>
-
+            android:textSize="16dp"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:hint="Please Enter Partner Unique Id"
+            android:layout_below="@+id/partner_source"/>
         <EditText
-            android:id="@+id/utm_text_here"
+            android:id="@+id/partner_api_key"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="10dp"
-          android:layout_margin="10dp"
-            android:inputType="text"
-            android:visibility="gone"
-            android:hint="Enter the UTM Link Here"
-            android:layout_below="@+id/user_class"/>
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:id="@+id/home_container"
+            android:textSize="16dp"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:hint="Please Enter Partner API Key"
+            android:layout_below="@+id/partner_unique_id"/>
+        <EditText
+            android:id="@+id/grade"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="visible" />
+            android:layout_height="wrap_content"
+            android:textSize="16dp"
+            android:layout_marginTop="@dimen/_14sdp"
+            android:hint="Please Enter Student Grade"
+            android:layout_below="@+id/partner_api_key"/>
 
 
+        <TextView
+            android:id="@+id/bt_sdk"
+            android:layout_width="@dimen/_120sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_12ssp"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:background="#2196F3"
+         android:gravity="center"
+            android:textSize="@dimen/_14sdp"
+            android:padding="10dp"
+            android:layout_below="@+id/grade"
+            android:text="LOGIN"
+            android:textColor="@color/white" />
     </RelativeLayout>
 </layout>

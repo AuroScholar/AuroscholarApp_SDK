@@ -64,10 +64,10 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
 
     @Override
     public Single<Response<JsonObject>> getDashboardData(AuroScholarDataModel model) {
-        SDKDataModel prefModel2 = AuroAppPref.INSTANCE.getModelInstance().getChildData();
+        PrefModel prefModel2 = AuroAppPref.INSTANCE.getModelInstance();
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(AppConstant.DashBoardParams.USER_ID, prefModel2.getUser_details().get(0).getUser_id());
-        params.put(AppConstant.DashBoardParams.LANGUAGE, prefModel2.getUser_details().get(0).getUser_prefered_language_id());
+        params.put(AppConstant.DashBoardParams.USER_ID, prefModel2.getUserId());
+        params.put(AppConstant.DashBoardParams.LANGUAGE, prefModel2.getUserLanguageId());
         params.put(AppConstant.DashBoardParams.MODULES, "details,wallet,quizes");
         params.put(AppConstant.DashBoardParams.LANGUAGE_VERSION, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         params.put(AppConstant.DashBoardParams.API_VERSION, AppConstant.ParamsValue.API_VERSION_VAL);
@@ -75,13 +75,15 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
         params.put(AppConstant.DashBoardParams.PARTNER_SOURCE, AppConstant.ParamsValue.PARTNER_SOURCE_VAL);
         params.put(AppConstant.DashBoardParams.LANGUAGE_VERSION, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         params.put(AppConstant.DashBoardParams.API_VERSION, AppConstant.ParamsValue.API_VERSION_VAL);
-        params.put(AppConstant.Language.USER_PREFERED_LANGUAGE,prefModel2.getUser_details().get(0).getUser_prefered_language_id());
+        params.put(AppConstant.Language.USER_PREFERED_LANGUAGE,prefModel2.getUserLanguageId());
         return homeRemoteApi.getDashboardSDKData(params);
     }
 
 
     @Override
     public Single<Response<JsonObject>> getAzureData(AssignmentReqModel azureReqModel) {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String partner_unique_id = prefModel.getPartneruniqueid();
         RequestBody registration_id = RequestBody.create(okhttp3.MultipartBody.FORM, azureReqModel.getRegistration_id());
         RequestBody exam_id = RequestBody.create(okhttp3.MultipartBody.FORM, azureReqModel.getEklavvya_exam_id());
         RequestBody exam_name = RequestBody.create(okhttp3.MultipartBody.FORM, azureReqModel.getExam_name());
@@ -92,6 +94,7 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
         RequestBody userId = RequestBody.create(okhttp3.MultipartBody.FORM, azureReqModel.getUserId());
         RequestBody langVersion = RequestBody.create(okhttp3.MultipartBody.FORM, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         RequestBody apiVersion = RequestBody.create(okhttp3.MultipartBody.FORM, AppConstant.ParamsValue.API_VERSION_VAL);
+        //RequestBody partner_unique_idvalue = RequestBody.create(okhttp3.MultipartBody.FORM, partner_unique_id);
 
         MultipartBody.Part student_photo = MultipartBody.Part.createFormData("exam_face_img", "image.jpg", requestFile);
         return homeRemoteApi.getAzureApiData(registration_id, exam_id, exam_name, quiz_attempt, subject, examAuroId, userId, langVersion, apiVersion, student_photo);
@@ -100,7 +103,7 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
     @Override
     public Single<Response<JsonObject>> inviteFriendListApi() {
         Map<String, String> params = new HashMap<String, String>();
-        params.put(AppConstant.DashBoardParams.USER_ID, AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
+        params.put(AppConstant.DashBoardParams.USER_ID, AuroAppPref.INSTANCE.getModelInstance().getUserId());
         return homeRemoteApi.inviteFriendListApi(params);
     }
 
@@ -123,7 +126,7 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
         RequestBody aadhar_no = RequestBody.create(okhttp3.MultipartBody.FORM, kycInputModel.getAadhar_no());
         RequestBody school_phone = RequestBody.create(okhttp3.MultipartBody.FORM, kycInputModel.getSchool_phone());
         RequestBody school_dob = RequestBody.create(okhttp3.MultipartBody.FORM, kycInputModel.getSchool_dob());
-        RequestBody user_id = RequestBody.create(okhttp3.MultipartBody.FORM, AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
+        RequestBody user_id = RequestBody.create(okhttp3.MultipartBody.FORM, AuroAppPref.INSTANCE.getModelInstance().getUserId());
         RequestBody langVersion = RequestBody.create(okhttp3.MultipartBody.FORM, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         RequestBody apiVersion = RequestBody.create(okhttp3.MultipartBody.FORM, AppConstant.ParamsValue.API_VERSION_VAL);
         MultipartBody.Part id_proof_front = ConversionUtil.INSTANCE.makeMultipartRequest(list.get(0));
@@ -352,10 +355,12 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
         params.put(AppConstant.DashBoardParams.USER_ID, assignmentReqModel.getUserId());
         params.put(AppConstant.AssignmentApiParams.EXAM_NAME, assignmentReqModel.getExam_name());
         params.put(AppConstant.AssignmentApiParams.QUIZ_ATTEMPT, assignmentReqModel.getQuiz_attempt());
-        params.put(AppConstant.AssignmentApiParams.EXAMLANG, AppUtil.getExamLanguage(assignmentReqModel));
+        params.put(AppConstant.AssignmentApiParams.EXAMLANG, "E");
         params.put(AppConstant.DashBoardParams.LANGUAGE_VERSION, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         params.put(AppConstant.DashBoardParams.API_VERSION, AppConstant.ParamsValue.API_VERSION_VAL);
         params.put(AppConstant.Language.USER_PREFERED_LANGUAGE,Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId()));
+        params.put("partner_unique_id",Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getPartneruniqueid()));
+
         return homeRemoteApi.getAssignmentId(params);
     }
 
@@ -384,7 +389,7 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
     public Single<Response<JsonObject>> partnersApi() {
         Map<String, Object> params = new HashMap<String, Object>();
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        params.put(AppConstant.DashBoardParams.USER_ID, prefModel.getStudentData().getUserId());
+        params.put(AppConstant.DashBoardParams.USER_ID, prefModel.getUserId());
         params.put(AppConstant.DashBoardParams.API_VERSION, AppConstant.ParamsValue.API_VERSION_VAL);
         params.put(AppConstant.Language.USER_PREFERED_LANGUAGE, Integer.parseInt(prefModel.getUserLanguageId()));
         return homeRemoteApi.partnersApi(params);
@@ -475,8 +480,8 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
     @Override
     public Single<Response<JsonObject>> getCertificateApi(CertificateResModel model) {
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put(AppConstant.DashBoardParams.USER_ID, model.getRegistrationId());
-        params.put(AppConstant.DashBoardParams.STUDENT_NAME, model.getStudentName());
+        //  params.put(AppConstant.DashBoardParams.USER_ID, model.getRegistrationId());
+        //params.put(AppConstant.DashBoardParams.STUDENT_NAME, model.getStudentName());
         params.put(AppConstant.Language.USER_PREFERED_LANGUAGE,Integer.parseInt( AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId()));
         return homeRemoteApi.getCertificateApi(params);
     }
@@ -546,23 +551,18 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
     @Override
     public Single<Response<JsonObject>> preferenceSubjectList() {
         Map<String, Object> requestMap = new HashMap<>();
-        if (AuroAppPref.INSTANCE.getModelInstance().getStudentClass()==0){
-            requestMap.put(AppConstant.DashBoardParams.STUDENT_CLASS, "" + "11");
 
-        }
-        else{
-            requestMap.put(AppConstant.DashBoardParams.STUDENT_CLASS, "" + AuroAppPref.INSTANCE.getModelInstance().getStudentClass());
-
-        }
-        requestMap.put(AppConstant.DashBoardParams.LANGUAGE, "" + ViewUtil.getLanguageId());
-        requestMap.put(AppConstant.DashBoardParams.LANGUAGE_VERSION, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
-        requestMap.put(AppConstant.DashBoardParams.API_VERSION, AppConstant.ParamsValue.API_VERSION_VAL);
-        requestMap.put(AppConstant.Language.USER_PREFERED_LANGUAGE,Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId()));
+            requestMap.put(AppConstant.DashBoardParams.STUDENT_CLASS,AuroAppPref.INSTANCE.getModelInstance().getUserclass());
+            requestMap.put(AppConstant.DashBoardParams.LANGUAGE, AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId());
+        //requestMap.put(AppConstant.DashBoardParams.LANGUAGE_VERSION, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
+       // requestMap.put(AppConstant.DashBoardParams.API_VERSION, AppConstant.ParamsValue.API_VERSION_VAL);
+        //requestMap.put(AppConstant.Language.USER_PREFERED_LANGUAGE,Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageCode()));
         return homeRemoteApi.preferenceSubjectList(requestMap);
     }
 
     @Override
     public Single<Response<JsonObject>> fetchStudentPreferenceApi(FetchStudentPrefReqModel reqModel) {
+        reqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getUserId());
         reqModel.setApiVersion(AppConstant.ParamsValue.API_VERSION_VAL);
         reqModel.setLangVersion(AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         reqModel.setUserPreferedLanguageId(Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId()));
@@ -573,7 +573,7 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
     public Single<Response<JsonObject>> updateStudentPreference(UpdatePrefReqModel reqModel) {
         reqModel.setApiVersion(AppConstant.ParamsValue.API_VERSION_VAL);
         reqModel.setLangVersion(AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
-        reqModel.setUserPreferedLanguageId(Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId()));
+       // reqModel.setUserPreferedLanguageId(Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageCode()));
         return homeRemoteApi.updateStudentPreference(reqModel);
     }
 
@@ -642,7 +642,7 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
     @Override
     public Single<Response<JsonObject>> getStudentKycStatus() {
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put(AppConstant.DashBoardParams.USER_ID, AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
+        requestMap.put(AppConstant.DashBoardParams.USER_ID, AuroAppPref.INSTANCE.getModelInstance().getUserId());
         // requestMap.put(AppConstant.DashBoardParams.USER_ID, "620551");
         requestMap.put(AppConstant.Language.USER_PREFERED_LANGUAGE,Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId()));
         return homeRemoteApi.getStudentKycStatus(requestMap);
@@ -650,7 +650,7 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
     @Override
     public Single<Response<JsonObject>> parentUpdateProfile(String name, int stateid, int districtid, String gender,String emailid) {
         Map<String, Object> requestMap = new HashMap<>();
-        requestMap.put(AppConstant.ParentProfileParams.USER_ID, AuroAppPref.INSTANCE.getModelInstance().getParentData().getUserId());
+        requestMap.put(AppConstant.ParentProfileParams.USER_ID, AuroAppPref.INSTANCE.getModelInstance().getUserId());
          requestMap.put(AppConstant.ParentProfileParams.FULL_NAME, name);
         requestMap.put(AppConstant.ParentProfileParams.STATE_ID, stateid);
         requestMap.put(AppConstant.ParentProfileParams.DISTRICT_ID, districtid);

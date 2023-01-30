@@ -87,6 +87,7 @@
                     android:layout_marginBottom="@dimen/_10sdp"
                     android:clipChildren="false"
                     android:clipToPadding="false"
+                    android:visibility="gone"
                     android:divider="@android:color/transparent"
                     android:dividerHeight="0.0px"
                     app:cardCornerRadius="@dimen/_5sdp"

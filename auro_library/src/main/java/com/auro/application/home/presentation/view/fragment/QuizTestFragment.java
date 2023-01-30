@@ -848,7 +848,7 @@ public class QuizTestFragment extends BaseFragment implements View.OnClickListen
                 DashboardResModel dashboardResModel = prefModel.getDashboardResModel();
                 saveQuestionResModel.setRegistration_id(dashboardResModel.getAuroid());
                 saveQuestionResModel.setExamId(assignmentResModel.getExamId());
-                saveQuestionResModel.setUserId(prefModel.getStudentData().getUserId());
+                saveQuestionResModel.setUserId(prefModel.getUserId());
 
                 quizTestViewModel.uploadExamFace(saveQuestionResModel);
             }

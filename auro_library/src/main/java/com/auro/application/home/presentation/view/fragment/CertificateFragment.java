@@ -2,6 +2,7 @@ package com.auro.application.home.presentation.view.fragment;
 
 import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
@@ -11,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,6 +20,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
@@ -32,13 +35,16 @@ import com.auro.application.core.database.PrefModel;
 import com.auro.application.databinding.FragmentCertificateBinding;
 import com.auro.application.home.data.model.DashboardResModel;
 import com.auro.application.home.data.model.Details;
+import com.auro.application.home.data.model.TutionData;
 import com.auro.application.home.data.model.response.APIcertificate;
 import com.auro.application.home.data.model.response.CertificateResModel;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
 import com.auro.application.home.presentation.view.adapter.CertificateAdapter;
 import com.auro.application.home.presentation.viewmodel.TransactionsViewModel;
 import com.auro.application.payment.presentation.view.fragment.SendMoneyFragment;
+
 import com.auro.application.util.AppUtil;
+import com.auro.application.util.RemoteApi;
 import com.auro.application.util.TextUtil;
 import com.auro.application.util.ViewUtil;
 import com.auro.application.util.alert_dialog.AskNameCustomDialog;
@@ -52,11 +58,16 @@ import com.auro.application.util.strings.AppStringDynamic;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class CertificateFragment extends BaseFragment implements View.OnClickListener, CommonCallBackListner {
@@ -74,6 +85,8 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
     private String comingFrom;
     String studentName = "";
     Details details;
+    List<APIcertificate> listchilds1 = new ArrayList<>();
+    List<APIcertificate> list1 = new ArrayList<>();
 
     public CertificateFragment() {
         // Required empty public constructor
@@ -91,23 +104,24 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        // return inflater.inflate(R.layout.fragment_transactions, container, false);
+
 
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
-        //((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+      //  ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
         DaggerWrapper.getComponent(getActivity()).doInjection(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(TransactionsViewModel.class);
         binding.setLifecycleOwner(this);
         setRetainInstance(true);
         ViewUtil.setLanguageonUi(getActivity());
+        details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
+
         return binding.getRoot();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        setAdapter();
         init();
         setToolbar();
         setListener();
@@ -122,22 +136,15 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
 
         }
         ViewUtil.setLanguageonUi(getActivity());
-        callCertificateApi();
+        //callCertificateApi();
 
-       /* if (comingFrom != null && comingFrom.equalsIgnoreCase(AppConstant.SENDING_DATA.DYNAMIC_LINK)) {
-            handleNavigationProgress(0, "");
-            AppLogger.i(TAG, "Log DynamicLink");
-            ((DashBoardMainActivity) getActivity()).setListner(this);
-            ((DashBoardMainActivity) getActivity()).callDashboardApi();
-        } else {
-            callCertificateApi();
-        }*/
+
         setListener();
         ViewUtil.setProfilePic(binding.imageView6);
         AppUtil.loadAppLogo(binding.auroScholarLogo,getActivity());
         details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
         AppStringDynamic.setCertificatesPageStrings(binding);
-        //setAdapter();
+
     }
 
     @Override
@@ -153,7 +160,9 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
         if (viewModel != null && viewModel.serviceLiveData().hasObservers()) {
             viewModel.serviceLiveData().removeObservers(this);
         } else {
-            observeServiceResponse();
+            getCertificateList();
+
+            // observeServiceResponse();
         }
 
         binding.downloadIcon.setOnClickListener(this);
@@ -170,8 +179,7 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
         int id = v.getId();
         if (id == R.id.back_arrow) {
             getActivity().onBackPressed();
-        } else if (id == R.id.download_icon) {
-            askPermission();
+        } else if (id == R.id.download_icon) {//askPermission();
         } else if (id == R.id.language_layout) {
             ((DashBoardMainActivity) getActivity()).openChangeLanguageDialog();
         } else if (id == R.id.cardView2) {
@@ -180,33 +188,20 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void askPermission() {
-//        String rationale = "Please provide storage permission for download the certificate.";
-//        Permissions.Options options = new Permissions.Options()
-//                .setRationaleDialogTitle("Info")
-//                .setSettingsDialogTitle("Warning");
-//        Permissions.check(getActivity(), PermissionUtil.mStorage, rationale, options, new PermissionHandler() {
-//            @Override
-//            public void onGranted() {
-                if (certificateResModel != null && !TextUtil.checkListIsEmpty(certificateResModel.getAPIcertificate())) {
-                    if (hashMap.size() > 0) {
-                        for (Map.Entry<Integer, String> map : hashMap.entrySet()) {
-                            downloadFile(map.getValue());
-                        }
-                    } else {
-                        ViewUtil.showSnackBar(binding.getRoot(),details.getPlease_select_certificate()!= null ? details.getPlease_select_certificate() : AuroApp.getAppContext().getResources().getString(R.string.no_certificate_for_download));
-                    }
-                } else {
-                    ViewUtil.showSnackBar(binding.getRoot(), details.getNo_certificate_for_download()!= null ? details.getNo_certificate_for_download() : AuroApp.getAppContext().getResources().getString(R.string.please_select_certificate));
 
+        if (list1 != null && !TextUtil.checkListIsEmpty(certificateResModel.getStudentuseridbasedcertificate())) {
+            if (hashMap.size() > 0) {
+                for (Map.Entry<Integer, String> map : hashMap.entrySet()) {
+                    downloadFile(map.getValue());
                 }
-//            }
-//
-//            @Override
-//            public void onDenied(Context context, ArrayList<String> deniedPermissions) {
-//                // permission denied, block the feature.
-//
-//            }
-//        });
+            } else {
+                ViewUtil.showSnackBar(binding.getRoot(),details.getPlease_select_certificate()!= null ? details.getPlease_select_certificate() : AuroApp.getAppContext().getResources().getString(R.string.no_certificate_for_download));
+            }
+        } else {
+            ViewUtil.showSnackBar(binding.getRoot(), details.getNo_certificate_for_download()!= null ? details.getNo_certificate_for_download() : AuroApp.getAppContext().getResources().getString(R.string.please_select_certificate));
+
+        }
+
     }
 
     private void downloadFile(String url) {
@@ -224,6 +219,60 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
+
+    }
+
+    private void getCertificateList()
+    {
+
+        HashMap<String,String> map_data = new HashMap<>();
+        String userid = AuroAppPref.INSTANCE.getModelInstance().getUserId();
+        map_data.put("UserId",userid);    //"576232"
+        RemoteApi.Companion.invoke().getCertificate(map_data)
+                .enqueue(new Callback<CertificateResModel>()
+                {
+                    @Override
+                    public void onResponse(Call<CertificateResModel> call, Response<CertificateResModel> response)
+                    {
+                        try {
+                            if (response.isSuccessful()) {
+
+                                if (response.body().getStatus().equals("success")){
+                                    if (!(response.body().getStudentuseridbasedcertificate() == null || response.body().getStudentuseridbasedcertificate().isEmpty() || response.body().getStudentuseridbasedcertificate().equals("") || response.body().getStudentuseridbasedcertificate().equals("null"))) {
+
+                                        listchilds1 = response.body().getStudentuseridbasedcertificate();
+                                        certificateResModel = response.body();
+                                        for (int i = 0; i < listchilds1.size(); i++) {
+                                            list1.add(listchilds1.get(i));
+                                        }
+                                        CertificateAdapter kyCuploadAdapter = new CertificateAdapter(getActivity(), list1, null);
+                                        binding.certificateRecyclerView.setAdapter(kyCuploadAdapter);
+
+                                    }
+                                    else{
+                                        Toast.makeText(getActivity(), "No Certificate Found", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                            }
+                            else {
+
+                                Toast.makeText(getActivity(), "No Certificate Found", Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), "Internet connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CertificateResModel> call, Throwable t)
+                    {
+                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+
 
     }
 
@@ -255,30 +304,16 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
 
 
     public void setAdapter() {
-        // List<CertificateResModel> list = viewModel.homeUseCase.makeCertificateList();
-        binding.certificateRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+        binding.certificateRecyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2, GridLayoutManager.VERTICAL, false));
+
         binding.certificateRecyclerView.setHasFixedSize(true);
-        CertificateAdapter kyCuploadAdapter = new CertificateAdapter(getActivity(), certificateResModel.getAPIcertificate(), this);
-        binding.certificateRecyclerView.setAdapter(kyCuploadAdapter);
+
     }
 
     private void openCertificateDialog(APIcertificate object) {
         CertificateDialog yesNoAlert = CertificateDialog.newInstance(object);
         yesNoAlert.show(getParentFragmentManager(), null);
-        //  new CertificateDialog().show(getParentFragmentManager(), null);
-       /* CustomDialogModel customDialogModel = new CustomDialogModel();
-        customDialogModel.setContext(getActivity());
-        CertificateDialog certificateDialog = new CertificateDialog(getActivity(), customDialogModel);
-        certificateDialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT);
 
-        *//*WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-       // lp.copyFrom(certificateDialog.getWindow().getAttributes());
-        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-        lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-        certificateDialog.getWindow().setAttributes(lp);*//*
-        Objects.requireNonNull(certificateDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        certificateDialog.setCancelable(true);
-        certificateDialog.show();*/
     }
 
 
@@ -289,42 +324,34 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
                 openCertificateDialog((APIcertificate) commonDataModel.getObject());
                 break;
 
-            case ITEM_LONG_CLICK:
-                APIcertificate apIcertificate = (APIcertificate) commonDataModel.getObject();
-                if (apIcertificate.isSelect()) {
-                    hashMap.put(commonDataModel.getSource(), apIcertificate.getCertificateFile());
-                } else {
-                    hashMap.remove(commonDataModel.getSource());
-                }
-                break;
 
-            case LISTNER_SUCCESS:
-                try {
-                    handleNavigationProgress(1, "");
-                    dashboardResModel = (DashboardResModel) commonDataModel.getObject();
-                    if (dashboardResModel != null && getActivity() != null) {
-                        ((DashBoardMainActivity) getActivity()).dashboardModel(dashboardResModel);
-                        callCertificateApi();
-                    }
-                } catch (Exception e) {
 
-                }
-                break;
 
-            case LISTNER_FAIL:
-                handleNavigationProgress(2, (String) commonDataModel.getObject());
 
-                break;
 
-            case NAME_DONE_CLICK:
-                studentName = (String) commonDataModel.getObject();
-                callCertificateApi();
+            case DOCUMENT_CLICK:
+
+                APIcertificate gData = (APIcertificate) commonDataModel.getObject();
+                openWhatsApp(gData.getDownloalink());
+
+
                 break;
 
             default:
 
                 break;
         }
+    }
+    private void openWhatsApp(String message) {
+
+        Intent sendIntent = new Intent();
+        sendIntent.setAction(Intent.ACTION_SEND);
+        sendIntent.putExtra(Intent.EXTRA_TEXT, "Certificate shareable link "+message);
+        sendIntent.setType("text/plain");
+
+        Intent shareIntent = Intent.createChooser(sendIntent, null);
+        startActivity(shareIntent);
+
     }
 
     private void observeServiceResponse() {
@@ -334,20 +361,20 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
             switch (responseApi.status) {
 
                 case LOADING:
-                    /*do coding here*/
+
                     break;
 
                 case SUCCESS:
                     if (isVisible()) {
                         certificateResModel = (CertificateResModel) responseApi.data;
                         if (certificateResModel.getError()) {
-                            if (certificateResModel.getStudentNameVerified().equalsIgnoreCase(AppConstant.DocumentType.NO)) {
+                            if (certificateResModel.getStatus().equalsIgnoreCase(AppConstant.DocumentType.NO)) {
                                 openAskNameDialog();
                             }
-                            handleProgress(3, certificateResModel.getMessage());
+                            handleProgress(3, certificateResModel.getStatus());
 
                         } else {
-                            if (!TextUtil.checkListIsEmpty(certificateResModel.getAPIcertificate())) {
+                            if (!TextUtil.checkListIsEmpty(certificateResModel.getStudentuseridbasedcertificate())) {
                                 handleProgress(1, "");
                                 setAdapter();
                             } else {
@@ -397,7 +424,7 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
                 binding.errorLayout.btRetry.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        callCertificateApi();
+                        //   callCertificateApi();
                     }
                 });
                 break;
@@ -418,10 +445,8 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
         if (prefModel.getDashboardResModel() != null) {
             handleProgress(0, "");
             CertificateResModel certificateResModel = new CertificateResModel();
-            certificateResModel.setRegistrationId(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
-            certificateResModel.setStudentName(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getStudentName());
-         /*   certificateResModel.setMobileNumber("9654234507");
-            certificateResModel.setRegistrationId("14");*/
+            //    certificateResModel.setRegistrationId(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
+            // certificateResModel.setStudentName(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getStudentName());
             viewModel.getCertificate(certificateResModel);
         }
     }
@@ -454,8 +479,10 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
     private void openAskNameDialog() {
         CustomDialogModel customDialogModel = new CustomDialogModel();
         customDialogModel.setContext(getActivity());
-        customDialogModel.setTitle(AuroApp.getAppContext().getResources().getString(R.string.update_auroscholar));
-        customDialogModel.setContent(AuroApp.getAppContext().getResources().getString(R.string.updateMessage));
+
+
+        customDialogModel.setTitle(details.getUpdate_auro()!= null?details.getUpdate_auro(): AuroApp.getAppContext().getResources().getString(R.string.update_auroscholar));
+        customDialogModel.setContent(details.getAuro_update_msg()!= null?details.getAuro_update_msg():AuroApp.getAppContext().getResources().getString(R.string.updateMessage));
         AskNameCustomDialog updateCustomDialog = new AskNameCustomDialog(getActivity(), customDialogModel, this);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(updateCustomDialog.getWindow().getAttributes());

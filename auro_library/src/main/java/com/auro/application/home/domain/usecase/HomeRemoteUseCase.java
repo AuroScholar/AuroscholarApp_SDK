@@ -477,15 +477,14 @@ public class HomeRemoteUseCase extends NetworkUseCase {
     public Single<ResponseApi> getDashboardData(AuroScholarDataModel model) {
         AppLogger.e("onRefresh-", "Step 04");
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        SDKDataModel prefModel2 = AuroAppPref.INSTANCE.getModelInstance().getChildData();
+
         if (prefModel.getDeviceToken() != null && !TextUtil.isEmpty(prefModel.getDeviceToken())) {
             model.setDevicetoken(prefModel.getDeviceToken());
         } else {
             model.setDevicetoken("");
-
         }
 
-        model.setUserId(prefModel2.getUser_details().get(0).getUser_id());
+        model.setUserId(prefModel.getUserId());
         return dashboardRemoteData.getDashboardData(model).map(new Function<Response<JsonObject>, ResponseApi>() {
             @Override
             public ResponseApi apply(Response<JsonObject> response) throws Exception {
@@ -493,9 +492,7 @@ public class HomeRemoteUseCase extends NetworkUseCase {
                 if (response != null) {
                     AppLogger.e("onRefresh-", "Step 05");
                     return handleResponse(response, DASHBOARD_API);
-
                 } else {
-
                     return responseFail(DASHBOARD_API);
                 }
             }

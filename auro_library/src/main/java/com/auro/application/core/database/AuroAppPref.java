@@ -77,7 +77,7 @@ public enum AuroAppPref {
         if (sharedPreferences != null) {
             PrefModel clearPrefModel = AuroAppPref.INSTANCE.getModelInstance();
             clearPrefModel.setLogin(true);
-            clearPrefModel.setUserMobile("9289180019");
+            clearPrefModel.setUserMobile(clearPrefModel.getUserMobile());
             //clearPrefModel.setStudentClass(0);
             clearPrefModel.setEmailId("");
             clearPrefModel.setPreLoginDisclaimer(true);

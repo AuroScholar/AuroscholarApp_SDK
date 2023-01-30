@@ -234,8 +234,8 @@ public class PartnersFragment extends BaseFragment implements CommonCallBackList
     private void openPartnerWebViewFragment() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         partnersLoginReqModel.setPartnerId(partnerDataModel.getPartnerId());
-        partnersLoginReqModel.setStudentMobile(prefModel.getStudentData().getUserMobile());
-        partnersLoginReqModel.setStudentClass("" + prefModel.getStudentData().getGrade());
+        partnersLoginReqModel.setStudentMobile(prefModel.getUserMobile());
+        partnersLoginReqModel.setStudentClass("" + prefModel.getStudentClass());
         partnersLoginReqModel.setStudentPassword("");
         partnersLoginReqModel.setPartnerName(partnerDataModel.getPartnerName());
         AppLogger.e("openPartnerWebViewFragment-", "--partner id=" + partnersLoginReqModel.getPartnerId() + "-mobile number-" + partnersLoginReqModel.getStudentMobile() +
@@ -451,7 +451,7 @@ public class PartnersFragment extends BaseFragment implements CommonCallBackList
             DashboardResModel dashboardResModel=AuroAppPref.INSTANCE.getModelInstance().getDashboardResModel();
             askDetailCustomDialog.showPorgress();
             GetStudentUpdateProfile studentProfileModel = new GetStudentUpdateProfile();
-            studentProfileModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
+            studentProfileModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getChildData().getUser_details().get(0).getUser_id());
             studentProfileModel.setStudentName(name);
             studentProfileModel.setEmailId(emailid);
             studentProfileModel.setPhonenumber(dashboardResModel.getPhonenumber());

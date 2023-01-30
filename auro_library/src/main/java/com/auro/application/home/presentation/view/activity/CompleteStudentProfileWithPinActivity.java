@@ -165,7 +165,9 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 
-public class CompleteStudentProfileWithPinActivity extends BaseActivity implements View.OnClickListener,View.OnTouchListener ,View.OnFocusChangeListener, CommonCallBackListner{
+public class
+
+CompleteStudentProfileWithPinActivity extends BaseActivity implements View.OnClickListener,View.OnTouchListener ,View.OnFocusChangeListener, CommonCallBackListner{
 
     @Inject
     @Named("CompleteStudentProfileWithPinActivity")
@@ -221,7 +223,6 @@ public class CompleteStudentProfileWithPinActivity extends BaseActivity implemen
     List<BoardData> boardlist = new ArrayList<>();
     List<SchoolLangData> langlist = new ArrayList<>();
     List<GradeData> gradelist = new ArrayList<>();
-
     RequestBody lRequestBody;
     String gradeid;
 
@@ -306,23 +307,7 @@ public class CompleteStudentProfileWithPinActivity extends BaseActivity implemen
                 }
             }
         });
-//        binding.etschool.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                Schoolsearch = s.toString();
-//                getSchool(stateCode,districtCode,Schoolsearch);
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//
-//            }
-//        });
+
 
     }
     @Override
@@ -349,8 +334,6 @@ public class CompleteStudentProfileWithPinActivity extends BaseActivity implemen
         binding.submitbutton.setOnClickListener(this);
         binding.edtusername.setOnClickListener(this);
         binding.cancelUserNameIcon.setOnClickListener(this);
-
-
         binding.gradeChnage.setOnClickListener(this);
         binding.walletBalText.setOnClickListener(this);
         binding.editemail.setOnClickListener(this);

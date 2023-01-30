@@ -1,5 +1,6 @@
 package com.auro.application.home.presentation.view.activity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -7,10 +8,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Toast;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
@@ -27,27 +30,38 @@ import com.auro.application.core.common.CommonDataModel;
 import com.auro.application.core.common.Status;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
+import com.auro.application.core.network.ErrorResponseModel;
+import com.auro.application.core.util.AuroScholar;
 import com.auro.application.databinding.ActivityAppLanguageBinding;
+import com.auro.application.home.data.model.AuroScholarInputModel;
 import com.auro.application.home.data.model.Details;
 import com.auro.application.home.data.model.LanguageMasterDynamic;
 import com.auro.application.home.data.model.LanguageMasterReqModel;
 import com.auro.application.home.data.model.SelectLanguageModel;
+import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.data.model.response.LanguageListResModel;
 import com.auro.application.home.data.model.response.LanguageResModel;
 import com.auro.application.home.presentation.view.adapter.LanguageAdapter;
 import com.auro.application.home.presentation.viewmodel.AppLanguageViewModel;
 import com.auro.application.util.AppLogger;
 import com.auro.application.util.AppUtil;
+import com.auro.application.util.RemoteApi;
 import com.auro.application.util.ViewUtil;
 import com.auro.application.util.firebaseAnalytics.AnalyticsRegistry;
 import com.auro.application.util.strings.AppStringDynamic;
+import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
 
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AppLanguageActivity extends BaseActivity implements View.OnClickListener, CommonCallBackListner {
 
@@ -64,6 +78,8 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
     LanguageMasterDynamic language;
     PrefModel prefModel;
     Details details;
+    String lang_id;
+    String errormismatch="";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +93,9 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
         mContext = AppLanguageActivity.this;
         AppUtil.loadAppLogo(binding.auroScholarLogo, this);
         //setContentView(R.layout.activity_app_language);
+
         init();
         setListener();
-
     }
 
     @Override
@@ -147,9 +163,14 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
 
 
     private void openLoginActivity() {
-        Intent tescherIntent = new Intent(AppLanguageActivity.this, LoginActivity.class);
-        startActivity(tescherIntent);
+        Intent teacherIntent = new Intent(AppLanguageActivity.this, LoginActivity.class);
+        startActivity(teacherIntent);
         finish();
+    }
+    public void calldashboard(){
+        Intent i = new Intent(mContext, CompleteStudentProfileWithoutPin.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        mContext.startActivity(i);
     }
 
     public void setAdapterLanguage() {
@@ -182,6 +203,7 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
     public void commonEventListner(CommonDataModel commonDataModel) {
         switch (commonDataModel.getClickType()) {
             case MESSAGE_SELECT_CLICK:
+                setSDKAPIGrade();
                 refreshList(commonDataModel);
 
                 break;
@@ -193,26 +215,31 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
         for (int i = 0; i < laugList.size(); i++) {
             if (i == commonDataModel.getSource()) {
                 laugList.get(i).setCheck(true);
+                 lang_id = laugList.get(i).getLanguageId();
                 setLanguage(laugList.get(i).getLanguageShortCode(),laugList.get(i).getLanguageCode(), laugList.get(i).getLanguageId());
                 // openFadeInSelectionLayout();
             } else {
                 laugList.get(i).setCheck(false);
             }
         }
+        callLanguageMasterApi();
+        setSDKAPI(lang_id);
         if (click) {
-            openFadeInSelectionLayout();
+            callLanguageMasterApi();
+            //openFadeInSelectionLayout();
             click = false;
         }
         adapter.setData(laugList);
-        callLanguageMasterApi();
+       // callLanguageMasterApi();
     }
 
     private void openFadeInSelectionLayout() {
+        calldashboard();
         //Animation on button
-        binding.backButton.setVisibility(View.VISIBLE);
-        binding.userSelectionSheet.sheetLayout.setVisibility(View.VISIBLE);
-        Animation anim = AnimationUtils.loadAnimation(this, R.anim.fadein);
-        binding.userSelectionSheet.sheetLayout.startAnimation(anim);
+//        binding.backButton.setVisibility(View.GONE);
+//        binding.userSelectionSheet.sheetLayout.setVisibility(View.GONE);
+//        Animation anim = AnimationUtils.loadAnimation(this, R.anim.fadein);
+//        binding.userSelectionSheet.sheetLayout.startAnimation(anim);
 
     }
 
@@ -261,23 +288,6 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
     public void onBackPressed() {
         super.onBackPressed();
         finishAffinity();
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//
-//        builder.setTitle("Save Or Not");
-//        builder.setMessage("Do you want to save this? ");
-//        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int id) {
-//
-//             //   super.onBackPressed();
-//            }
-//        });
-//        builder.setNegativeButton("Discard", new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int id) {
-//               // super.onBackPressed();
-//            }
-//        });
-//        builder.show();
-
     }
 
     private void setScreenText() {
@@ -314,7 +324,179 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
         viewModel.checkInternet(Status.DYNAMIC_LANGUAGE, languageMasterReqModel);
 
     }
+    private void setSDKAPI(String langid)
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String mobile = prefModel.getUserMobile();
+        String partneruniueid = prefModel.getPartneruniqueid();
+        String partnersource = prefModel.getPartnersource();
+        String userid = prefModel.getUserId();
+        String apikey = prefModel.getApikey();
 
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("mobile_no",mobile);
+        map_data.put("partner_unique_id",partneruniueid); //456456
+        map_data.put("partner_source",partnersource);
+        map_data.put("partner_api_key",apikey);
+        map_data.put("user_id",userid);
+        map_data.put("user_prefered_language_id",langid);
+
+        RemoteApi.Companion.invoke().getSDKData(map_data)
+                .enqueue(new Callback<SDKDataModel>() {
+                    @Override
+                    public void onResponse(Call<SDKDataModel> call, Response<SDKDataModel> response)
+                    {
+                        try {
+                            if (response.code() == 400) {
+                                Toast.makeText(mContext, "Error!", Toast.LENGTH_SHORT).show();
+                            }
+                            else if (response.code() == 200) {
+                                PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+                                prefModel.setUserLanguageId(langid);
+                                AuroAppPref.INSTANCE.setPref(prefModel);
+
+                                          getProfile(userid);
+                            }
+                            else {
+                                Toast.makeText(mContext, response.message(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        catch (Exception e) {
+                            Toast.makeText(mContext, "Internet connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<SDKDataModel> call, Throwable t) {
+                        Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+
+    }
+
+
+    private void setSDKAPIGrade()
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String mobile = prefModel.getUserMobile();
+        String uniqueid = prefModel.getPartneruniqueid();
+        String source = prefModel.getPartnersource();
+        String apikey = prefModel.getApikey();
+        String userid = prefModel.getUserId();
+        String gradeid = prefModel.getUserclass();
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("mobile_no",mobile);
+        map_data.put("partner_unique_id",uniqueid); //456456
+        map_data.put("partner_source",source);
+        map_data.put("partner_api_key",apikey);
+        map_data.put("user_id",userid);
+        map_data.put("grade",gradeid);
+
+        RemoteApi.Companion.invoke().getSDKDataerror(map_data)
+                .enqueue(new Callback<ErrorResponseModel>() {
+                    @Override
+                    public void onResponse(Call<ErrorResponseModel> call, Response<ErrorResponseModel> response)
+                    {
+                        try {
+                            if (response.code() == 400) {
+                                Toast.makeText(AppLanguageActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                            }
+                            else if (response.code() == 200) {
+                                ErrorResponseModel error = (ErrorResponseModel) response.body();
+                                 errormismatch = error.getMessage();
+
+                                  //  getProfile(userid,resmessage);
+
+
+
+
+                            }
+                            else {
+                                Toast.makeText(AppLanguageActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        catch (Exception e) {
+                            Toast.makeText(AppLanguageActivity.this, "Internet connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<ErrorResponseModel> call, Throwable t) {
+                        Toast.makeText(AppLanguageActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+
+
+    }
+
+
+    private void getProfile(String userid)
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String partnersource = prefModel.getPartnersource();
+        String parnteruniqueid = prefModel.getPartneruniqueid();
+        String mobileno = prefModel.getUserMobile();
+        int userclass = Integer.parseInt(prefModel.getUserclass());
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("user_id",userid);
+
+        RemoteApi.Companion.invoke().getStudentData(map_data)
+                .enqueue(new Callback<GetStudentUpdateProfile>()
+                {
+                    @Override
+                    public void onResponse(Call<GetStudentUpdateProfile> call, Response<GetStudentUpdateProfile> response)
+                    {
+                        if (response.isSuccessful())
+                        {
+
+                            if (errormismatch.equals("Error! Grade Mismatched")){
+                                Intent i = new Intent(mContext, ChooseGradeActivity.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                mContext.startActivity(i);
+                            }
+
+                            else if (response.body().getStatename().equals("")||response.body().getStatename().equals("null")||response.body().getStatename().equals(null)||response.body().getDistrictname().equals("")||response.body().getDistrictname().equals("null")||response.body().getDistrictname().equals(null)||response.body().getStudentName().equals("")||response.body().getStudentName().equals("null")||response.body().getStudentName().equals(null)||
+                                    response.body().getStudentclass().equals("")||response.body().getStudentclass().equals("null")||response.body().getStudentclass().equals(null)||response.body().getStudentclass().equals("0")||response.body().getStudentclass().equals(0)){
+                                Intent i = new Intent(mContext, CompleteStudentProfileWithoutPin.class);
+                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                mContext.startActivity(i);
+                            }
+                            else{
+
+                                openGenricSDK(mobileno,partnersource,parnteruniqueid);
+
+                            }
+
+                        }
+                        else
+                        {
+                            Toast.makeText(mContext, response.message(), Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetStudentUpdateProfile> call, Throwable t)
+                    {
+                        Toast.makeText(mContext, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource  ) {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String userclass = prefModel.getUserclass();
+        AuroScholarInputModel inputModel = new AuroScholarInputModel();
+        inputModel.setMobileNumber(mobileNumber);
+        inputModel.setStudentClass(userclass);
+        inputModel.setPartner_unique_id(partneruniqueid);
+        inputModel.setPartnerSource(partnersource);
+        inputModel.setPartner_api_key("");
+        inputModel.setActivity((Activity) mContext);
+        AuroScholar.startAuroSDK(inputModel);
+    }
     private void observeServiceResponse() {
 
         viewModel.serviceLiveData().observeForever(responseApi -> {

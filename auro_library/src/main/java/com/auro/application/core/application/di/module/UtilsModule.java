@@ -56,7 +56,6 @@ public class UtilsModule {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
 
-
         httpClient.addInterceptor(new Interceptor() {
             @Override
             public Response intercept(Chain chain) throws IOException {
