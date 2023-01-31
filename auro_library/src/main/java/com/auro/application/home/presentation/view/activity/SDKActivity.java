@@ -99,11 +99,6 @@ public class SDKActivity  extends AppCompatActivity {
                 String psource = partner_source.getText().toString();
                 String apikey = partner_api_key.getText().toString();
                 String grade = gradeid.getText().toString();
-                String mobno1 = "8745256899";
-                String puniqueid1 = "975231";
-                String psource1 = "Aeronuts_WEB";
-                String apikey1 = "7611f0fafb1e3b96d1a78c57b0650b85985eace9f6aaa365c0b496e9ae1163e7";
-                String grade1 = "";
                 openGenricSDK(mobno,puniqueid,psource,apikey,grade);
             }
         });
