@@ -541,7 +541,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
                     ((DashBoardMainActivity) getActivity()).openKYCFragment(dashboardResModel, 0);
                 }*/
         } else if (id == R.id.float_chat) {// openYuboChatActivty();
-            startActivity(new Intent(getContext(), ChatActivity.class));
+            //startActivity(new Intent(getContext(), ChatActivity.class));
 
             //  Toast.makeText(getContext(),"clicked",Toast.LENGTH_SHORT).show();
         } else if (id == R.id.privacy_policy) {
