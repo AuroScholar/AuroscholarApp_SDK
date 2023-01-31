@@ -43,6 +43,10 @@ import com.auro.application.util.strings.AppStringDynamic;
 import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
 import com.truecaller.android.sdk.ErrorResponse;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -232,7 +236,19 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
                         {
                             try {
                                 if (response.code() == 400) {
-                                    Toast.makeText(ChooseGradeActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                                    JSONObject jsonObject = null;
+                                    try {
+                                        jsonObject = new JSONObject(response.errorBody().string());
+                                        String message = jsonObject.getString("message");
+                                        Toast.makeText(ChooseGradeActivity.this,message, Toast.LENGTH_SHORT).show();
+                                        if (message.equals("Error! Grade Mismatched")){
+                                            buttonSelect(gradeid);
+                                        }
+                                    } catch (JSONException | IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+
                                 }
                                 else if (response.code() == 200) {
                                     ErrorResponseModel error = (ErrorResponseModel) response.body();
@@ -271,9 +287,6 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
         String source = prefModel.getPartnersource();
         String apikey = prefModel.getApikey();
         String userid = prefModel.getUserId();
-
-
-
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("mobile_no",mobile);
         map_data.put("partner_unique_id",uniqueid); //456456
@@ -290,7 +303,17 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
                     {
                         try {
                             if (response.code() == 400) {
-                                Toast.makeText(ChooseGradeActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(response.errorBody().string());
+                                    String message = jsonObject.getString("message");
+                                    Toast.makeText(ChooseGradeActivity.this,message, Toast.LENGTH_SHORT).show();
+
+                                } catch (JSONException | IOException e) {
+                                    e.printStackTrace();
+                                }
+
+
                             }
                             else if (response.code() == 200) {
                                 if (gradestatus.equals("1")){

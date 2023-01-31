@@ -129,6 +129,7 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     protected void init() {
+        DashBoardMainActivity.setListingActiveFragment(DashBoardMainActivity.CERTIFICATE_FRAGMENT);
 
         if (getArguments() != null) {
             dashboardResModel = getArguments().getParcelable(AppConstant.DASHBOARD_RES_MODEL);

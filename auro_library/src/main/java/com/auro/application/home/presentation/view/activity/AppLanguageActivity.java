@@ -52,6 +52,10 @@ import com.auro.application.util.strings.AppStringDynamic;
 import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
 
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -80,6 +84,8 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
     Details details;
     String lang_id;
     String errormismatch="";
+    LanguageMasterDynamic language1;
+    Details languagedetail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -348,13 +354,23 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
                     {
                         try {
                             if (response.code() == 400) {
-                                Toast.makeText(mContext, "Error!", Toast.LENGTH_SHORT).show();
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(response.errorBody().string());
+                                    String message = jsonObject.getString("message");
+                                    Toast.makeText(AppLanguageActivity.this,message, Toast.LENGTH_SHORT).show();
+
+                                } catch (JSONException | IOException e) {
+                                    e.printStackTrace();
+                                }
+
+
                             }
                             else if (response.code() == 200) {
                                 PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
                                 prefModel.setUserLanguageId(langid);
                                 AuroAppPref.INSTANCE.setPref(prefModel);
-
+                                getLanguage(langid);
                                           getProfile(userid);
                             }
                             else {
@@ -374,7 +390,55 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
                 });
 
     }
+    public void getLanguage(String language_id)
+    {
 
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("language_id",language_id);
+        map_data.put("user_type_id","1");
+        RemoteApi.Companion.invoke().getLanguageAPI(map_data)
+                .enqueue(new Callback<LanguageMasterDynamic>() {
+                    @Override
+                    public void onResponse(Call<LanguageMasterDynamic> call, Response<LanguageMasterDynamic> response)
+                    {
+                        try {
+                            if (response.code() == 400) {
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(response.errorBody().string());
+                                    String message = jsonObject.getString("message");
+                                    Toast.makeText(AppLanguageActivity.this,message, Toast.LENGTH_SHORT).show();
+
+                                } catch (JSONException | IOException e) {
+                                    e.printStackTrace();
+                                }
+
+
+                            }
+                            else if (response.code() == 200) {
+                                languagedetail = response.body().getDetails();
+                                language1 = (LanguageMasterDynamic) response.body();
+                                PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+                                prefModel.setLanguageMasterDynamic(language1);
+                                AuroAppPref.INSTANCE.setPref(prefModel);
+
+                            }
+                            else {
+                                Toast.makeText(AppLanguageActivity.this, response.message(), Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                        catch (Exception e) {
+                            Toast.makeText(AppLanguageActivity.this, "Internet connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<LanguageMasterDynamic> call, Throwable t) {
+                        Toast.makeText(AppLanguageActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
+                });
+    }
 
     private void setSDKAPIGrade()
     {
@@ -400,17 +464,25 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
                     {
                         try {
                             if (response.code() == 400) {
-                                Toast.makeText(AppLanguageActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(response.errorBody().string());
+                                    String message = jsonObject.getString("message");
+                                    ErrorResponseModel error = (ErrorResponseModel) response.body();
+                                    errormismatch = message;
+
+                                    Toast.makeText(AppLanguageActivity.this,message, Toast.LENGTH_SHORT).show();
+
+                                } catch (JSONException | IOException e) {
+                                    e.printStackTrace();
+                                }
+
+
                             }
                             else if (response.code() == 200) {
                                 ErrorResponseModel error = (ErrorResponseModel) response.body();
                                  errormismatch = error.getMessage();
-
                                   //  getProfile(userid,resmessage);
-
-
-
-
                             }
                             else {
                                 Toast.makeText(AppLanguageActivity.this, response.message(), Toast.LENGTH_SHORT).show();

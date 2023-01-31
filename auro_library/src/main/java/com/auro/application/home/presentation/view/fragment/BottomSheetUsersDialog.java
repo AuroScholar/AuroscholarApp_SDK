@@ -24,6 +24,7 @@ import com.auro.application.home.presentation.view.activity.AppLanguageActivity;
 import com.auro.application.home.presentation.view.activity.CompleteStudentProfileWithoutPin;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
 import com.auro.application.home.presentation.view.activity.ParentProfileActivity;
+import com.auro.application.home.presentation.view.activity.SDKActivity;
 import com.auro.application.home.presentation.view.adapter.SelectYourChildAdapter;
 
 import com.auro.application.util.RemoteApi;
@@ -31,6 +32,10 @@ import com.auroscholar.final_auroscholarapp_sdk.SDKChildModel;
 import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -84,7 +89,17 @@ public class BottomSheetUsersDialog extends BottomSheetDialogFragment implements
                     {
                         try {
                             if (response.code() == 400) {
-                                Toast.makeText(getActivity(), "Error!", Toast.LENGTH_SHORT).show();
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(response.errorBody().string());
+                                    String message = jsonObject.getString("message");
+                                    Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+
+                                } catch (JSONException | IOException e) {
+                                    e.printStackTrace();
+                                }
+
+
                             }
                             else if (response.code() == 200) {
 
