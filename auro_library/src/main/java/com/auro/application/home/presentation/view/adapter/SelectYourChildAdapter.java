@@ -45,7 +45,10 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 
@@ -98,8 +101,7 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                 editor.apply();
                 checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData().getUser_details().get(position);
                 checkUserResModel2 = AuroAppPref.INSTANCE.getModelInstance().getChildData();
-
-                    String userid_child =  mValues.get(position).getUser_id();
+                String userid_child =  mValues.get(position).getUser_id();
                     String user_mobile =  mValues.get(position).getMobile_no();
                     String student_name =  mValues.get(position).getStudent_name();
                     String user_language =  mValues.get(position).getUser_prefered_language_id();
@@ -108,7 +110,6 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                 String user_name =  mValues.get(position).getUser_name();
                 String partner_logo =  mValues.get(position).getPartner_logo();
                 String profile_pic =  mValues.get(position).getProfile_pic();
-setSDKAPIGrade();
                     SDKChildModel resModel = AuroAppPref.INSTANCE.getModelInstance().getChildData().getUser_details().get(position);
                     setDatainPref(resModel);
                     PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
@@ -215,12 +216,22 @@ setSDKAPIGrade();
                         {
                             try {
                                 if (response.code() == 400) {
-                                    Toast.makeText(mContext, "Error!", Toast.LENGTH_SHORT).show();
+                                    JSONObject jsonObject = null;
+                                    try {
+                                        jsonObject = new JSONObject(response.errorBody().string());
+                                        String message = jsonObject.getString("message");
+                                        Toast.makeText(mContext,message, Toast.LENGTH_SHORT).show();
+
+                                    } catch (JSONException | IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+
                                 }
                                 else if (response.code() == 200) {
 
                                     getProfile(userid,langid);
-
+                                    setSDKAPIGrade();
 
                                 }
                                 else {
@@ -319,7 +330,18 @@ setSDKAPIGrade();
                     {
                         try {
                             if (response.code() == 400) {
-                                Toast.makeText(mContext, "Error!", Toast.LENGTH_SHORT).show();
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(response.errorBody().string());
+                                    String message = jsonObject.getString("message");
+                                    errormismatch = message;
+                                    Toast.makeText(mContext,message, Toast.LENGTH_SHORT).show();
+
+                                } catch (JSONException | IOException e) {
+                                    e.printStackTrace();
+                                }
+
+
                             }
                             else if (response.code() == 200) {
                                 ErrorResponseModel error = (ErrorResponseModel) response.body();

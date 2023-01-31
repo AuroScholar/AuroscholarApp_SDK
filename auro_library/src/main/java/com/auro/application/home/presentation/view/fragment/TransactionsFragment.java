@@ -216,6 +216,7 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
 
     @Override
     protected void setListener() {
+        DashBoardMainActivity.setListingActiveFragment(DashBoardMainActivity.TRANSACTION_FRAGMENT);
         binding.cardView2.setOnClickListener(this);
         binding.languageLayout.setOnClickListener(this);
         binding.monthParentLayout.setOnClickListener(this);

@@ -35,7 +35,6 @@ public class ForgotPinActivity extends BaseActivity implements View.OnClickListe
     @Named("ForgotPinActivity")
     ViewModelFactory viewModelFactory;
     ActivityForgotPinBinding binding;
-
     SetPinViewModel viewModel;
     UserDetailResModel resModel;
     PrefModel prefModel ;

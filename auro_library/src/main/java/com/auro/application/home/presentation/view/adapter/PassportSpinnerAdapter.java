@@ -51,7 +51,9 @@ public class PassportSpinnerAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                 R.layout.passport_spinner_item, parent, false);
-        binding.parentLayout.setBackground(AuroApp.getAppContext().getResources().getDrawable(R.drawable.button_bg_dark_blue));
+        binding.parentLayout.setBackground(AuroApp.getAppContext().getResources().
+
+                getDrawable(R.drawable.button_bg_dark_blue));
         binding.titleText.setText(list.get(position).getMonth());
         binding.dropDownIcon.setVisibility(View.GONE);
         return binding.getRoot();

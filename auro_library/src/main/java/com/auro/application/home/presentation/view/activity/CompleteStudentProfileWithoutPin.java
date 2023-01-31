@@ -49,6 +49,7 @@ import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
+import com.auro.application.core.util.AuroScholar;
 import com.auro.application.databinding.FragmentStudentUpdateProfileBinding;
 import com.auro.application.home.data.model.AuroScholarInputModel;
 import com.auro.application.home.data.model.BoardData;
@@ -101,6 +102,10 @@ import com.bumptech.glide.request.target.Target;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -661,6 +666,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         String buildversion =AppUtil.getAppVersionName();
         String ipaddress = AppUtil.getIpAdress();
         String languageid = prefModel.getUserLanguageId();
+        String partnersourceid = prefModel.getPartnersource();
 
         String childid = prefModel.getUserId();
         String childuserid = childid;
@@ -685,7 +691,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         RequestBody mobileversion_c  = RequestBody.create(MediaType.parse("text/plain"), mobileversion);
         RequestBody email_c  = RequestBody.create(MediaType.parse("text/plain"), parentemail);
         RequestBody name_c  = RequestBody.create(MediaType.parse("text/plain"), child_name);
-        RequestBody prtnersource  = RequestBody.create(MediaType.parse("text/plain"), "AURO3VE4j7");
+        RequestBody prtnersource  = RequestBody.create(MediaType.parse("text/plain"), partnersourceid);
         RequestBody regsource = RequestBody.create(MultipartBody.FORM, "AuroScholr");//model.getPartnerSource()
         RequestBody sharetype = RequestBody.create(MultipartBody.FORM, "telecaller");//model.getPartnerSource()
         RequestBody devicetoken  = RequestBody.create(MediaType.parse("text/plain"), fbnewToken);
@@ -718,8 +724,19 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                         {
                             try {
                                 if (response.code() == 400) {
-                                    Toast.makeText(CompleteStudentProfileWithoutPin.this, response.message().toString(), Toast.LENGTH_SHORT).show();
-                                } else if (response.isSuccessful()) {
+                                    JSONObject jsonObject = null;
+                                    try {
+                                        jsonObject = new JSONObject(response.errorBody().string());
+                                        String message = jsonObject.getString("message");
+                                        Toast.makeText(CompleteStudentProfileWithoutPin.this,message, Toast.LENGTH_SHORT).show();
+
+                                    } catch (JSONException | IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+
+                                }
+                                else if (response.isSuccessful()) {
                                     Log.d(TAG, "onImageResponse: ");
                                     String status = response.body().getStatus().toString();
                                     String msg = response.body().getMessage();
@@ -738,9 +755,16 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                                         prefModel.setUserclass(String.valueOf(gradeid));
                                         AuroAppPref.INSTANCE.setPref(prefModel);
 
-                                        Intent i = new Intent(CompleteStudentProfileWithoutPin.this, DashBoardMainActivity.class);
-                                        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                        startActivity(i);
+
+                                        String userclass = prefModel.getUserclass();
+                                        AuroScholarInputModel inputModel = new AuroScholarInputModel();
+                                        inputModel.setMobileNumber(prefModel.getUserMobile());
+                                        inputModel.setStudentClass(userclass);
+                                        inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
+                                        inputModel.setPartnerSource(prefModel.getPartnersource());
+                                        inputModel.setPartner_api_key(prefModel.getApikey());
+                                        inputModel.setActivity((Activity) CompleteStudentProfileWithoutPin.this);
+                                        AuroScholar.startAuroSDK(inputModel);
                                     }
                                 } else {
 
