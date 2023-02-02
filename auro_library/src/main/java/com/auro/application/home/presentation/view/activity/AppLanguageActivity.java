@@ -511,7 +511,7 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
         String partnersource = prefModel.getPartnersource();
         String parnteruniqueid = prefModel.getPartneruniqueid();
         String mobileno = prefModel.getUserMobile();
-        int userclass = Integer.parseInt(prefModel.getUserclass());
+        //int userclass = Integer.parseInt(prefModel.getUserclass());
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("user_id",userid);
 

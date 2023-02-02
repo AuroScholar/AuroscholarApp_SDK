@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:padding="@dimen/_5ssp"
             android:gravity="right"
-            android:visibility="visible"
+            android:visibility="gone"
             android:text="@string/download_certificate"
             android:textColor="@color/blue_color">
         </androidx.appcompat.widget.AppCompatTextView>
