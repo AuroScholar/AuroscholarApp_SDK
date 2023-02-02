@@ -1,6 +1,7 @@
 package com.auro.application.home.presentation.view.activity;
 
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -40,7 +41,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseActivity;
-import com.auro.application.core.application.di.component.DaggerAppComponent;
+
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
@@ -264,14 +265,26 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     public void callFetchUserPreference() {
         SharedPreferences prefs = getSharedPreferences("My_Pref", MODE_PRIVATE);
-      //  checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
-        int gradeid = Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserclass());
-        String gradeforsubjectpreference = String.valueOf(gradeid);
+        String gradeforsubjectpreference = prefs.getString("gradeforsubjectpreference", "");
         AppLogger.e("DashbaordMain", "oncreate step 2");
-        if (gradeforsubjectpreference.equals("11")||gradeforsubjectpreference.equals("12")||gradeforsubjectpreference.equals(11)||gradeforsubjectpreference.equals(12)) {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+
+        if (Integer.parseInt(prefModel.getUserclass()) > 10 || prefModel.getStudentClass() > 10 || gradeforsubjectpreference.equals("11")||gradeforsubjectpreference.equals("12")||gradeforsubjectpreference.equals(11)||gradeforsubjectpreference.equals(12)) {
             FetchStudentPrefReqModel fetchStudentPrefReqModel = new FetchStudentPrefReqModel();
-            fetchStudentPrefReqModel.setUserId(prefModel.getUserId());
+
+            fetchStudentPrefReqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getUserId());
+            // if (!gradeforsubjectpreference.equals("")||!gradeforsubjectpreference.equals("null")||!gradeforsubjectpreference.equals(null)||!gradeforsubjectpreference.isEmpty()){
+
+            //   fetchStudentPrefReqModel.setUserId(childid);
+            //  viewModel.checkInternet(Status.FETCH_STUDENT_PREFERENCES_API, fetchStudentPrefReqModel);
+
+
+            //}
+            //  else{
             viewModel.checkInternet(Status.FETCH_STUDENT_PREFERENCES_API, fetchStudentPrefReqModel);
+
+            //  }
+
         }
     }
 
@@ -314,6 +327,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             getDashboardMenu();
 
         }
+
         binding.naviagtionContent.bottomNavigation.setVisibility(View.GONE);
         setupNavigation();
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
@@ -714,7 +728,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         if (itemId == R.id.item_home) {
             selectNavigationMenu(0);
 
-            auroStudentscholarSdk(0);
+            //auroStudentscholarSdk(0);
+            openGenricSDK();
         } else if (itemId == R.id.item_passport) {
             funnelPassportScreen();
             selectNavigationMenu(3);
@@ -729,7 +744,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             closeItemMore();
             if (!isBackNormal) {
                 selectNavigationMenu(0);
-                auroStudentscholarSdk(0);
+             //   auroStudentscholarSdk(0);
+                openGenricSDK();
                 isBackNormal = true;
             }
         } else if (itemId == R.id.item_partner) {
@@ -1206,6 +1222,19 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         bundle.putParcelable(AppConstant.DASHBOARD_RES_MODEL, prefModel.getDashboardResModel());
         transactionsFragment.setArguments(bundle);
         openFragment(transactionsFragment);
+    }
+    public void openGenricSDK() {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String userclass = prefModel.getUserclass();
+        AuroScholarInputModel inputModel = new AuroScholarInputModel();
+        inputModel.setMobileNumber(prefModel.getUserMobile());
+        inputModel.setStudentClass(prefModel.getUserclass());
+        inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
+        inputModel.setPartnerSource(prefModel.getPartnersource());
+        inputModel.setPartner_api_key(prefModel.getApikey());
+        inputModel.setActivity((Activity) mContext);
+        AuroScholar.startAuroSDK(inputModel);
+
     }
 
 

@@ -560,6 +560,7 @@ public class StudentProfileActivity extends BaseActivity implements View.OnFocus
         }
 
 else {
+            PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
     String schoolnamechild = binding.etSchoolname.getText().toString();
             String buildversion = AppUtil.getAppVersionName();
             RequestBody useridp = RequestBody.create(MediaType.parse("text/plain"), userid);
@@ -569,7 +570,7 @@ else {
             RequestBody stateid = RequestBody.create(MediaType.parse("text/plain"), stateCode);
             RequestBody devicetoken = RequestBody.create(MediaType.parse("text/plain"), fbnewToken);
             RequestBody districtid = RequestBody.create(MediaType.parse("text/plain"), districtCode);
-            RequestBody prtnersource = RequestBody.create(MediaType.parse("text/plain"), "AURO3VE4j7");
+            RequestBody prtnersource = RequestBody.create(MediaType.parse("text/plain"), prefModel.getPartnersource());
             RequestBody schoolname = RequestBody.create(MediaType.parse("text/plain"), schoolnamechild);
             RequestBody gendertype = RequestBody.create(MediaType.parse("text/plain"), gender);
             RequestBody emailid = RequestBody.create(MediaType.parse("text/plain"), email);

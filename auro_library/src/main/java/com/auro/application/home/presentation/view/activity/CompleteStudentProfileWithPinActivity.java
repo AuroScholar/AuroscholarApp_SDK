@@ -854,7 +854,7 @@ CompleteStudentProfileWithPinActivity extends BaseActivity implements View.OnCli
 
     private void updateChild()
     {
-
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         String child_name = binding.edtusername.getText().toString();
         String mobileversion =DeviceUtil.getVersionName();
         String mobilemanufacture = DeviceUtil.getManufacturer(this);
@@ -910,7 +910,7 @@ CompleteStudentProfileWithPinActivity extends BaseActivity implements View.OnCli
         RequestBody mobileversion_c  = RequestBody.create(MediaType.parse("text/plain"), mobileversion);
         RequestBody email_c  = RequestBody.create(MediaType.parse("text/plain"), parentemail);
         RequestBody name_c  = RequestBody.create(MediaType.parse("text/plain"), child_name);
-        RequestBody prtnersource  = RequestBody.create(MediaType.parse("text/plain"), "AURO3VE4j7");
+        RequestBody prtnersource  = RequestBody.create(MediaType.parse("text/plain"), prefModel.getPartnersource());
         RequestBody regsource = RequestBody.create(okhttp3.MultipartBody.FORM, "AuroScholr");//model.getPartnerSource()
         RequestBody sharetype = RequestBody.create(okhttp3.MultipartBody.FORM, "telecaller");//model.getPartnerSource()
         RequestBody devicetoken  = RequestBody.create(MediaType.parse("text/plain"), fbnewToken);

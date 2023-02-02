@@ -3,6 +3,7 @@ package com.auro.application.teacher.data.datasource.remote;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.database.AuroAppPref;
+import com.auro.application.core.database.PrefModel;
 import com.auro.application.home.data.model.AuroScholarDataModel;
 import com.auro.application.home.data.model.FetchStudentPrefReqModel;
 import com.auro.application.home.data.model.KYCDocumentDatamodel;
@@ -61,7 +62,7 @@ public class TeacherRemoteDataSourceImp implements TeacherRepo.TeacherRemoteData
 
 
             RequestBody teacherName = RequestBody.create(okhttp3.MultipartBody.FORM, model.getTeacher_name());//model.getPartnerSource()
-            AppLogger.e("update profile api-", "step 11 - " + "AURO3VE4j7");
+
 
 
             RequestBody userName = RequestBody.create(okhttp3.MultipartBody.FORM, model.getUser_name());

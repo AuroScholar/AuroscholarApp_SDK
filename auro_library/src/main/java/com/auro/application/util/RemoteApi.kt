@@ -54,8 +54,15 @@ interface RemoteApi
     @POST("check_kyc_status")
     public fun getCheckKYC(@Body params:HashMap<String,String>):Call<GetStudentUpdateProfile>
 
+    @POST("add_new_school")
+    public fun addNewSchool(@Body params:HashMap<String,String>):Call<AddNewSchoolResModel>
+
     @POST("student_full_details")
     public fun getStatusForInsta(@Body params:HashMap<String,String>):Call<DashboardResponselDataModel>
+
+    @POST("compare_documents")
+    public fun setComparedoc(@Body params:HashMap<String,String>):Call<UpdateParentProfileResModel>
+
 
     @POST("show_pending_refferals")
     public fun getPendingRefferal(@Body params:HashMap<String,String>):Call<ReferralPopUpDataModel>

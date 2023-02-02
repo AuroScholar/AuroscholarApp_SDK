@@ -347,6 +347,7 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
         map_data.put("user_id",userid);
         map_data.put("user_prefered_language_id",langid);
 
+
         RemoteApi.Companion.invoke().getSDKData(map_data)
                 .enqueue(new Callback<SDKDataModel>() {
                     @Override

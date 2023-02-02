@@ -17,7 +17,7 @@ public interface URLConstant {
     String AZURE_API
 
             = BASE_URL + "save_pre_quiz_image_l";
-    String UPLOAD_IMAGE_URL = BASE_URL + "upload_kyc_documents_l";
+    String UPLOAD_IMAGE_URL = BASE_URL + "upload_kyc_documents_ocr";
     String GET_ASSIGNMENT_ID = BASE_URL + "start_quiz";
     String GET_STATE = BASE_URL + "states";
     String GET_DISTRICT = BASE_URL + "districts";

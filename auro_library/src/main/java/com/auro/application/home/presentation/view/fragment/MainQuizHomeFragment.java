@@ -69,6 +69,7 @@ import com.auro.application.home.data.model.response.StudentKycStatusResModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
 import com.auro.application.home.presentation.view.activity.CameraActivity;
+import com.auro.application.home.presentation.view.activity.SDKActivity;
 import com.auro.application.home.presentation.view.activity.StudentMainDashboardActivity;
 import com.auro.application.home.presentation.view.activity.WebActivity;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
@@ -108,6 +109,7 @@ import com.instabug.library.ui.onboarding.WelcomeMessage;
 import com.instabug.library.visualusersteps.State;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -126,6 +128,7 @@ import static com.auro.application.core.common.Status.LISTNER_FAIL;
 import static com.auro.application.home.presentation.view.fragment.CongratulationsDialog.commonCallBackListner;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import okhttp3.MediaType;
@@ -259,9 +262,8 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
 
     void checkScreenPreferences() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-
-        int studentClass = Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserclass());
-        AppLogger.e("checkScreenPreferences --", "" + studentClass);
+        int studentClass = Integer.parseInt(prefModel.getUserclass());
+        FetchStudentPrefResModel fetchStudentPrefResModel2 = prefModel.getFetchStudentPrefResModel();
         if (studentClass > 10) {
             FetchStudentPrefResModel fetchStudentPrefResModel = prefModel.getFetchStudentPrefResModel();
             if (fetchStudentPrefResModel != null && !TextUtil.checkListIsEmpty(fetchStudentPrefResModel.getPreference())) {
@@ -360,6 +362,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
         AppLogger.e(TAG, "commonEventListner");
         switch (commonDataModel.getClickType()) {
             case SUBJECT_CLICKED:
+                getKYCChecked();
                 SharedPreferences prefs = getActivity().getSharedPreferences("My_Pref", MODE_PRIVATE);
                 String checkkycstatus = prefs.getString("checkkycstatus", "");
                 String checkkycstatusmessage = prefs.getString("checkkycstatusmessage","");
@@ -368,9 +371,8 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
                 }
                 else{
                     ViewUtil.showSnackBar(binding.getRoot(),checkkycstatusmessage);
+
                 }
-
-
                 break;
 
             case BACK_CLICK:
@@ -395,7 +397,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
             case ACCEPT_PARENT_BUTTON:
                 funnelStartQuiz();
                 askPermission();
-                //
+
                 //openCameraPhotoFragment();
                 break;
 
@@ -435,7 +437,21 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
                     @Override
                     public void onResponse(Call<GetStudentUpdateProfile> call, Response<GetStudentUpdateProfile> response)
                     {
-                        if (response.isSuccessful())
+                        if (response.code() == 400) {
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response.errorBody().string());
+                                String message = jsonObject.getString("message");
+                                SharedPreferences.Editor editor = getActivity().getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
+                                    editor.putString("checkkycstatus", "false");
+                                    editor.putString("checkkycstatusmessage", message);
+                                    editor.apply();
+
+                            } catch (JSONException | IOException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                        else if (response.isSuccessful())
                         {
                          String success = response.body().getStatus();
                          String message = response.body().getMessage();
@@ -884,9 +900,9 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
         }
 
         if (dashboardResModel != null && dashboardResModel.isChatBotEnabled()) {
-            binding.imageChat.setVisibility(View.GONE);
+            binding.imageChat.setVisibility(View.VISIBLE);
         } else {
-            binding.imageChat.setVisibility(View.GONE);
+            binding.imageChat.setVisibility(View.VISIBLE);
         }
     }
 

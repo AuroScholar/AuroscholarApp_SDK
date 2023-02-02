@@ -153,14 +153,14 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
 
     @Override
     public Single<Response<JsonObject>> studentUpdateProfile(GetStudentUpdateProfile model) {
-
+      PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         if (model.getDeviceToken() == null) {
             model.setDeviceToken("");
         }
         try {
             RequestBody buildVersion = RequestBody.create(okhttp3.MultipartBody.FORM, model.getBuildVersion());
             AppLogger.e("update profile api-", "step 10 " + model.getBuildVersion());
-            RequestBody partnersource = RequestBody.create(okhttp3.MultipartBody.FORM, "AURO3VE4j7");//model.getPartnerSource()
+            RequestBody partnersource = RequestBody.create(okhttp3.MultipartBody.FORM, prefModel.getPartnersource());//model.getPartnerSource()
             AppLogger.e("update profile api-", "step 11 - " + "AURO3VE4j7");
             RequestBody schoolName = RequestBody.create(okhttp3.MultipartBody.FORM, model.getSchoolName());
             AppLogger.e("update profile api-", "step 12" + model.getSchoolName());

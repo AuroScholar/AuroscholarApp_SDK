@@ -172,6 +172,7 @@ public class SDKActivity  extends AppCompatActivity {
                                     PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
                                     prefModel.setChildData(checkUserResModel);
                                     prefModel.setPartnersource(partnersource);
+                                    prefModel.setUserMobile(mobno);
                                     prefModel.setPartneruniqueid(partneruniqueid);
                                     prefModel.setApikey(apikey);
                                     AuroAppPref.INSTANCE.setPref(prefModel);

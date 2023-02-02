@@ -6,7 +6,9 @@ import static com.auro.application.core.common.Status.UPDATE_PREFERENCE_API;
 import static com.auro.application.core.common.Status.UPDATE_STUDENT;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.View;
@@ -72,12 +74,27 @@ public class SubjectPreferencesActivity extends BaseActivity implements CommonCa
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, getLayout());
-        //((AuroApp) this.getApplication()).getAppComponent().doInjection(this);
+       // ((AuroApp) this.getApplication()).getAppComponent().doInjection(this);
         DaggerWrapper.getComponent(this).doInjection(this);
+
         homeViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomeViewModel.class);
         binding.setLifecycleOwner(this);
         init();
         setListener();
+
+        SharedPreferences.Editor editor = getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
+        editor.putString("statusparentprofile", "false");
+        editor.putString("isLogin","true");
+        editor.putString("statusfillstudentprofile", "false");
+        editor.putString("statussetpasswordscreen", "false");
+        editor.putString("statuschoosegradescreen", "false");
+        editor.putString("statuschoosedashboardscreen", "false");
+        editor.putString("statussubjectpref","true");
+        editor.putString("statusopenprofileteacher", "false");
+        editor.putString("statusopendashboardteacher", "false");
+        editor.putString("statusopenprofilewithoutpin", "false");
+        editor.apply();
+
     }
 
 
@@ -227,14 +244,13 @@ public class SubjectPreferencesActivity extends BaseActivity implements CommonCa
                     } else if (responseApi.apiTypeStatus == UPDATE_PREFERENCE_API) {
                         UpdatePrefResModel updatePrefResModel = (UpdatePrefResModel) responseApi.data;
                         if (updatePrefResModel.getError()) {
-                           // callSubjectListPreference();
+                            // callSubjectListPreference();
                             ViewUtil.showSnackBar(binding.getRoot(), updatePrefResModel.getMessage());
                         } else {
                             ViewUtil.showSnackBar(binding.getRoot(), updatePrefResModel.getMessage());
                             startDashboardActivity();
                         }
                     }
-
                     break;
 
                 case NO_INTERNET:
@@ -308,7 +324,7 @@ public class SubjectPreferencesActivity extends BaseActivity implements CommonCa
             categorySubjectResModels.add(subjectResModelHashMap.get(key));
         }
         for (int i = 0; i < categorySubjectResModels.size(); i++) {
-            if (i == categorySubjectResModels.size() - 1) {
+            if (i == categorySubjectResModels.size() - 1) {  //1
                 preference = preference + categorySubjectResModels.get(i).getId();
             } else {
                 preference = preference + categorySubjectResModels.get(i).getId() + ",";
@@ -320,15 +336,21 @@ public class SubjectPreferencesActivity extends BaseActivity implements CommonCa
 
 
         reqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getUserId());
+        reqModel.setUserPreferedLanguageId(Integer.valueOf(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId()));
         reqModel.setPreference(preference);
         homeViewModel.checkInternetForApi(Status.UPDATE_PREFERENCE_API, reqModel);
+        SharedPreferences preferences = getSharedPreferences("My_Pref", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.remove("gradeforsubjectpreference");
+        editor.apply();
+
     }
 
 
     void callFetchUserPreference() {
         handleProgress(0, "");
         FetchStudentPrefReqModel fetchStudentPrefReqModel = new FetchStudentPrefReqModel();
-        fetchStudentPrefReqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getChildData().getUser_details().get(0).getUser_id());
+        fetchStudentPrefReqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getUserId());
         homeViewModel.checkInternetForApi(FETCH_STUDENT_PREFERENCES_API, fetchStudentPrefReqModel);
     }
 

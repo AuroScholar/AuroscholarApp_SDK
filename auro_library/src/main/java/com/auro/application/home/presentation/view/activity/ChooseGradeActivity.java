@@ -202,6 +202,10 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
             case MESSAGE_SELECT_CLICK:
                 SelectLanguageModel model = (SelectLanguageModel) commonDataModel.getObject();
                 grade = ConversionUtil.INSTANCE.convertStringToInteger(model.getStudentClassName());
+                SharedPreferences.Editor editor1 = getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
+                editor1.putString("gradeforsubjectpreference", String.valueOf(grade));
+                editor1.apply();
+
                 for (int i = 0; i < laugList.size(); i++) {
                     laugList.get(i).setCheck(i == commonDataModel.getSource());
                 }
