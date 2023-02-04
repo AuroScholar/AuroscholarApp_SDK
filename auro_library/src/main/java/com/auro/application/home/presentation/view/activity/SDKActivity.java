@@ -176,6 +176,10 @@ public class SDKActivity  extends AppCompatActivity {
                                     prefModel.setPartneruniqueid(partneruniqueid);
                                     prefModel.setApikey(apikey);
                                     AuroAppPref.INSTANCE.setPref(prefModel);
+
+
+
+
                                         if (userDetails.size() ==1 && (userDetails.get(0).is_mapped() == 1||userDetails.get(0).is_mapped().equals(1)||userDetails.get(0).is_mapped().equals("1"))){
 
                                             String userid_child =  userDetails.get(0).getUser_id();
@@ -187,16 +191,17 @@ public class SDKActivity  extends AppCompatActivity {
                                             String user_name = userDetails.get(0).getUser_name();
                                             String partner_logo =  userDetails.get(0).getPartner_logo();
                                             String profile_pic = userDetails.get(0).getProfile_pic();
-                                            prefModel.setUserId(userid_child);
-                                            prefModel.setUserMobile(user_mobile);
-                                            prefModel.setUserLanguageId(user_language);
-                                            prefModel.setStudentName(student_name);
-                                            prefModel.setUserclass(user_grade);
-                                            prefModel.setKycstatus(user_kyc);
-                                            prefModel.setUserprofilepic(profile_pic);
-                                            prefModel.setUserName(user_name);
-                                            prefModel.setPartner_logo(partner_logo);
-                                            AuroAppPref.INSTANCE.setPref(prefModel);
+                                            PrefModel prefModel2 = AuroAppPref.INSTANCE.getModelInstance();
+                                            prefModel2.setUserId(userid_child);
+                                            prefModel2.setUserMobile(user_mobile);
+                                            prefModel2.setUserLanguageId(user_language);
+                                            prefModel2.setStudentName(student_name);
+                                            prefModel2.setUserclass(user_grade);
+                                            prefModel2.setKycstatus(user_kyc);
+                                            prefModel2.setUserprofilepic(profile_pic);
+                                            prefModel2.setUserName(user_name);
+                                            prefModel2.setPartner_logo(partner_logo);
+                                            AuroAppPref.INSTANCE.setPref(prefModel2);
                                             getProfile(userid_child,user_language);
                                         }
                                         else{
@@ -229,7 +234,7 @@ public class SDKActivity  extends AppCompatActivity {
     }
     private void getProfile(String userid, String lang_id)
     {
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("user_id",userid);
 
@@ -384,66 +389,7 @@ public class SDKActivity  extends AppCompatActivity {
                 });
     }
 
-    private void setSDKAPIGrade()
-    {
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String mobile = prefModel.getUserMobile();
-        String uniqueid = prefModel.getPartneruniqueid();
-        String source = prefModel.getPartnersource();
-        String apikey = prefModel.getApikey();
-        String userid = prefModel.getUserId();
-        String gradeid = prefModel.getUserclass();
-        HashMap<String,String> map_data = new HashMap<>();
-        map_data.put("mobile_no",mobile);
-        map_data.put("partner_unique_id",uniqueid); //456456
-        map_data.put("partner_source",source);
-        map_data.put("partner_api_key",apikey);
-        map_data.put("user_id",userid);
-        map_data.put("grade",gradeid);
 
-        RemoteApi.Companion.invoke().getSDKDataerror(map_data)
-                .enqueue(new Callback<ErrorResponseModel>() {
-                    @Override
-                    public void onResponse(Call<ErrorResponseModel> call, Response<ErrorResponseModel> response)
-                    {
-                        try {
-                            if (response.code() == 400) {
-                                JSONObject jsonObject = null;
-                                try {
-                                    jsonObject = new JSONObject(response.errorBody().string());
-                                    String message = jsonObject.getString("message");
-                                    errormismatch = message;
-                                    Toast.makeText(SDKActivity.this,message, Toast.LENGTH_SHORT).show();
-
-                                } catch (JSONException | IOException e) {
-                                    e.printStackTrace();
-                                }
-
-
-                            }
-                            else if (response.code() == 200) {
-                                ErrorResponseModel error = (ErrorResponseModel) response.body();
-                                errormismatch = error.getMessage();
-
-                            }
-                            else {
-                                Toast.makeText(SDKActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        catch (Exception e) {
-                            Toast.makeText(SDKActivity.this, "Internet connection", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<ErrorResponseModel> call, Throwable t) {
-                        Toast.makeText(SDKActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-                });
-
-
-    }
     public void openBottomSheetDialog() {
         BottomSheetUsersDialog bottomSheet = new BottomSheetUsersDialog();
         bottomSheet.show(this.getSupportFragmentManager(),

@@ -125,7 +125,6 @@ public interface URLConstant {
 
     String FINISH_QUIZ_DATA = BASE_URL + "submit_final_quiz";//  //submit_final_quiz_test
 
-
     String REGISTER_USER_API = BASE_URL + "register_user";
 
     String SET_PASSWORD_API = BASE_URL + "set_user_password";

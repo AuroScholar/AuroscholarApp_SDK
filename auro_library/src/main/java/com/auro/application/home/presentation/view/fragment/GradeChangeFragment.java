@@ -396,6 +396,8 @@ public class GradeChangeFragment extends BaseFragment implements View.OnClickLis
         CheckUserValidResModel reqModel = new CheckUserValidResModel();
         reqModel.setMobileNo(prefModel.getUserId());
         reqModel.setStudentClass("" + studentClass);
+        prefModel.setUserclass(String.valueOf(studentClass));
+        AuroAppPref.INSTANCE.setPref(prefModel);
         viewModel.changeGrade(reqModel);
     }
 

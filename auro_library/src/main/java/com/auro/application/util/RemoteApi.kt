@@ -48,6 +48,14 @@ interface RemoteApi
     public fun getQuizMonthSubject(@Body params:HashMap<String,String>):Call<PassportQuizMonthModel>
 
 
+    @Multipart
+    @POST("update_student_photo")
+    public fun update_student_photo(
+        @Part("user_id") userId:RequestBody ,
+        @Part("user_prefered_language_id") userpreferlanguageid:RequestBody ,
+        @Part image:MultipartBody.Part
+    ):Call<StudentResponselDataModel>
+
     @POST("get_user_details")
     public fun getStudentData(@Body params:HashMap<String,String>):Call<GetStudentUpdateProfile>
 

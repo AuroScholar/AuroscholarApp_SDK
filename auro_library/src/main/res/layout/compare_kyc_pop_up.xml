@@ -113,35 +113,29 @@
 
                <com.google.android.material.textfield.TextInputLayout
                    android:id="@+id/tiGender"
-                   style="@style/TextInputLayoutExposeStyle"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:hint="Gender"
-                   android:textColorHint="@color/auro_border_blue"
-                   app:endIconMode="none"
                    android:padding="5dp"
+                   android:hint="Gender"
+                   style="@style/TextInputLayoutStyle"
+                   android:layout_width="match_parent"
                    android:longClickable="false"
                    android:editable="false"
-                   app:layout_constraintBottom_toBottomOf="parent"
-                   app:layout_constraintEnd_toEndOf="parent"
-                   app:layout_constraintStart_toStartOf="parent"
-                   app:layout_constraintTop_toTopOf="parent">
+                   android:textColorHint="@color/auro_border_blue"
+                   android:layout_height="wrap_content">
 
-                   <AutoCompleteTextView
+
+
+                   <com.google.android.material.textfield.TextInputEditText
                        android:id="@+id/etGender"
                        android:layout_width="match_parent"
                        android:layout_height="wrap_content"
-                       android:drawablePadding="@dimen/_18sdp"
-                       android:dropDownHeight="wrap_content"
+                       android:digits="0123456789"
                        android:focusable="false"
-                       android:drawableRight="@drawable/ic_user_drop_down"
-                       android:gravity="left"
                        android:longClickable="false"
+                       android:gravity="left"
+                       android:inputType="number"
                        android:maxLines="1"
                        android:paddingEnd="@dimen/_20sdp"
-                       android:textColor="@color/black"
-
-                       />
+                       android:textColor="@color/black" />
 
 
                </com.google.android.material.textfield.TextInputLayout>

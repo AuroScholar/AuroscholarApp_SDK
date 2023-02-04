@@ -1039,7 +1039,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                 RoundedBitmapDrawableFactory.create(binding.profileimage.getContext().getResources(), picBitmap);
         circularBitmapDrawable.setCircular(true);
         binding.profileimage.setImageDrawable(circularBitmapDrawable);
-
+        updateProfilePicChild();
     }
 
 
@@ -1257,6 +1257,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
             if (!TextUtil.isEmpty(getStudentUpdateProfile.getProfilePic())) {
                 ImageUtil.loadCircleImage(binding.profileimage, getStudentUpdateProfile.getProfilePic());
+                prefModel.setUserprofilepic(getStudentUpdateProfile.getProfilePic());
             }
             if (!getStudentUpdateProfile.getGender().isEmpty()){
                 binding.etStudentGender.setText(getStudentUpdateProfile.getTranslated_gender());
@@ -1311,9 +1312,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
             }
 
 
-//            if (!getStudentUpdateProfile.getStatename().isEmpty()){
 
-            //}
 
 
         }
@@ -1481,61 +1480,66 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
 
 
+    private void updateProfilePicChild() {
+        Details details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
+        String childid = prefModel.getUserId();
+        String langid = prefModel.getUserLanguageId();
+        RequestBody userid_c = RequestBody.create(MediaType.parse("text/plain"), childid);
+        RequestBody languageid = RequestBody.create(MediaType.parse("text/plain"), langid);
 
-    public void openGenricSDK() {
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String userclass = prefModel.getUserclass();
-        AuroScholarInputModel inputModel = new AuroScholarInputModel();
-        inputModel.setMobileNumber(prefModel.getUserMobile());
-        inputModel.setStudentClass(prefModel.getUserclass());
-        inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
-        inputModel.setPartnerSource(prefModel.getPartnersource());
-        inputModel.setPartner_api_key(prefModel.getApikey());
-        inputModel.setActivity((Activity) getActivity());
-        AuroScholar.startAuroSDK(inputModel);
-
-    }
-
-    public void sendProfileScreenApi() {
-        firstTimeCome = false;
-        AppLogger.v("callApi", firstTimeCome + "");
-        String username = binding.UserName.getText().toString();
-        String emailId = binding.editemail.getText().toString();
-        String userid = binding.editUserid.getText().toString();
-        studentProfileModel.setStudentName(username);
-        studentProfileModel.setEmailId(emailId);
-        studentProfileModel.setPhonenumber(dashboardResModel.getPhonenumber());
-        ValidationModel validation = viewModel.homeUseCase.validateStudentProfile(studentProfileModel);
-        /*Device Detail*/
-        studentProfileModel.setDeviceToken(AuroAppPref.INSTANCE.getModelInstance().getDeviceToken());
-        Log.d(TAG, "sendProfileScreenApitoken: "+AuroAppPref.INSTANCE.getModelInstance().getDeviceToken());
-        studentProfileModel.setMobileVersion(DeviceUtil.getVersionName());
-        studentProfileModel.setMobileManufacturer(DeviceUtil.getManufacturer(getActivity()));
-        studentProfileModel.setMobileModel(DeviceUtil.getModelName(getActivity()));
-        studentProfileModel.setBuildVersion(AppUtil.getAppVersionName());
-        studentProfileModel.setIpAddress(AppUtil.getIpAdress());
-        studentProfileModel.setLanguage(ViewUtil.getLanguageId());
-        studentProfileModel.setGender(GenderName);
-        studentProfileModel.setSchoolName(SchoolName);
-        studentProfileModel.setSchoolType(schooltype);
-        studentProfileModel.setBoardType(boardtype);
-        studentProfileModel.setPrivateTutionType(Tutiontype);
-        studentProfileModel.setIsPrivateTution(Tution);
-        studentProfileModel.setStateId(stateCode);
-        studentProfileModel.setDistrictId(districtCode);
-        studentProfileModel.setStudentName(districtCode);
-        studentProfileModel.setDeviceToken(prefModel.getDeviceToken());
-
-        studentProfileModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
-        /*End of Device Detail*/
-        if (validation.isStatus()) {
-            AppLogger.e("sendProfilepradeepApi", "step -1- " + validation.isStatus());
-            viewModel.sendStudentProfileInternet(studentProfileModel);
-            handleSubmitProgress(0, "");
-        } else {
-            AppLogger.e("sendProfilepradeepApi", "step -2- " + validation.isStatus());
-            showSnackbarError(validation.getMessage());
+        if (image_path == null || image_path.equals("null") || image_path.equals("") || image_path.isEmpty()) {
+            lRequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), "");
+            filename = "";
         }
+        else {
+            lRequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), studentProfileModel.getImageBytes());
+            filename = image_path.substring(image_path.lastIndexOf("/") + 1);
+        }
+        MultipartBody.Part lFile = MultipartBody.Part.createFormData("user_profile_image", filename, lRequestBody);
+        RemoteApi.Companion.invoke()
+                .update_student_photo(userid_c,languageid,lFile)
+                .enqueue(new Callback<StudentResponselDataModel>() {
+                    @Override
+                    public void onResponse(Call<StudentResponselDataModel> call, Response<StudentResponselDataModel> response) {
+                        try {
+
+                            if (response.code()==400){
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(response.errorBody().string());
+                                    String message = jsonObject.getString("message");
+                                    Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+
+                                } catch (JSONException | IOException e) {
+                                    e.printStackTrace();
+                                }
+
+
+
+                            }
+                            else if (response.isSuccessful()) {
+                                Log.d(TAG, "onImageResponse: ");
+                                String status = response.body().getStatus().toString();
+                                String msg = response.body().getMessage();
+                                if (status.equalsIgnoreCase("success")) {
+                                    Toast.makeText(getActivity(), msg.toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            else {
+                                Toast.makeText(getActivity(), response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), details.getInternetCheck(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<StudentResponselDataModel> call, Throwable t) {
+                        Toast.makeText(getActivity(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
+
+                    }
+                });
     }
 
 

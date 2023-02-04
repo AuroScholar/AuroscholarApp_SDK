@@ -15,6 +15,7 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -40,6 +41,7 @@ import com.auro.application.databinding.StudentKycInfoLayoutBinding;
 import com.auro.application.home.data.model.DashboardResModel;
 import com.auro.application.home.data.model.FetchStudentPrefReqModel;
 import com.auro.application.home.data.model.KYCDocumentDatamodel;
+import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.data.model.response.InstructionsResModel;
 import com.auro.application.home.data.model.response.StudentKycStatusResModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
@@ -53,9 +55,14 @@ import com.auro.application.teacher.data.model.response.TeacherKycStatusResModel
 import com.auro.application.teacher.presentation.view.adapter.TeacherKycDocumentAdapter;
 import com.auro.application.util.AppLogger;
 import com.auro.application.util.AppUtil;
+import com.auro.application.util.RemoteApi;
 import com.auro.application.util.ViewUtil;
 import com.auro.application.util.alert_dialog.disclaimer.DisclaimerKycDialog;
 import com.auro.application.util.strings.AppStringDynamic;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -64,6 +71,10 @@ import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 
 public class StudentKycInfoFragment extends BaseFragment implements CommonCallBackListner, View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
@@ -117,13 +128,12 @@ public class StudentKycInfoFragment extends BaseFragment implements CommonCallBa
         if (model != null && model.getTeacherName() != null && !model.getTeacherName().isEmpty()) {
             binding.teacherName.setText(model.getTeacherName());
         }
-        if (model != null && model.getTeacherProfilePic() != null && !model.getTeacherProfilePic().isEmpty()) {
-            ViewUtil.setTeacherProfilePic(binding.imageView6);
-        }
+
         kycScannerBanner(binding.scannerLayout, binding.scannerBar);
         kycScannerBanner(binding.relativeLayout2, binding.scannerLayout);
         startAnimation();
-        ViewUtil.setProfilePic(binding.imageView6);
+     //   ViewUtil.setProfilePic(binding.imageView6);
+        getProfile();
         DashboardResModel dashboardResModel = AuroAppPref.INSTANCE.getModelInstance().getDashboardResModel();
         if (dashboardResModel.getStudent_name() != null && !dashboardResModel.getStudent_name().isEmpty()) {
             binding.teacherName.setText(dashboardResModel.getStudent_name());
@@ -139,6 +149,7 @@ public class StudentKycInfoFragment extends BaseFragment implements CommonCallBa
 
         kycViewModel.checkInternet(instructionModel, Status.GET_INSTRUCTIONS_API);
     }
+
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -157,7 +168,46 @@ public class StudentKycInfoFragment extends BaseFragment implements CommonCallBa
     protected void setToolbar() {
 
     }
+    private void getProfile()
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String userid = prefModel.getUserId();
 
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("user_id",userid);
+
+        RemoteApi.Companion.invoke().getStudentData(map_data)
+                .enqueue(new Callback<GetStudentUpdateProfile>()
+                {
+                    @Override
+                    public void onResponse(Call<GetStudentUpdateProfile> call, Response<GetStudentUpdateProfile> response)
+                    {
+                        if (response.isSuccessful())
+                        {
+                            String profilepicurl = response.body().getProfilePic();
+                            Glide.with(getActivity()).load(profilepicurl)
+                                    .apply(RequestOptions.placeholderOf(R.drawable.imageplaceholder_ico)
+                                            .error(R.drawable.imageplaceholder_ico)
+                                            .dontAnimate()
+                                            .priority(Priority.IMMEDIATE)
+                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                            .skipMemoryCache(true)
+                                    ).into(binding.imageView6);
+                        }
+                        else
+                        {
+                            Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetStudentUpdateProfile> call, Throwable t)
+                    {
+                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
     @Override
     protected void setListener() {
         HomeActivity.setListingActiveFragment(HomeActivity.TEACHER_KYC_FRAGMENT);

@@ -378,7 +378,7 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
         inputModel.setMobileNumber(mobileNumber);
         inputModel.setStudentClass(userclass);
         inputModel.setPartner_unique_id(partneruniqueid);
-        inputModel.setPartnerSource(partnersource);
+        inputModel.setPartnerSource(prefModel.getPartnersource());
         inputModel.setPartner_api_key("");
         inputModel.setActivity((Activity) mContext);
         AuroScholar.startAuroSDK(inputModel);

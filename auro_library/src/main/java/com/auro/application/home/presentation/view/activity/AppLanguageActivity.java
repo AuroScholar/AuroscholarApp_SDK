@@ -558,15 +558,15 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
                 });
     }
 
-    public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource  ) {
+    public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         String userclass = prefModel.getUserclass();
         AuroScholarInputModel inputModel = new AuroScholarInputModel();
-        inputModel.setMobileNumber(mobileNumber);
+        inputModel.setMobileNumber(prefModel.getUserMobile());
         inputModel.setStudentClass(userclass);
-        inputModel.setPartner_unique_id(partneruniqueid);
-        inputModel.setPartnerSource(partnersource);
-        inputModel.setPartner_api_key("");
+        inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
+        inputModel.setPartnerSource(prefModel.getPartnersource());
+        inputModel.setPartner_api_key(prefModel.getApikey());
         inputModel.setActivity((Activity) mContext);
         AuroScholar.startAuroSDK(inputModel);
     }

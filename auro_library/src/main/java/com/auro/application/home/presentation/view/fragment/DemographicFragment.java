@@ -209,9 +209,9 @@ public class DemographicFragment extends BaseFragment implements CommonCallBackL
 
         prefModel  = AuroAppPref.INSTANCE.getModelInstance();
         details = prefModel.getLanguageMasterDynamic().getDetails();
-        demographicResModel.setUserId(prefModel.getStudentData().getUserId());
+        demographicResModel.setUserId(prefModel.getUserId());
 
-        demographicResModel.setPartnerSource(AppConstant.PARTNER_AURO_ID);
+        demographicResModel.setPartnerSource(prefModel.getPartnersource());
         demographicResModel.setRegitrationSource(AppConstant.REGISTRATION_SOURCE);
         demographicResModel.setMobileModel(DeviceUtil.getModelName(getActivity()));
         demographicResModel.setMobileVersion(DeviceUtil.getVersionName());

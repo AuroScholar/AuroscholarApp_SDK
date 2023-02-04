@@ -483,7 +483,7 @@ public class ViewUtil {
 
     public static void setProfilePic(ImageView imageView) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        if (prefModel != null && prefModel.getUserprofilepic() != null && !TextUtil.isEmpty(prefModel.getUserprofilepic())) {
+        //if (prefModel != null && prefModel.getUserprofilepic() != null && !TextUtil.isEmpty(prefModel.getUserprofilepic())) {
 
             Glide.with(imageView.getContext()).load(prefModel.getUserprofilepic())
                     .apply(RequestOptions.placeholderOf(R.drawable.imageplaceholder_ico)
@@ -494,7 +494,7 @@ public class ViewUtil {
                             .skipMemoryCache(true)
                     ).into(imageView);
 
-        }
+      //  }
     }
     public static float getScreenRatio(Context c) {
         DisplayMetrics metrics = c.getResources().getDisplayMetrics();

@@ -1,5 +1,6 @@
 package com.auro.application.home.presentation.view.fragment;
 
+import android.app.Activity;
 import android.app.Application;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -49,10 +50,12 @@ import com.auro.application.core.common.Status;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
 import com.auro.application.core.network.URLConstant;
+import com.auro.application.core.util.AuroScholar;
 import com.auro.application.databinding.FragmentMainQuizHomeBinding;
 import com.auro.application.home.data.model.AssignmentReqModel;
 import com.auro.application.home.data.model.AssignmentResModel;
 import com.auro.application.home.data.model.AuroScholarDataModel;
+import com.auro.application.home.data.model.AuroScholarInputModel;
 import com.auro.application.home.data.model.DashboardResModel;
 import com.auro.application.home.data.model.DashboardResponselDataModel;
 import com.auro.application.home.data.model.Details;
@@ -68,7 +71,10 @@ import com.auro.application.home.data.model.response.SlabsResModel;
 import com.auro.application.home.data.model.response.StudentKycStatusResModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
+import com.auro.application.home.presentation.view.activity.AppLanguageActivity;
 import com.auro.application.home.presentation.view.activity.CameraActivity;
+import com.auro.application.home.presentation.view.activity.ChooseGradeActivity;
+import com.auro.application.home.presentation.view.activity.CompleteStudentProfileWithoutPin;
 import com.auro.application.home.presentation.view.activity.SDKActivity;
 import com.auro.application.home.presentation.view.activity.StudentMainDashboardActivity;
 import com.auro.application.home.presentation.view.activity.WebActivity;
@@ -97,6 +103,7 @@ import com.auro.application.util.strings.AppStringDynamic;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import com.instabug.apm.APM;
@@ -187,28 +194,20 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
         if (binding != null) {
             return binding.getRoot();
         }
-//        if (!AuroApp.getAuroScholarModel().isApplicationLang()) {
-//            String lang = AuroApp.getAuroScholarModel().getLanguage();
-//            if (!TextUtil.isEmpty(lang)) {
-//                if (lang.equalsIgnoreCase(AppConstant.LANGUAGE_HI) || lang.equalsIgnoreCase(AppConstant.LANGUAGE_EN)) {
-//
-//                }
-//            } else {
-//        AuroApp.getAuroScholarModel().setLanguage(AppConstant.LANGUAGE_EN);
-//            }
-//        }
+
 
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
 
         //((AuroApp) requireActivity().getApplication()).getAppComponent().doInjection(this);
         DaggerWrapper.getComponent(getActivity()).doInjection(this);
         quizViewModel = ViewModelProviders.of(this, viewModelFactory).get(QuizViewModel.class);
-
-
+        ViewUtil.setProfilePic(binding.imageView6);
+        getProfile();
         binding.setLifecycleOwner(this);
         binding.setQuizViewModel(quizViewModel);
         setRetainInstance(true);
         getKYCChecked();
+       // getProfile();
         init();
         setListener();
         return binding.getRoot();
@@ -224,12 +223,13 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
     protected void init() {
      prefModel = AuroAppPref.INSTANCE.getModelInstance();
      String partnerlogo = prefModel.getPartner_logo();
+        String userlogo = prefModel.getUserprofilepic();
         Glide.with(this).load(partnerlogo)
                 .apply(RequestOptions.placeholderOf(R.drawable.ic_auro_scholar_logo)
                         .dontAnimate()
-                        .priority(Priority.IMMEDIATE)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL))
+                        .priority(Priority.IMMEDIATE))
                 .into(binding.partnerLogo);
+
 
         details = prefModel.getLanguageMasterDynamic().getDetails();
         prefModel.setLogin(true);
@@ -249,17 +249,54 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
         if (dashboardResModel != null && !prefModel.isDashboardaApiNeedToCall()) {
             onApiSuccess();
         } else {
-
+           // getProfile();
             callDasboardApi();
         }
         AppStringDynamic.setMainQuizHometrings(binding);
-       // ((DashBoardMainActivity) getActivity()).callSlabsApi(); //Slab Changes
-       /* if (slabsResModel == null) {
-            slabsResModel = getDummyJson();
-        }*/
-       // makeQuizInfoAdapter();
+
     }
 
+
+    private void getProfile()
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String userid = prefModel.getUserId();
+
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("user_id",userid);
+
+        RemoteApi.Companion.invoke().getStudentData(map_data)
+                .enqueue(new Callback<GetStudentUpdateProfile>()
+                {
+                    @Override
+                    public void onResponse(Call<GetStudentUpdateProfile> call, Response<GetStudentUpdateProfile> response)
+                    {
+                        if (response.isSuccessful())
+                        {
+                           String profilepicurl = response.body().getProfilePic();
+                            Glide.with(getActivity()).load(profilepicurl)
+                                    .apply(RequestOptions.placeholderOf(R.drawable.imageplaceholder_ico)
+                                            .error(R.drawable.imageplaceholder_ico)
+                                            .dontAnimate()
+                                            .priority(Priority.IMMEDIATE)
+                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                            .skipMemoryCache(true)
+                                    ).into(binding.imageView6);
+                        }
+                        else
+                        {
+                            Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetStudentUpdateProfile> call, Throwable t)
+                    {
+                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
     void checkScreenPreferences() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         int studentClass = Integer.parseInt(prefModel.getUserclass());
@@ -837,14 +874,9 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
         if (dashboardResModel != null && dashboardResModel.getCheckVerResModel() != null && ((DashBoardMainActivity) getActivity()) != null) {
             ((DashBoardMainActivity) getContext()).checkVersion(dashboardResModel.getCheckVerResModel());
         }
-        /*Update Dynamic  to empty*/
-        AppLogger.e("chhonker--", "setPref step 1--" + AuroAppPref.INSTANCE.getModelInstance().isDashboardaApiNeedToCall());
-/*
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        DynamiclinkResModel model = prefModel.getDynamiclinkResModel();
-        prefModel.setDynamiclinkResModel(new DynamiclinkResModel());
-        AuroAppPref.INSTANCE.setPref(prefModel);*/
-        ViewUtil.setProfilePic(binding.imageView6);
+      //  getProfile();
+
+
     }
 
     private void updateList(DashboardResModel dashboardResModel) {
@@ -883,19 +915,19 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
         if (dashboardResModel != null && !TextUtil.isEmpty(dashboardResModel.getPartnerSource()) && dashboardResModel.getPartnerSource().equalsIgnoreCase(AppConstant.PARTNER_AURO_ID)) {
             binding.auroScholarBottom.setVisibility(View.GONE);
             binding.auroScholarLogo.setVisibility(View.VISIBLE);
-            AppUtil.loadAppLogo(binding.auroScholarLogo, getActivity());
+           // AppUtil.loadAppLogo(binding.auroScholarLogo, getActivity());
             //   binding.auroScholarLogo.setImageDrawable(getActivity().getDrawable(R.drawable.auro_scholar_logo));
         } else {
             if (dashboardResModel != null && !TextUtil.isEmpty(dashboardResModel.getPartnerLogo())) {
                 binding.auroScholarBottom.setVisibility(View.VISIBLE);
                 //    binding.auroScholarBottom.setImageDrawable(getActivity().getDrawable(R.drawable.auro_scholar_logo));
-                AppUtil.loadAppLogo(binding.auroScholarLogo, getActivity());
-                ImageUtil.loadNormalImage(binding.auroScholarLogo, dashboardResModel.getPartnerLogo());
+               // AppUtil.loadAppLogo(binding.auroScholarLogo, getActivity());
+              //  ImageUtil.loadNormalImage(binding.auroScholarLogo, dashboardResModel.getPartnerLogo());
 
             } else {
                 binding.auroScholarBottom.setVisibility(View.GONE);
                 //  binding.auroScholarLogo.setImageDrawable(getActivity().getDrawable(R.drawable.auro_scholar_logo));
-                AppUtil.loadAppLogo(binding.auroScholarLogo, getActivity());
+               // AppUtil.loadAppLogo(binding.auroScholarLogo, getActivity());
             }
         }
 

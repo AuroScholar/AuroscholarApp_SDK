@@ -56,7 +56,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:layout_marginEnd="@dimen/_35sdp"
-                        android:layout_marginTop="@dimen/_15sdp"
+                        android:layout_marginTop="@dimen/_18sdp"
                         android:src="@drawable/ic_auro_scholar_logo"
                         android:visibility="visible"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -95,7 +95,6 @@
                                 android:id="@+id/imageView6"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@drawable/ic_profile"
                                 android:scaleType="fitXY" />
                         </androidx.cardview.widget.CardView>
                     </androidx.cardview.widget.CardView>

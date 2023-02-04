@@ -484,8 +484,7 @@ public class StudentMainDashboardActivity extends BaseActivity implements OnItem
                 Glide.with(this).load(imgUrl)
                         .apply(RequestOptions.placeholderOf(R.drawable.ic_image_placeholder)
                                 .dontAnimate()
-                                .priority(Priority.IMMEDIATE)
-                                .diskCacheStrategy(DiskCacheStrategy.ALL))
+                                .priority(Priority.IMMEDIATE))
                         .into(imageView);
             } else {
                 imageView.setVisibility(View.GONE);

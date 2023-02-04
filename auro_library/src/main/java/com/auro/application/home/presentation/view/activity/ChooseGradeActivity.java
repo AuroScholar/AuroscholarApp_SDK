@@ -432,7 +432,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
         inputModel.setStudentClass(userclass);
 
         inputModel.setPartner_unique_id(partneruniqueid);
-        inputModel.setPartnerSource(partnersource);
+        inputModel.setPartnerSource(prefModel.getPartnersource());
         inputModel.setPartner_api_key("");
         inputModel.setActivity((Activity) mContext);
 

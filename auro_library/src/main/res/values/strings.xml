@@ -267,7 +267,7 @@
     <string name="updateMessage">We have worked harder to improve the app, Please click the button below to update.</string>
     <string name="update_auroscholar">Update Auroscholar?</string>
     <string name="update">Update</string>
-    <string name="student_phone_number">Parent Phone Number<font color='#FF0000'>*</font></string>
+    <string name="student_phone_number">Phone Number<font color='#FF0000'>*</font></string>
     <string name="grade_student">Grade :</string>
     <string name="wl_amount_rejected">Scholarship Rejected</string>
     <string name="wl_amount">₹100.00</string>
@@ -409,7 +409,7 @@
     <string name="start_now">Start Now</string>
     <string name="scholarship_transfer">Scholarship Transfer</string>
     <string name="subject_brief">Please select 5 Subjects of your choice</string>
-    <string name="parent_phone_number">Parent Phone Number</string>
+    <string name="parent_phone_number">Phone Number</string>
     <string name="student_gender">Student Gender</string>
     <string name="parent_gender">Gender</string>
     <string name="check_discalimer_first_text">I/we hereby allow my/our child to use the Auro Scholar application to take quizzes, learn and win scholarships. In consideration of this, I will not allow, promote or use any unfair means to help my child to get scholarships or while taking quizzes.</string>

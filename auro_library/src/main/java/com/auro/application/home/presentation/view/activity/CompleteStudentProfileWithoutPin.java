@@ -886,7 +886,10 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                                     editor1.apply();
                                     PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
                                     prefModel.setUserclass(String.valueOf(gradeid));
+
                                     AuroAppPref.INSTANCE.setPref(prefModel);
+
+
 
                                     openGenricSDK();
                                 }

@@ -606,7 +606,6 @@ public class ParentProfileActivity extends BaseActivity implements View.OnFocusC
                                         Glide.with(ParentProfileActivity.this)
                                                 .load(ParentProfileActivity.this.getResources().getIdentifier("my_drawable_image_name", "drawable", ParentProfileActivity.this.getPackageName()))
                                                 .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))
-                                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                                                 .placeholder(R.drawable.circle_user_image)
                                                 .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL))
                                                 .into(binding.profileimage);
