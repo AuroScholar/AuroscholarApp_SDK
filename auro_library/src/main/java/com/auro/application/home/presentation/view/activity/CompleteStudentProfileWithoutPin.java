@@ -90,6 +90,7 @@ import com.auro.application.home.presentation.viewmodel.CompleteStudentProfileWi
 
 import com.auro.application.util.AppLogger;
 import com.auro.application.util.AppUtil;
+import com.auro.application.util.ConversionUtil;
 import com.auro.application.util.DeviceUtil;
 import com.auro.application.util.RemoteApi;
 import com.auro.application.util.ViewUtil;
@@ -885,7 +886,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                                     editor1.putString("gradeforsubjectpreferencewithoutpin", "true");
                                     editor1.apply();
                                     PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-                                    prefModel.setUserclass(String.valueOf(gradeid));
+                                    prefModel.setUserclass(ConversionUtil.INSTANCE.convertStringToInteger(gradeid));
 
                                     AuroAppPref.INSTANCE.setPref(prefModel);
 
@@ -919,10 +920,10 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
 
     public void openGenricSDK() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String userclass = prefModel.getUserclass();
+        int userclass = prefModel.getUserclass();
         AuroScholarInputModel inputModel = new AuroScholarInputModel();
         inputModel.setMobileNumber(prefModel.getUserMobile());
-        inputModel.setStudentClass(prefModel.getUserclass());
+        inputModel.setStudentClass(String.valueOf(userclass));
         inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
         inputModel.setPartnerSource(prefModel.getPartnersource());
         inputModel.setPartner_api_key(prefModel.getApikey());

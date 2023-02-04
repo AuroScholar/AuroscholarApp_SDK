@@ -575,7 +575,7 @@ public class StudentMainDashboardActivity extends BaseActivity implements OnItem
     public void callFetchUserPreference() {
         AppLogger.e("DashbaordMain", "oncreate step 2");
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        int userclass = Integer.parseInt(prefModel.getUserclass());
+        int userclass = prefModel.getUserclass();
         if (userclass > 10) {
             FetchStudentPrefReqModel fetchStudentPrefReqModel = new FetchStudentPrefReqModel();
             fetchStudentPrefReqModel.setMobileNo(AuroAppPref.INSTANCE.getModelInstance().getUserMobile());

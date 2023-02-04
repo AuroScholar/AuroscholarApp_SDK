@@ -299,7 +299,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
     }
     void checkScreenPreferences() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        int studentClass = Integer.parseInt(prefModel.getUserclass());
+        int studentClass = prefModel.getUserclass();
         FetchStudentPrefResModel fetchStudentPrefResModel2 = prefModel.getFetchStudentPrefResModel();
         if (studentClass > 10) {
             FetchStudentPrefResModel fetchStudentPrefResModel = prefModel.getFetchStudentPrefResModel();

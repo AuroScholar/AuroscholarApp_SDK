@@ -1421,10 +1421,10 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
     }
     public void openGenricSDK() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String userclass = prefModel.getUserclass();
+        int userclass = prefModel.getUserclass();
         AuroScholarInputModel inputModel = new AuroScholarInputModel();
         inputModel.setMobileNumber(prefModel.getUserMobile());
-        inputModel.setStudentClass(prefModel.getUserclass());
+        inputModel.setStudentClass(String.valueOf(userclass));
         inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
         inputModel.setPartnerSource(prefModel.getPartnersource());
         inputModel.setPartner_api_key(prefModel.getApikey());

@@ -139,7 +139,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
             if (grade == 0) {
                 ViewUtil.showSnackBar(binding.getRoot(), prefModel.getLanguageMasterDynamic().getDetails().getPlease_select_the_grade());
             } else {
-                setSDKAPIGrade(String.valueOf(grade),"1");
+                setSDKAPIGrade(grade,"1");
                 //callChangeGradeApi();
 
             }
@@ -209,7 +209,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
                 for (int i = 0; i < laugList.size(); i++) {
                     laugList.get(i).setCheck(i == commonDataModel.getSource());
                 }
-                setSDKAPI(String.valueOf(grade));
+                setSDKAPI(grade);
 
                 //    reqModel.setNotification_message(list.get(commonDataModel.getSource()).getMessage());
                 adapter.setData(laugList);
@@ -217,7 +217,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
                 break;
         }
     }
-    private void setSDKAPI(String gradeid)
+    private void setSDKAPI(int gradeid)
     {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         String mobile = prefModel.getUserMobile();
@@ -231,7 +231,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
             map_data.put("partner_source",source);
             map_data.put("partner_api_key",apikey);
             map_data.put("user_id",userid);
-            map_data.put("grade",gradeid);
+            map_data.put("grade", String.valueOf(gradeid));
 
             RemoteApi.Companion.invoke().getSDKDataerror(map_data)
                     .enqueue(new Callback<ErrorResponseModel>() {
@@ -283,7 +283,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
 
     }
 
-    private void setSDKAPIGrade(String gradeid, String gradestatus)
+    private void setSDKAPIGrade(int gradeid, String gradestatus)
     {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         String mobile = prefModel.getUserMobile();
@@ -297,7 +297,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
         map_data.put("partner_source",source);
         map_data.put("partner_api_key",apikey);
         map_data.put("user_id",userid);
-        map_data.put("grade",gradeid);
+        map_data.put("grade", String.valueOf(gradeid));
         map_data.put("update_grade",gradestatus);
 
         RemoteApi.Companion.invoke().getSDKDataerror(map_data)
@@ -345,7 +345,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
 
 
     }
-    public void buttonSelect(String userclass) {
+    public void buttonSelect(int userclass) {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -425,11 +425,11 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
     }
     public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource  ) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String userclass = prefModel.getUserclass();
+        int userclass = prefModel.getUserclass();
         AuroScholarInputModel inputModel = new AuroScholarInputModel();
 
         inputModel.setMobileNumber(mobileNumber);
-        inputModel.setStudentClass(userclass);
+        inputModel.setStudentClass(String.valueOf(userclass));
 
         inputModel.setPartner_unique_id(partneruniqueid);
         inputModel.setPartnerSource(prefModel.getPartnersource());

@@ -262,10 +262,10 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         String gradeforsubjectpreference = prefs.getString("gradeforsubjectpreference", "");
         AppLogger.e("DashbaordMain", "oncreate step 2");
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-              String newclass = prefModel.getUserclass();
-              int studentprefclass = Integer.parseInt(newclass);
+              int newclass = prefModel.getUserclass();
+
         int stclass = prefModel.getStudentClass();
-        if (studentprefclass > 10 || stclass > 10 || gradeforsubjectpreference.equals("11")||gradeforsubjectpreference.equals("12")||gradeforsubjectpreference.equals(11)||gradeforsubjectpreference.equals(12)) {
+        if (newclass > 10 || stclass > 10 || gradeforsubjectpreference.equals("11")||gradeforsubjectpreference.equals("12")||gradeforsubjectpreference.equals(11)||gradeforsubjectpreference.equals(12)) {
             FetchStudentPrefReqModel fetchStudentPrefReqModel = new FetchStudentPrefReqModel();
 
             fetchStudentPrefReqModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getUserId());
@@ -1157,7 +1157,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     private void setRequiredData() {
         AuroScholarDataModel auroScholarDataModel = new AuroScholarDataModel();
         auroScholarDataModel.setMobileNumber(prefModel.getUserMobile());
-        auroScholarDataModel.setStudentClass(prefModel.getUserclass());
+        auroScholarDataModel.setStudentClass(String.valueOf(prefModel.getUserclass()));
         auroScholarDataModel.setRegitrationSource(auroScholarDataModel.getRegitrationSource());
         auroScholarDataModel.setActivity(auroScholarDataModel.getActivity());
         auroScholarDataModel.setFragmentContainerUiId(auroScholarDataModel.getFragmentContainerUiId());
@@ -1220,7 +1220,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
         AuroScholarInputModel inputModel = new AuroScholarInputModel();
         inputModel.setMobileNumber(prefModel.getUserMobile());
-        inputModel.setStudentClass(prefModel.getUserclass());
+        inputModel.setStudentClass(String.valueOf(prefModel.getUserclass()));
         inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
         inputModel.setPartnerSource(prefModel.getPartnersource());
         inputModel.setPartner_api_key(prefModel.getApikey());
@@ -1491,9 +1491,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     }
 
     public void setupNavigation() {
-        String studentClass = AuroAppPref.INSTANCE.getModelInstance().getUserclass();
-        int newclass = Integer.parseInt(studentClass);
-        if (newclass < 10) {
+        int studentClass = AuroAppPref.INSTANCE.getModelInstance().getUserclass();
+        if (studentClass < 10) {
             Menu menuDashboard = binding.naviagtionContent.bottomNavigation.getMenu();
             menuDashboard.findItem(R.id.item_partner).setTitle(R.string.certificatesmenuauro);
 
@@ -1510,9 +1509,9 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     private void handlePrivacyPolicytabClick() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String studentClass = prefModel.getUserclass();
-        int newclass = Integer.parseInt(studentClass);
-        if (newclass < 10) {
+        int studentClass = prefModel.getUserclass();
+
+        if (studentClass < 10) {
             openFragment(new PrivacyPolicyFragment());
         } else {
             openCertificate();
@@ -1522,9 +1521,9 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     private void handlePartnertabClick() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String studentClass = prefModel.getUserclass();
-        int studentprefclass = Integer.parseInt(studentClass);
-        if (studentprefclass < 10) {
+        int studentClass = prefModel.getUserclass();
+
+        if (studentClass < 10) {
             openCertificate();
         } else {
             openPartnersFragment();
@@ -1645,10 +1644,10 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                                 genderList.add(districtData);
                             }
                             PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-                            String prefstudentClass = prefModel.getUserclass();
-                            int studentClass = Integer.parseInt(prefstudentClass);
+                            int prefstudentClass = prefModel.getUserclass();
 
-                            if (studentClass < 10) {
+
+                            if (prefstudentClass < 10) {
                                 Menu menuDashboard = binding.naviagtionContent.bottomNavigation.getMenu();
 
                                 menuDashboard.findItem(R.id.item_partner).setTitle(genderList.get(1).getTranslatedName());

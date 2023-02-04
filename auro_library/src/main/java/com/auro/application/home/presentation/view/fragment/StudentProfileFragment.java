@@ -1571,7 +1571,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         if (dashboardResModel != null) {
             PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
             int studentClass = 0;
-            studentClass = ConversionUtil.INSTANCE.convertStringToInteger(prefModel.getUserclass());
+            studentClass = prefModel.getUserclass();
             SharedPreferences prefs = getActivity().getSharedPreferences("My_Pref", MODE_PRIVATE);
             String gradeforsubjectpreferencefinalprofile = prefs.getString("gradeforsubjectpreferencefinalprofile", "");
             if (studentClass > 10 || gradeforsubjectpreferencefinalprofile.equals("11")||gradeforsubjectpreferencefinalprofile.equals("12")||gradeforsubjectpreferencefinalprofile.equals(11)||gradeforsubjectpreferencefinalprofile.equals(12)) {

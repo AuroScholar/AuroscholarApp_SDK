@@ -449,14 +449,14 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
         String source = prefModel.getPartnersource();
         String apikey = prefModel.getApikey();
         String userid = prefModel.getUserId();
-        String gradeid = prefModel.getUserclass();
+        int gradeid = prefModel.getUserclass();
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("mobile_no",mobile);
         map_data.put("partner_unique_id",uniqueid); //456456
         map_data.put("partner_source",source);
         map_data.put("partner_api_key",apikey);
         map_data.put("user_id",userid);
-        map_data.put("grade",gradeid);
+        map_data.put("grade", String.valueOf(gradeid));
 
         RemoteApi.Companion.invoke().getSDKDataerror(map_data)
                 .enqueue(new Callback<ErrorResponseModel>() {
@@ -560,10 +560,10 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
 
     public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String userclass = prefModel.getUserclass();
+        int userclass = prefModel.getUserclass();
         AuroScholarInputModel inputModel = new AuroScholarInputModel();
         inputModel.setMobileNumber(prefModel.getUserMobile());
-        inputModel.setStudentClass(userclass);
+        inputModel.setStudentClass(String.valueOf(userclass));
         inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
         inputModel.setPartnerSource(prefModel.getPartnersource());
         inputModel.setPartner_api_key(prefModel.getApikey());

@@ -232,7 +232,7 @@ public class GradeChangeFragment extends BaseFragment implements View.OnClickLis
     private void setClassInPref(int studentClass) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         prefModel.getUserclass();
-         prefModel.setUserclass(String.valueOf(studentClass));
+         prefModel.setUserclass(studentClass);
         AuroAppPref.INSTANCE.setPref(prefModel);
     }
 
@@ -296,7 +296,7 @@ public class GradeChangeFragment extends BaseFragment implements View.OnClickLis
                     studentClass = ConversionUtil.INSTANCE.convertStringToInteger(classesNewMap.get("" + position));
 
                     PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-                    prefModel.setUserclass(String.valueOf(studentClass));
+                    prefModel.setUserclass(studentClass);
                     AuroAppPref.INSTANCE.setPref(prefModel);
                 } else {
                     studentClass = 0;
@@ -396,7 +396,7 @@ public class GradeChangeFragment extends BaseFragment implements View.OnClickLis
         CheckUserValidResModel reqModel = new CheckUserValidResModel();
         reqModel.setMobileNo(prefModel.getUserId());
         reqModel.setStudentClass("" + studentClass);
-        prefModel.setUserclass(String.valueOf(studentClass));
+        prefModel.setUserclass(studentClass);
         AuroAppPref.INSTANCE.setPref(prefModel);
         viewModel.changeGrade(reqModel);
     }

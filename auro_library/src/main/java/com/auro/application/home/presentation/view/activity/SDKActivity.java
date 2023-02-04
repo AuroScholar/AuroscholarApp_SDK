@@ -72,10 +72,10 @@ public class SDKActivity  extends AppCompatActivity {
 
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         if (prefModel.isLogin()){
-            String userclass = prefModel.getUserclass();
+            int userclass = prefModel.getUserclass();
             AuroScholarInputModel inputModel = new AuroScholarInputModel();
             inputModel.setMobileNumber(prefModel.getUserMobile());
-            inputModel.setStudentClass(userclass);
+            inputModel.setStudentClass(String.valueOf(userclass));
             inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
             inputModel.setPartnerSource(prefModel.getPartnersource());
             inputModel.setPartner_api_key(prefModel.getApikey());
@@ -186,7 +186,7 @@ public class SDKActivity  extends AppCompatActivity {
                                             String user_mobile =  userDetails.get(0).getMobile_no();
                                             String student_name =  userDetails.get(0).getStudent_name();
                                             String user_language =  userDetails.get(0).getUser_prefered_language_id();
-                                            String user_grade =  userDetails.get(0).getGrade();
+                                            int user_grade =  userDetails.get(0).getGrade();
                                             String user_kyc =  userDetails.get(0).getKyc_status();
                                             String user_name = userDetails.get(0).getUser_name();
                                             String partner_logo =  userDetails.get(0).getPartner_logo();
@@ -265,10 +265,10 @@ public class SDKActivity  extends AppCompatActivity {
                             }
                             else{
                                     PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-                                    String userclass = prefModel.getUserclass();
+                                    int userclass = prefModel.getUserclass();
                                     AuroScholarInputModel inputModel = new AuroScholarInputModel();
                                     inputModel.setMobileNumber(prefModel.getUserMobile());
-                                    inputModel.setStudentClass(userclass);
+                                    inputModel.setStudentClass(String.valueOf(userclass));
                                     inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
                                     inputModel.setPartnerSource(prefModel.getPartnersource());
                                     inputModel.setPartner_api_key(prefModel.getApikey());
