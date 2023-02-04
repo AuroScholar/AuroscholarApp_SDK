@@ -17,8 +17,6 @@
         android:layout_height="match_parent"
         android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
         tools:context=".home.presentation.view.fragment.newDesgin.UserProfileFragment">
-
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constantLayoutNew"
             android:layout_width="match_parent"
