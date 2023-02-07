@@ -2,10 +2,13 @@ package com.auro.application.home.presentation.view.fragment;
 
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.app.ProgressDialog;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,14 +42,17 @@ import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
 import com.auro.application.databinding.StudentKycInfoLayoutBinding;
 import com.auro.application.home.data.model.DashboardResModel;
+import com.auro.application.home.data.model.Details;
 import com.auro.application.home.data.model.FetchStudentPrefReqModel;
 import com.auro.application.home.data.model.KYCDocumentDatamodel;
+import com.auro.application.home.data.model.ParentProfileDataModel;
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.data.model.response.InstructionsResModel;
 import com.auro.application.home.data.model.response.StudentKycStatusResModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
 import com.auro.application.home.presentation.view.activity.HomeActivity;
+import com.auro.application.home.presentation.view.activity.ParentProfileActivity;
 import com.auro.application.home.presentation.view.adapter.StudentKycDocumentAdapter;
 import com.auro.application.home.presentation.viewmodel.KYCViewModel;
 import com.auro.application.kyc.presentation.view.fragment.UploadDocumentFragment;
@@ -63,6 +69,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,7 +114,6 @@ public class StudentKycInfoFragment extends BaseFragment implements CommonCallBa
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
-        //((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
         DaggerWrapper.getComponent(getActivity()).doInjection(this);
         kycViewModel = ViewModelProviders.of(this, viewModelFactory).get(KYCViewModel.class);
         binding.setLifecycleOwner(this);
@@ -128,12 +134,14 @@ public class StudentKycInfoFragment extends BaseFragment implements CommonCallBa
         if (model != null && model.getTeacherName() != null && !model.getTeacherName().isEmpty()) {
             binding.teacherName.setText(model.getTeacherName());
         }
-
+        if (model != null && model.getTeacherProfilePic() != null && !model.getTeacherProfilePic().isEmpty()) {
+            ViewUtil.setTeacherProfilePic(binding.imageView6);
+        }
         kycScannerBanner(binding.scannerLayout, binding.scannerBar);
         kycScannerBanner(binding.relativeLayout2, binding.scannerLayout);
         startAnimation();
-     //   ViewUtil.setProfilePic(binding.imageView6);
         getProfile();
+        //ViewUtil.setProfilePic(binding.imageView6);
         DashboardResModel dashboardResModel = AuroAppPref.INSTANCE.getModelInstance().getDashboardResModel();
         if (dashboardResModel.getStudent_name() != null && !dashboardResModel.getStudent_name().isEmpty()) {
             binding.teacherName.setText(dashboardResModel.getStudent_name());
@@ -149,7 +157,6 @@ public class StudentKycInfoFragment extends BaseFragment implements CommonCallBa
 
         kycViewModel.checkInternet(instructionModel, Status.GET_INSTRUCTIONS_API);
     }
-
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
@@ -168,46 +175,7 @@ public class StudentKycInfoFragment extends BaseFragment implements CommonCallBa
     protected void setToolbar() {
 
     }
-    private void getProfile()
-    {
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String userid = prefModel.getUserId();
 
-        HashMap<String,String> map_data = new HashMap<>();
-        map_data.put("user_id",userid);
-
-        RemoteApi.Companion.invoke().getStudentData(map_data)
-                .enqueue(new Callback<GetStudentUpdateProfile>()
-                {
-                    @Override
-                    public void onResponse(Call<GetStudentUpdateProfile> call, Response<GetStudentUpdateProfile> response)
-                    {
-                        if (response.isSuccessful())
-                        {
-                            String profilepicurl = response.body().getProfilePic();
-                            Glide.with(getActivity()).load(profilepicurl)
-                                    .apply(RequestOptions.placeholderOf(R.drawable.imageplaceholder_ico)
-                                            .error(R.drawable.imageplaceholder_ico)
-                                            .dontAnimate()
-                                            .priority(Priority.IMMEDIATE)
-                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
-                                            .skipMemoryCache(true)
-                                    ).into(binding.imageView6);
-                        }
-                        else
-                        {
-                            Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<GetStudentUpdateProfile> call, Throwable t)
-                    {
-                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
     @Override
     protected void setListener() {
         HomeActivity.setListingActiveFragment(HomeActivity.TEACHER_KYC_FRAGMENT);
@@ -278,7 +246,46 @@ public class StudentKycInfoFragment extends BaseFragment implements CommonCallBa
         });
 
     }
+    private void getProfile()
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String userid = prefModel.getUserId();
 
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("user_id",userid);
+
+        RemoteApi.Companion.invoke().getStudentData(map_data)
+                .enqueue(new Callback<GetStudentUpdateProfile>()
+                {
+                    @Override
+                    public void onResponse(Call<GetStudentUpdateProfile> call, Response<GetStudentUpdateProfile> response)
+                    {
+                        if (response.isSuccessful())
+                        {
+                            String profilepicurl = response.body().getProfilePic();
+                            Glide.with(getActivity()).load(profilepicurl)
+                                    .apply(RequestOptions.placeholderOf(R.drawable.imageplaceholder_ico)
+                                            .error(R.drawable.imageplaceholder_ico)
+                                            .dontAnimate()
+                                            .priority(Priority.IMMEDIATE)
+                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                            .skipMemoryCache(true)
+                                    ).into(binding.imageView6);
+                        }
+                        else
+                        {
+                            Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetStudentUpdateProfile> call, Throwable t)
+                    {
+                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
     public void startAnimation() {
         animationlist = new HashMap<Integer, Integer>();
         animationlist.put(1, R.drawable.ic_full_kyc_2);
@@ -461,5 +468,8 @@ public class StudentKycInfoFragment extends BaseFragment implements CommonCallBa
         handleProgress(0, "");
         kycViewModel.checkInternet("", Status.STUDENT_KYC_STATUS_API);
     }
+
+
+
 
 }

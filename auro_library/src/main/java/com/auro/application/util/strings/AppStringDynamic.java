@@ -342,7 +342,8 @@ public enum AppStringDynamic {
             if (model != null) {
 
 
-
+                  binding.txtreffereduser.setText(details.getReffered_user());
+                binding.txtrefferaluser.setText(details.getRefferal_user());
                 binding.friendsBoardText.setText(details.getFriend_leader_board());
                 binding.RpFriendsKeBina.setText(details.getFriendsKeBinaKyaFun());
                 binding.inviteNow.setText(details.getInviteThem());
@@ -390,7 +391,9 @@ public enum AppStringDynamic {
                 binding.tlstate.setHint(details.getState());
                 binding.tldistrict.setHint(details.getDistrict());
                 binding.tlSchool.setHint(details.getSchoolName());
-
+                binding.txtsearch.setHint(details.getSearch_school_here()!=null ? details.getSearch_school_here() : "Search school here..");
+                binding.autoCompleteTextView1.setHint(details.getSearch_school());
+                binding.addnewschool.setText(details.getAdd_school());
 
             }
         } catch (Exception e) {
@@ -418,9 +421,10 @@ public enum AppStringDynamic {
                 binding.useridtxt.setHint(details.getUserId());
                 binding.inputemailedittext.setHint(details.getEmailId());
                 binding.tvGender.setText(details.getGender());
-                binding.tvSchoolType.setText(details.getSchoolType());
+                binding.tvSchoolType.setText(details.getDemo_student_school_type());
              //   binding.tvBoard.setText(details.getBoard());
-
+                binding.autoCompleteTextView1.setHint(details.getSearch_school());
+                binding.addnewschool.setText(details.getAdd_school());
                 binding.tvLanguageMedium.setText(details.getLanguageMedium());
                 binding.tvPrivateTution.setText(details.getTakingPrivateTutions());
                 binding.tvPrivateType.setText(details.getTakingType());

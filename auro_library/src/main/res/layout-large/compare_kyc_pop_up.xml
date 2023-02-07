@@ -124,14 +124,16 @@
 
 
 
-                    <com.google.android.material.textfield.TextInputEditText
+                    <AutoCompleteTextView
                         android:id="@+id/etGender"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/_34sdp"
                         android:digits="0123456789"
                         android:focusable="false"
                         android:longClickable="false"
                         android:gravity="left"
+                        android:paddingTop="@dimen/_10sdp"
+                        android:paddingLeft="@dimen/_10sdp"
                         android:inputType="number"
                         android:maxLines="1"
                         android:paddingEnd="@dimen/_20sdp"
@@ -151,7 +153,6 @@
                         android:id="@+id/etAdharName"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:enabled="true"
                         android:longClickable="false"
                         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                         android:gravity="left"

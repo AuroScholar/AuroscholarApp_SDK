@@ -51,6 +51,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16dp"
+            android:visibility="gone"
             android:layout_marginTop="@dimen/_14sdp"
             android:hint="Please Enter Student Grade"
             android:layout_below="@+id/partner_api_key"/>

@@ -6,6 +6,7 @@ ext {
     //Version
     def loggingInterceptor = '3.12.1'
     def retrofit = '2.5.0'
+    def gsonretrofit = '2.0.0'
     def dagger  = '2.13'
     def googleVersion = '16.0.0'
     def gson = '2.8.0'

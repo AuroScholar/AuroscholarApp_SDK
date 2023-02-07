@@ -3,11 +3,13 @@ package com.auro.application.home.presentation.view.fragment;
 import static android.app.Activity.RESULT_OK;
 
 import static com.auro.application.core.common.Status.AZURE_API;
+import static com.auro.application.core.common.Status.GENDER;
 import static com.auro.application.core.common.Status.UPLOAD_PROFILE_IMAGE;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,24 +45,31 @@ import com.auro.application.core.application.base_component.BaseDialog;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
+import com.auro.application.core.common.CommonCallBackListner;
+import com.auro.application.core.common.CommonDataModel;
 import com.auro.application.core.common.Status;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
 import com.auro.application.databinding.FragmentUploadDocumentBinding;
+import com.auro.application.home.data.model.CheckUserResModel;
+import com.auro.application.home.data.model.CompareKYCDetailsModel;
 import com.auro.application.home.data.model.Details;
-import com.auro.application.home.data.model.GenderDataModel;
+import com.auro.application.home.data.model.GenderData;
 import com.auro.application.home.data.model.KYCDocumentDatamodel;
 import com.auro.application.home.data.model.KYCInputModel;
+import com.auro.application.home.data.model.KYCOCRDetailsModel;
 import com.auro.application.home.data.model.KYCResListModel;
+import com.auro.application.home.data.model.StateData;
 import com.auro.application.home.data.model.UpdateParentProfileResModel;
 import com.auro.application.home.data.model.response.StudentKycStatusResModel;
+import com.auro.application.home.presentation.view.activity.CompleteStudentProfileWithPinActivity;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
-import com.auro.application.home.presentation.view.activity.HomeActivity;
-import com.auro.application.home.presentation.view.activity.StudentProfileActivity;
+
 import com.auro.application.home.presentation.viewmodel.KYCViewModel;
 import com.auro.application.util.AppLogger;
 import com.auro.application.util.AppUtil;
 import com.auro.application.util.RemoteApi;
+import com.auro.application.util.TextUtil;
 import com.auro.application.util.ViewUtil;
 import com.auro.application.util.cropper.CropImages;
 import com.auro.application.util.network.ProgressRequestBody;
@@ -68,6 +77,9 @@ import com.auro.application.util.permission.PermissionHandler;
 import com.auro.application.util.permission.PermissionUtil;
 import com.auro.application.util.permission.Permissions;
 import com.auro.application.util.strings.AppStringDynamic;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.Target;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -80,10 +92,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -99,17 +115,21 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
     @Inject
     @Named("StudentUploadDocumentFragment")
     ViewModelFactory viewModelFactory;
+    List<String> genderList = new ArrayList<>();
+    public Activity activity;
     String TAG = "UploadDocumentFragment";
     FragmentUploadDocumentBinding binding;
     KYCViewModel kycViewModel;
-    List<String> genderList = new ArrayList<>();
+    GenderData gData;
     KYCDocumentDatamodel kycDocumentDatamodel;
     StudentKycStatusResModel studentKycStatusResModel;
     ArrayList<KYCDocumentDatamodel> kycDocumentDatamodelArrayList;
-    AlertDialog alertDialog;
+    List<KYCResListModel> OCR_list = new ArrayList<>();
+    List<KYCResListModel> compare_list = new ArrayList<>();
     PrefModel prefModel;
     Details details;
-
+    AlertDialog alertDialog;
+    String GenderName;
     public StudentUploadDocumentFragment() {
         // Required empty public constructor
     }
@@ -129,9 +149,9 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
         // Inflate the layout for this fragment
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
-        //((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
         DaggerWrapper.getComponent(getActivity()).doInjection(this);
         kycViewModel = ViewModelProviders.of(this, viewModelFactory).get(KYCViewModel.class);
         binding.setLifecycleOwner(this);
@@ -140,12 +160,12 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
         setListener();
         setToolbar();
 
+
         return binding.getRoot();
     }
 
     @Override
     protected void init() {
-       // DashBoardMainActivity.setListingActiveFragment(DashBoardMainActivity.QUIZ_KYC_FRAGMENT);
         prefModel = AuroAppPref.INSTANCE.getModelInstance();
         details =prefModel.getLanguageMasterDynamic().getDetails();
         binding.documentTitle.setText(kycDocumentDatamodel.getDocumentName());
@@ -154,7 +174,6 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
 
     @Override
     protected void setToolbar() {
-
     }
 
     @Override
@@ -169,6 +188,7 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
         } else {
             observeServiceResponse();
         }
+
     }
 
     @Override
@@ -203,22 +223,22 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
 
     private void askPermission() {
 
-                ImagePicker.with(StudentUploadDocumentFragment.this)
-                        .crop()                    //Crop image(Optional), Check Customization for more option
-                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
-                        .start();
+        ImagePicker.with(StudentUploadDocumentFragment.this)
+                .crop()                    //Crop image(Optional), Check Customization for more option
+                .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
+                .start();
 
     }
 
     private void askPermissionCamera() {
 
-                ImagePicker.with(StudentUploadDocumentFragment.this)
-                        .crop()                    //Crop image(Optional), Check Customization for more option
-                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
-                        .cameraOnly()
-                        .start();
+        ImagePicker.with(StudentUploadDocumentFragment.this)
+                .crop()                    //Crop image(Optional), Check Customization for more option
+                .compress(1024)            //Final image size will be less than 1 MB(Optional)
+                .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
+                .cameraOnly()
+                .start();
 
     }
 
@@ -234,6 +254,9 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
                 if (resultCode == RESULT_OK) {
                     try {
 
+
+
+
                         handleData(data);
 
 
@@ -248,6 +271,7 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
             else if (requestCode == 1 ) {
                 if (Build.VERSION.SDK_INT > 26) {
                     handleData(data);
+
 
                 }
                 else{
@@ -298,14 +322,11 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
     }
 
 
+
+
     private void showSnackbarError(String message) {
         ViewUtil.showSnackBar(binding.getRoot(), message);
     }
-
-    private void setDataOnUI() {
-
-    }
-
 
     void handleData(Intent data) {
         try {
@@ -325,14 +346,7 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
                 binding.fileNameTxt.setText(f.getName());
                 updateKYCList(uri.getPath());
             }
-            if (file_size >= 500) {
-                //   studentProfileModel.setImageBytes(AppUtil.encodeToBase64(picBitmap, 50));
-            } else {
-                //   studentProfileModel.setImageBytes(bytes);
-            }
-            // int new_file_size = Integer.parseInt(String.valueOf(studentProfileModel.getImageBytes().length / 1024));
-            //AppLogger.d(TAG, "Image Path  new Size kb- " + mb + "-bytes-" + new_file_size);
-            // loadimage(picBitmap);
+
         } catch (Exception e) {
             AppLogger.e("StudentProfile", "fragment exception=" + e.getMessage());
         }
@@ -371,7 +385,6 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
                             if (!kycResListModel.isError()) {
                                 if (kycResListModel.getShow_popup().equals(true)||kycResListModel.getShow_popup().equals("true")){
 
-                                    AppUtil.commonCallBackListner.commonEventListner(AppUtil.getCommonClickModel(0, Status.UPLOAD_DOC_CALLBACK,""));
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                                     final View customLayout
@@ -383,6 +396,7 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
                                     builder.setCancelable(false);
                                     TextView txtconfirm = customLayout.findViewById(R.id.txtconfirm);
                                     txtconfirm.setText(details.getConfirm_kyc_detail() != null ? details.getConfirm_kyc_detail() :"Confirm KYC Details");
+
                                     TextInputLayout tidob = customLayout.findViewById(R.id.tiDOB);
                                     tidob.setHint(details.getDob_kyc() != null ? details.getDob_kyc() :"DOB (YYYY-MM-DD)");
                                     TextInputLayout tiAdhar = customLayout.findViewById(R.id.tiAdhar);
@@ -418,9 +432,9 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
                                     map_data.put("key","Gender");
                                     map_data.put("language_id",prefModel.getUserLanguageId());
                                     RemoteApi.Companion.invoke().getGender(map_data)
-                                            .enqueue(new Callback<GenderDataModel>() {
+                                            .enqueue(new Callback<com.auro.application.home.data.model.GenderDataModel>() {
                                                 @Override
-                                                public void onResponse(Call<GenderDataModel> call, Response<GenderDataModel> response)
+                                                public void onResponse(Call<com.auro.application.home.data.model.GenderDataModel> call, Response<com.auro.application.home.data.model.GenderDataModel> response)
                                                 {
                                                     if (response.isSuccessful())
                                                     {
@@ -570,7 +584,7 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
                                             else if (txtpin.getText().toString().length() < 6){
                                                 Toast.makeText(builder.getContext(), details.getInvalid_pin(), Toast.LENGTH_SHORT).show();
                                             }
-
+//
                                             else{
                                                 String userid = AuroAppPref.INSTANCE.getModelInstance().getUserId();
                                                 PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
@@ -604,7 +618,9 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
                                                                         try {
                                                                             jsonObject = new JSONObject(response.errorBody().string());
                                                                             String message = jsonObject.getString("message");
-                                                                            Toast.makeText(builder.getContext(),message, Toast.LENGTH_SHORT).show();
+                                                                            Toast.makeText(builder.getContext(),details.getMismatch_dob(), Toast.LENGTH_SHORT).show();
+
+                                                                            //Toast.makeText(builder.getContext(),message, Toast.LENGTH_SHORT).show();
 
                                                                         } catch (JSONException | IOException e) {
                                                                             e.printStackTrace();
@@ -615,6 +631,7 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
                                                                         alertDialog.dismiss();
                                                                         String msg = response.body().getMessage();
                                                                         Toast.makeText(builder.getContext(), msg, Toast.LENGTH_SHORT).show();
+                                                                        AppUtil.commonCallBackListner.commonEventListner(AppUtil.getCommonClickModel(0, Status.UPLOAD_DOC_CALLBACK,""));
 
                                                                     }
                                                                     else {
@@ -625,7 +642,6 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
                                                                 catch (Exception e) {
                                                                     alertDialog.dismiss();
                                                                     Toast.makeText(builder.getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                    // Toast.makeText(requireActivity(), details.getInternetCheck(), Toast.LENGTH_SHORT).show();
                                                                 }
                                                             }
 
@@ -635,7 +651,6 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
                                                                 alertDialog.dismiss();
                                                                 Toast.makeText(builder.getContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
 
-                                                                //  Toast.makeText(requireActivity(), details.getInternetCheck(), Toast.LENGTH_SHORT).show();
                                                             }
                                                         });
                                             }
@@ -653,7 +668,6 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
                                     AppUtil.commonCallBackListner.commonEventListner(AppUtil.getCommonClickModel(0, Status.UPLOAD_DOC_CALLBACK,""));
                                 }
                                 ViewUtil.showSnackBar(binding.getRoot(), kycResListModel.getMessage(), Color.parseColor("#4bd964"));
-
                                 dismiss();
                                 handleUi(1);
 
@@ -697,6 +711,36 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
         }
     }
 
+    public static boolean isValidPinCode(String pinCode)
+    {
+
+        String regex
+                = "^[1-9]{1}[0-9]{2}\\s{0,1}[0-9]{3}$";
+        Pattern p = Pattern.compile(regex);
+
+        if (pinCode == null) {
+            return false;
+        }
+
+        Matcher m = p.matcher(pinCode);
+
+        return m.matches();
+    }
+
+    public static boolean isValidAadhaarNumber(String str)
+    {
+        String regex
+                = "^[2-9]{1}[0-9]{3}\\s[0-9]{4}\\s[0-9]{4}$";
+
+        // Compile the ReGex
+        Pattern p = Pattern.compile(regex);
+        if (str == null) {
+            return false;
+        }
+        Matcher m = p.matcher(str);
+        return m.matches();
+    }
+
     private void updateKYCList(String path) {
         try {
             AppLogger.e("calluploadApi-", "Step 1");
@@ -730,6 +774,8 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
         kycInputModel.setUser_phone("");
         kycViewModel.uploadProfileImage(kycDocumentDatamodelArrayList, kycInputModel);
     }
+
+
 
 }
 

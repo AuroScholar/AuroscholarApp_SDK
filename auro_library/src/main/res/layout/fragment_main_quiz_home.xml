@@ -56,7 +56,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_marginStart="@dimen/_5sdp"
                         android:layout_marginEnd="@dimen/_35sdp"
-                        android:layout_marginTop="@dimen/_18sdp"
+                        android:layout_marginTop="@dimen/_15sdp"
                         android:src="@drawable/ic_auro_scholar_logo"
                         android:visibility="visible"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -95,6 +95,7 @@
                                 android:id="@+id/imageView6"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
+                                android:background="@drawable/ic_profile"
                                 android:scaleType="fitXY" />
                         </androidx.cardview.widget.CardView>
                     </androidx.cardview.widget.CardView>
@@ -431,13 +432,13 @@
                 android:id="@+id/float_chat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:visibility="gone"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
                 android:layout_marginRight="15dp"
                 android:layout_marginBottom="30dp"
                 android:backgroundTint="@color/colorPrimary"
                 android:clickable="true"
-                android:visibility="gone"
                 android:src="@drawable/ic_baseline_message_24"
                 app:tint="@color/white" />
             <!--<com.auro.application.core.util.uiwidget.RPTextView
@@ -447,7 +448,6 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_8sdp"/>
             <ImageView
-
                 android:layout_width="@dimen/_45sdp"
                 android:layout_height="@dimen/_45sdp"
                 android:background="@drawable/ic_chat_bot_icon"

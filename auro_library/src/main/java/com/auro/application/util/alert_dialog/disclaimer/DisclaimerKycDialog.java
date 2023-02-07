@@ -91,10 +91,12 @@ public class DisclaimerKycDialog extends Dialog {
             binding.tvMessageKyc.setText(instructionsResModel.getData());
             binding.RPAccept.setText(details.getContinueExit());
             binding.tvParent.setText(details.getParentSection());
-            makeTextViewResizable(binding.tvMessageKyc, 3, "...See More", true);
+            makeTextViewResizable(binding.tvMessageKyc, 3, "..."+details.getSee_more(), true);
         } catch (Exception e) {
+            Details details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
+
             binding.tvMessageKyc.setText(R.string.kyc_disclaimer_text_one);
-            makeTextViewResizable(binding.tvMessageKyc, 3, "...See More", true);
+            makeTextViewResizable(binding.tvMessageKyc, 3, "..."+details.getSee_more(), true);
         }
     }
 
@@ -151,6 +153,7 @@ public class DisclaimerKycDialog extends Dialog {
                                                                             final int maxLine, final String spanableText, final boolean viewMore) {
         String str = strSpanned.toString();
         SpannableStringBuilder ssb = new SpannableStringBuilder(strSpanned);
+        Details details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
 
         if (str.contains(spanableText)) {
 
@@ -162,12 +165,12 @@ public class DisclaimerKycDialog extends Dialog {
                         tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, -1, "See Less", false);
+                        makeTextViewResizable(tv, -1, details.getSee_less(), false);
                     } else {
                         tv.setLayoutParams(tv.getLayoutParams());
                         tv.setText(tv.getTag().toString(), TextView.BufferType.SPANNABLE);
                         tv.invalidate();
-                        makeTextViewResizable(tv, 3, "...See More", true);
+                        makeTextViewResizable(tv, 3, "..."+details.getSee_more(), true);
                     }
                 }
             }, str.indexOf(spanableText), str.indexOf(spanableText) + spanableText.length(), 0);

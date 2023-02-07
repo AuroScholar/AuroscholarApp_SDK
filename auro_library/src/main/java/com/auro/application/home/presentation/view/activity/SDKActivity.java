@@ -72,6 +72,8 @@ public class SDKActivity  extends AppCompatActivity {
 
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         if (prefModel.isLogin()){
+            getMultiLanguage();
+            getLanguage(prefModel.getUserLanguageId());
             int userclass = prefModel.getUserclass();
             AuroScholarInputModel inputModel = new AuroScholarInputModel();
             inputModel.setMobileNumber(prefModel.getUserMobile());
@@ -84,14 +86,13 @@ public class SDKActivity  extends AppCompatActivity {
         }
        else{
             getMultiLanguage();
-            getLanguage();
+            getLanguage("1");
         }
 
 
         bt_sdk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 String mobno = mobile_number.getText().toString();
 
                 String puniqueid = partner_unique_id.getText().toString();
@@ -139,7 +140,7 @@ public class SDKActivity  extends AppCompatActivity {
             map_data.put("partner_unique_id",partneruniqueid); //456456
             map_data.put("partner_source",partnersource);
             map_data.put("partner_api_key",apikey);
-            map_data.put("grade",grade);
+            //map_data.put("grade",grade);
 
             RemoteApi.Companion.invoke().getSDKData(map_data)
                     .enqueue(new Callback<SDKDataModel>() {
@@ -292,12 +293,16 @@ public class SDKActivity  extends AppCompatActivity {
                     }
                 });
     }
-    public void getLanguage()
+    public void getLanguage(String langid)
     {
-
         HashMap<String,String> map_data = new HashMap<>();
+        if (!langid.isEmpty()|| !langid.equals("")){
+            map_data.put("language_id",langid);
+        }
+        else{
             map_data.put("language_id","1");
-            map_data.put("user_type_id","1");
+        }
+        map_data.put("user_type_id","1");
         RemoteApi.Companion.invoke().getLanguageAPI(map_data)
                     .enqueue(new Callback<LanguageMasterDynamic>() {
                         @Override
@@ -330,7 +335,7 @@ public class SDKActivity  extends AppCompatActivity {
                                 }
                             }
                             catch (Exception e) {
-                                Toast.makeText(SDKActivity.this, "Internet connection", Toast.LENGTH_SHORT).show();
+                           //     Toast.makeText(SDKActivity.this, "Internet connection", Toast.LENGTH_SHORT).show();
                             }
                         }
 
@@ -343,8 +348,6 @@ public class SDKActivity  extends AppCompatActivity {
         }
     public void getMultiLanguage()
     {
-
-
         RemoteApi.Companion.invoke().getLanguageAPIList()
                 .enqueue(new Callback<LanguageListResModel>() {
                     @Override
@@ -377,7 +380,7 @@ public class SDKActivity  extends AppCompatActivity {
                             }
                         }
                         catch (Exception e) {
-                            Toast.makeText(SDKActivity.this, "Internet connection", Toast.LENGTH_SHORT).show();
+                         //   Toast.makeText(SDKActivity.this, "Internet connection", Toast.LENGTH_SHORT).show();
                         }
                     }
 

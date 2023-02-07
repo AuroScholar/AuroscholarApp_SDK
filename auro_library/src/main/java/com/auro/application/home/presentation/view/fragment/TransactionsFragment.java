@@ -519,7 +519,7 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
        // passportReqModel.setSubject(spinnerSubject.getMonth());
 
         passportReqModel.setIsAll(isall);
-        passportReqModel.setUserPreferedLanguageId(Integer.parseInt(prefModel.getChildData().getUser_details().get(0).getUser_prefered_language_id()));
+        passportReqModel.setUserPreferedLanguageId(Integer.parseInt(prefModel.getUserLanguageId()));
         // passportReqModel.setIsAll();
         viewModel.getPassportInternetCheck(passportReqModel);
         progress.cancel();

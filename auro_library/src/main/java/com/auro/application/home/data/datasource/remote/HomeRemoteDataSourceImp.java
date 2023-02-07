@@ -129,6 +129,8 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
         RequestBody user_id = RequestBody.create(okhttp3.MultipartBody.FORM, AuroAppPref.INSTANCE.getModelInstance().getUserId());
         RequestBody langVersion = RequestBody.create(okhttp3.MultipartBody.FORM, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         RequestBody apiVersion = RequestBody.create(okhttp3.MultipartBody.FORM, AppConstant.ParamsValue.API_VERSION_VAL);
+        RequestBody preferedlangid = RequestBody.create(okhttp3.MultipartBody.FORM, AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId());
+
         MultipartBody.Part id_proof_front = ConversionUtil.INSTANCE.makeMultipartRequest(list.get(0));
         MultipartBody.Part id_proof_back = ConversionUtil.INSTANCE.makeMultipartRequest(list.get(1));
         MultipartBody.Part school_id_card = ConversionUtil.INSTANCE.makeMultipartRequest(list.get(2));
@@ -144,6 +146,7 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
                 user_id,
                 langVersion,
                 apiVersion,
+                preferedlangid,
                 id_proof_front,
                 id_proof_back,
                 school_id_card,
