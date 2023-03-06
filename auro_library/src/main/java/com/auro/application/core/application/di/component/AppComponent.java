@@ -24,6 +24,7 @@ import com.auro.application.home.presentation.view.activity.LoginActivity;
 import com.auro.application.home.presentation.view.activity.OtpActivity;
 import com.auro.application.home.presentation.view.activity.RegisterActivity;
 import com.auro.application.home.presentation.view.activity.ResetPasswordActivity;
+import com.auro.application.home.presentation.view.activity.SDKActivity;
 import com.auro.application.home.presentation.view.activity.SetPinActivity;
 import com.auro.application.home.presentation.view.activity.SplashScreenAnimationActivity;
 import com.auro.application.home.presentation.view.activity.StudentMainDashboardActivity;
@@ -268,7 +269,7 @@ public interface AppComponent {
 
     void doInjection(UploadDocumentFragment fragment);
     void doInjection(UpComingTimeSlotDialog fragment);
-
+    void doInjection(SDKActivity sdkActivity);
 
 
 

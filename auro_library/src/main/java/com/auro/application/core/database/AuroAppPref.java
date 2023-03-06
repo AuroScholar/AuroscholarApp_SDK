@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerAppComponent;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.util.AppLogger;
 import com.google.gson.Gson;
@@ -15,7 +17,7 @@ public enum AuroAppPref {
     INSTANCE;
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor sharedPreferenceEditor;
-    private final String PreferenceName = AuroApp.getAppContext().getPackageName();
+    private final String PreferenceName = DaggerWrapper.getmContext().getPackageName();
     private PrefModel prefModel;
 
     /**
@@ -27,7 +29,7 @@ public enum AuroAppPref {
       //  AppLogger.e("getModelInstance-","step 1");
         if (sharedPreferences == null) {
         //    AppLogger.e("getModelInstance-","step 2");
-            sharedPreferences = AuroApp.getAppContext().getSharedPreferences(PreferenceName, Context.MODE_PRIVATE);
+            sharedPreferences = DaggerWrapper.getmContext().getSharedPreferences(PreferenceName, Context.MODE_PRIVATE);
         }
       //  AppLogger.e("getModelInstance-","step 3");
         if (getPref() != null) {

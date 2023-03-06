@@ -23,6 +23,10 @@ public class DaggerWrapper {
         return mAppComponent;
     }
 
+    public static Context getmContext(){
+        return mContext;
+    }
+
     private static void initComponent () {
         mAppComponent = DaggerAppComponent
                 .builder()

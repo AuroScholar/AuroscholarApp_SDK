@@ -14,6 +14,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.auro.application.R;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.Status;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
@@ -69,7 +70,7 @@ public class SDKActivity  extends AppCompatActivity {
         partner_unique_id.setText("975231");
         partner_source.setText("Aeronuts_WEB");
         partner_api_key.setText("7611f0fafb1e3b96d1a78c57b0650b85985eace9f6aaa365c0b496e9ae1163e7");
-
+        DaggerWrapper.getComponent(this).doInjection(this);
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         if (prefModel.isLogin()){
             getMultiLanguage();
