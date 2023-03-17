@@ -74,6 +74,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DaggerWrapper.getComponent(this).doInjection(this);
         ViewUtil.setLanguageonUi(this);
         init();
     }
@@ -82,7 +83,7 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     protected void init() {
         binding = DataBindingUtil.setContentView(this, getLayout());
         //((AuroApp) this.getApplication()).getAppComponent().doInjection(this);
-        DaggerWrapper.getComponent(this).doInjection(this);
+      //  DaggerWrapper.getComponent(this).doInjection(this);
         //view model and handler setup
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(LoginScreenViewModel.class);
         binding.setLifecycleOwner(this);

@@ -130,6 +130,7 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(TransactionsViewModel.class);
         binding.setLifecycleOwner(this);
         setRetainInstance(true);
+
         ViewUtil.setLanguageonUi(getActivity());
         details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
         return binding.getRoot();

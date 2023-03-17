@@ -110,6 +110,7 @@ public class PartnersWebviewFragment extends BaseFragment {
         setRetainInstance(true);
         funnelPartnerScreen();
         AppLogger.v("Fragment","PartnerWebViewFragment ---onCreateView");
+
         ViewUtil.setLanguageonUi(getActivity());
         setHasOptionsMenu(true);
         return binding.getRoot();

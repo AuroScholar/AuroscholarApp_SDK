@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -113,11 +114,12 @@ public class DemographicFragment extends BaseFragment implements CommonCallBackL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
-        ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+        DaggerWrapper.getComponent(getActivity()).doInjection(this);
         demographicViewModel = ViewModelProviders.of(this, viewModelFactory).get(DemographicViewModel.class);
         binding.setLifecycleOwner(this);
         DashBoardMainActivity.setListingActiveFragment(DashBoardMainActivity.DEMOGRAPHIC_FRAGMENT);
         setRetainInstance(true);
+
         ViewUtil.setLanguageonUi(getActivity());
         AppStringDynamic.setDemoGraphicStrings(binding);
       //  getSchoolmedium();

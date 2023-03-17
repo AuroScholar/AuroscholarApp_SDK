@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import com.auro.application.core.application.base_component.BaseActivity;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.databinding.ActivityWebBinding;
 import com.auro.application.core.common.NetworkUtil;
@@ -74,6 +75,7 @@ public class WebActivity extends BaseActivity {
             binding = DataBindingUtil.setContentView(this, getLayout());
             binding.setLifecycleOwner(this);
         }
+
         ViewUtil.setLanguageonUi(this);
         init();
 

@@ -141,6 +141,7 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
             comingFrom = getArguments().getString(AppConstant.COMING_FROM);
 
         }
+
         ViewUtil.setLanguageonUi(getActivity());
         //callCertificateApi();
 

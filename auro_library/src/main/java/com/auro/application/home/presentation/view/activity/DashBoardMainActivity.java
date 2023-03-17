@@ -226,6 +226,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DaggerWrapper.getComponent(this).doInjection(this);
         ViewUtil.setLanguageonUi(this);
 
         // for sdk
@@ -275,7 +276,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
         binding = DataBindingUtil.setContentView(this, getLayout());
         // ((AuroApp) this.getApplication()).getAppComponent().doInjection(this);
-        DaggerWrapper.getComponent(this).doInjection(this);
+
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(AuroScholarDashBoardViewModel.class);
         binding.setLifecycleOwner(this);
         mContext = DashBoardMainActivity.this;

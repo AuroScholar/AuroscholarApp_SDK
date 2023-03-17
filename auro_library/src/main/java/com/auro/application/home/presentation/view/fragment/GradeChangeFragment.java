@@ -104,6 +104,7 @@ public class GradeChangeFragment extends BaseFragment implements View.OnClickLis
         //((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
         DaggerWrapper.getComponent(getActivity()).doInjection(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(GradeChangeViewModel.class);
+
         ViewUtil.setLanguageonUi(getActivity());
         setRetainInstance(true);
         init();

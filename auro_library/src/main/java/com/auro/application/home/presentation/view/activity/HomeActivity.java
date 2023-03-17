@@ -32,6 +32,7 @@ import com.android.installreferrer.api.ReferrerDetails;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseActivity;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -125,6 +126,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        DaggerWrapper.getComponent(this).doInjection(this);
         // getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         ViewUtil.setLanguageonUi(this);
 
@@ -209,7 +211,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
     protected void init() {
         memberType = "Member";
         binding = DataBindingUtil.setContentView(this, getLayout());
-        ((AuroApp) this.getApplication()).getAppComponent().doInjection(this);
+
         //view model and handler setup
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MyClassroomViewModel.class);
 

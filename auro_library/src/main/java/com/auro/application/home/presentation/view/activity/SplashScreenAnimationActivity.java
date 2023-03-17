@@ -268,6 +268,7 @@ public class SplashScreenAnimationActivity extends BaseActivity {
         FirebaseDynamicLink mfirebase = new FirebaseDynamicLink(this);
         //mfirebase.dynamiclinking();
         mfirebase.getFirebaseData();
+      //  DaggerWrapper.getComponent(this).doInjection(this);
         ViewUtil.setLanguageonUi(this);
 
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();

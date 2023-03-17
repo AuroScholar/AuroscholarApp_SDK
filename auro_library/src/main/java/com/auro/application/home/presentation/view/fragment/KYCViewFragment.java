@@ -100,6 +100,7 @@ public class KYCViewFragment extends BaseFragment implements View.OnClickListene
         binding.setLifecycleOwner(this);
         binding.setKycViewModel(kycViewModel);
         setRetainInstance(true);
+
         ViewUtil.setLanguageonUi(getActivity());
         // checkDisclaimerKYCDialog();
         return binding.getRoot();

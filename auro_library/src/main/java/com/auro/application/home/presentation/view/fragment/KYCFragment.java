@@ -123,6 +123,7 @@ public class KYCFragment extends BaseFragment implements CommonCallBackListner, 
         binding.setLifecycleOwner(this);
         binding.setKycViewModel(kycViewModel);
         setRetainInstance(true);
+
         ViewUtil.setLanguageonUi(getActivity());
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         AppLogger.v("CheckKyc", "Prefrence" + prefModel.isPreKycDisclaimer());

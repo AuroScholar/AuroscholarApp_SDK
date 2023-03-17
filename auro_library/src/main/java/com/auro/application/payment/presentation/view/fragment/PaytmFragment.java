@@ -75,6 +75,7 @@ public class PaytmFragment extends BaseFragment implements CommonCallBackListner
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DaggerWrapper.getComponent(getActivity()).doInjection(this);
         ViewUtil.setLanguageonUi(getActivity());
     }
 

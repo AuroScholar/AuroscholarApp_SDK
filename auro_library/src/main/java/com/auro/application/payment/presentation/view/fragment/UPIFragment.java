@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -67,6 +68,7 @@ public class UPIFragment extends BaseFragment implements CommonCallBackListner, 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DaggerWrapper.getComponent(getActivity()).doInjection(this);
         ViewUtil.setLanguageonUi(getActivity());
     }
 
@@ -79,7 +81,7 @@ public class UPIFragment extends BaseFragment implements CommonCallBackListner, 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
-        ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(SendMoneyViewModel.class);
         binding.setLifecycleOwner(this);
         setRetainInstance(true);

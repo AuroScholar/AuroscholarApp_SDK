@@ -69,6 +69,7 @@ public class BankFragment extends BaseFragment implements CommonCallBackListner,
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DaggerWrapper.getComponent(getActivity()).doInjection(this);
         ViewUtil.setLanguageonUi(getActivity());
     }
 
@@ -82,7 +83,7 @@ public class BankFragment extends BaseFragment implements CommonCallBackListner,
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
         //((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
-        DaggerWrapper.getComponent(getActivity()).doInjection(this);
+     //   DaggerWrapper.getComponent(getActivity()).doInjection(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(SendMoneyViewModel.class);
         binding.setLifecycleOwner(this);
         setRetainInstance(true);

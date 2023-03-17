@@ -76,6 +76,7 @@ public class OtpScreenActivity extends BaseActivity implements OTPListener, View
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DaggerWrapper.getComponent(this).doInjection(this);
         ViewUtil.setLanguageonUi(this);
         init();
         setListener();
@@ -85,7 +86,7 @@ public class OtpScreenActivity extends BaseActivity implements OTPListener, View
     protected void init() {
         binding = DataBindingUtil.setContentView(this, getLayout());
         //((AuroApp) this.getApplication()).getAppComponent().doInjection(this);
-        DaggerWrapper.getComponent(this).doInjection(this);
+      //  DaggerWrapper.getComponent(this).doInjection(this);
         //view model and handler setup
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(OtpScreenViewModel.class);
         binding.setViewModel(viewModel);
