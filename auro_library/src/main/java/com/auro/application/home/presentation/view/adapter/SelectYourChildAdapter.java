@@ -2,6 +2,8 @@ package com.auro.application.home.presentation.view.adapter;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import static com.auro.application.core.application.AuroApp.auroScholarDataModel;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -257,6 +259,7 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         String partnersource = prefModel.getPartnersource();
         String parnteruniqueid = prefModel.getPartneruniqueid();
+        String apikey = prefModel.getApikey();
         int userclass = prefModel.getUserclass();
         String mobileno = prefModel.getUserMobile();
         HashMap<String,String> map_data = new HashMap<>();
@@ -288,7 +291,9 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                                 mContext.startActivity(i);
                             }
                             else{
-                                openGenricSDK(mobileno,partnersource,parnteruniqueid);
+                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), AppLanguageActivity.class));
+
+                                // openGenricSDK(mobileno,partnersource,parnteruniqueid, apikey);
 
                             }
 
@@ -372,7 +377,7 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
 
 
     }
-    public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource  ) {
+    public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource,String apikey  ) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         int userclass = prefModel.getUserclass();
         AuroScholarInputModel inputModel = new AuroScholarInputModel();
@@ -380,7 +385,7 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
         inputModel.setStudentClass(String.valueOf(userclass));
         inputModel.setPartner_unique_id(partneruniqueid);
         inputModel.setPartnerSource(prefModel.getPartnersource());
-        inputModel.setPartner_api_key("");
+        inputModel.setPartner_api_key(apikey);
         inputModel.setActivity((Activity) mContext);
         AuroScholar.startAuroSDK(inputModel);
         //  AuroScholar.startAuroSDK(inputModel);

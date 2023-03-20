@@ -83,7 +83,7 @@ public class AuroScholar {
        AuroApp.setAuroModel(auroScholarDataModel);
        getMultiLanguage();
         getLanguage("1");
-        openGenricSDK(inputModel.getMobileNumber(),inputModel.getPartner_unique_id(),inputModel.getPartnerSource(),inputModel.getPartner_api_key(),inputModel.getStudentClass());
+        setSDKAPI(inputModel.getMobileNumber(),inputModel.getPartner_unique_id(),inputModel.getPartnerSource(),inputModel.getPartner_api_key(),inputModel.getStudentClass());
         return null;
     }
 
@@ -164,6 +164,7 @@ public class AuroScholar {
                                         getProfile(userid_child,user_language);
                                     }
                                     else{
+
                                         progress.dismiss();
                                         openBottomSheetDialog();
                                     }
