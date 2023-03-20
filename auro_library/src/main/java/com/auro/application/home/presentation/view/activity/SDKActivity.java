@@ -94,14 +94,34 @@ public class SDKActivity  extends AppCompatActivity {
         bt_sdk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String mobno = mobile_number.getText().toString();
-
-                String puniqueid = partner_unique_id.getText().toString();
-
-                String psource = partner_source.getText().toString();
-                String apikey = partner_api_key.getText().toString();
-                String grade = gradeid.getText().toString();
-                openGenricSDK(mobno,puniqueid,psource,apikey,grade);
+                if (prefModel.isLogin()){
+                    getMultiLanguage();
+                    getLanguage(prefModel.getUserLanguageId());
+                    int userclass = prefModel.getUserclass();
+                    AuroScholarInputModel inputModel = new AuroScholarInputModel();
+                    inputModel.setMobileNumber(prefModel.getUserMobile());
+                    inputModel.setStudentClass(String.valueOf(userclass));
+                    inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
+                    inputModel.setPartnerSource(prefModel.getPartnersource());
+                    inputModel.setPartner_api_key(prefModel.getApikey());
+                    inputModel.setActivity((Activity) SDKActivity.this);
+                    AuroScholar.startAuroSDK(inputModel);
+                }
+                else{
+                    String mobno = mobile_number.getText().toString();
+                    String puniqueid = partner_unique_id.getText().toString();
+                    String psource = partner_source.getText().toString();
+                    String apikey = partner_api_key.getText().toString();
+                    String grade = gradeid.getText().toString();
+                    AuroScholarInputModel inputModel = new AuroScholarInputModel();
+                    inputModel.setMobileNumber(mobno);
+                    inputModel.setStudentClass(String.valueOf(grade));
+                    inputModel.setPartner_unique_id(puniqueid);
+                    inputModel.setPartnerSource(psource);
+                    inputModel.setPartner_api_key(apikey);
+                    inputModel.setActivity((Activity) SDKActivity.this);
+                    AuroScholar.startAuroSDK(inputModel);
+                }
             }
         });
     }
@@ -392,8 +412,6 @@ public class SDKActivity  extends AppCompatActivity {
 
                 });
     }
-
-
     public void openBottomSheetDialog() {
         BottomSheetUsersDialog bottomSheet = new BottomSheetUsersDialog();
         bottomSheet.show(this.getSupportFragmentManager(),

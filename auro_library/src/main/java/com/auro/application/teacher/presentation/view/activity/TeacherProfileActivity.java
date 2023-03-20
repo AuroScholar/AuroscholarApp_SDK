@@ -477,7 +477,7 @@ public class TeacherProfileActivity extends BaseActivity implements View.OnFocus
                 }
             }
         });
-        AuroScholar.startTeacherSDK(auroScholarDataModel);
+     //   AuroScholar.startTeacherSDK(auroScholarDataModel);
 
     }
 

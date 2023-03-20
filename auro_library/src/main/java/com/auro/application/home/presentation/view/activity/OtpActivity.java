@@ -667,7 +667,7 @@ public class OtpActivity extends BaseActivity implements View.OnClickListener, C
                 }
             }
         });
-        AuroScholar.startTeacherSDK(auroScholarDataModel);
+       // AuroScholar.startTeacherSDK(auroScholarDataModel);
         finish();
     }
 

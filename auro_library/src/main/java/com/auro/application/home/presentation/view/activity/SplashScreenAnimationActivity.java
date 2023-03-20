@@ -616,7 +616,7 @@ public class SplashScreenAnimationActivity extends BaseActivity {
                 }
             }
         });
-        AuroScholar.startTeacherSDK(auroScholarDataModel);
+      //  AuroScholar.startTeacherSDK(auroScholarDataModel);
 
     }
 

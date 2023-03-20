@@ -1,6 +1,7 @@
 package com.auro.application.home.presentation.view.fragment;
 
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -181,8 +182,7 @@ public class BottomSheetUsersDialog extends BottomSheetDialogFragment implements
     }
 
 
-
-
-
+    public void show(FragmentManager fragmentManager, String modalBottomSheet) {
+    }
 }
 
