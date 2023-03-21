@@ -537,8 +537,8 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
                                 mContext.startActivity(i);
                             }
                             else{
-
-                                openGenricSDK(mobileno,partnersource,parnteruniqueid);
+                                 AuroScholar.opendashboard();
+                               // openGenricSDK(mobileno,partnersource,parnteruniqueid);
 
                             }
 
@@ -568,6 +568,7 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
         inputModel.setPartnerSource(prefModel.getPartnersource());
         inputModel.setPartner_api_key(prefModel.getApikey());
         inputModel.setActivity((Activity) mContext);
+
         AuroScholar.startAuroSDK(inputModel);
     }
     private void observeServiceResponse() {

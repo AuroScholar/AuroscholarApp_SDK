@@ -229,13 +229,10 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                                         e.printStackTrace();
                                     }
 
-
                                 }
                                 else if (response.code() == 200) {
-
-                                    getProfile(userid,langid);
                                     setSDKAPIGrade();
-
+                                    getProfile(userid,langid);
                                 }
                                 else {
                                     Toast.makeText(mContext, response.message(), Toast.LENGTH_SHORT).show();
@@ -291,7 +288,7 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                                 mContext.startActivity(i);
                             }
                             else{
-                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), AppLanguageActivity.class));
+                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), DashBoardMainActivity.class));
 
                                 // openGenricSDK(mobileno,partnersource,parnteruniqueid, apikey);
 

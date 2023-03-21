@@ -1429,7 +1429,7 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
         inputModel.setPartnerSource(prefModel.getPartnersource());
         inputModel.setPartner_api_key(prefModel.getApikey());
         inputModel.setActivity((Activity) getActivity());
-        AuroScholar.startAuroSDK(inputModel);
+        AuroScholar.opendashboard();
 
     }
 

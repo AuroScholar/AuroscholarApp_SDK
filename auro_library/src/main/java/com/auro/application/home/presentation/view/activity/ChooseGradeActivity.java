@@ -403,8 +403,8 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
                                 mContext.startActivity(i);
                             }
                             else{
-
-                                openGenricSDK(mobileno,partnersource,parnteruniqueid);
+                                 AuroScholar.opendashboard();
+                              //  openGenricSDK(mobileno,partnersource,parnteruniqueid);
 
                             }
 

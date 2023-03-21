@@ -197,6 +197,12 @@ public class AuroScholar {
 
 
     }
+
+    public static void opendashboard(){
+        auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), DashBoardMainActivity.class));
+
+    }
+
     public static void openGenricSDK(String mobileNumber, String partneruniqueid, String partnersource, String partnerapi, String grade) {
         AuroScholarInputModel inputModel = new AuroScholarInputModel();
         inputModel.setMobileNumber(mobileNumber);

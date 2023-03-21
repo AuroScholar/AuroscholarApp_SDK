@@ -866,8 +866,6 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                                     e.printStackTrace();
                                 }
 
-
-
                             }
 
                             else if (response.isSuccessful()) {
@@ -891,8 +889,8 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                                     AuroAppPref.INSTANCE.setPref(prefModel);
 
 
-
-                                    openGenricSDK();
+                                        AuroScholar.opendashboard();
+                                   // openGenricSDK();
                                 }
                             }
                             else {
@@ -928,7 +926,8 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         inputModel.setPartnerSource(prefModel.getPartnersource());
         inputModel.setPartner_api_key(prefModel.getApikey());
         inputModel.setActivity((Activity) this);
-        AuroScholar.startAuroSDK(inputModel);
+        AuroScholar.opendashboard();
+       // AuroScholar.startAuroSDK(inputModel);
 
     }
     private ArrayAdapter<String> getEmailAddressAdapter(Context context) {
