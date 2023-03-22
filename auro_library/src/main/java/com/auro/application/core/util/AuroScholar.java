@@ -72,7 +72,7 @@ public class AuroScholar {
     /*For generic with PhoneNumber and class*/
     public static Fragment startAuroSDK(AuroScholarInputModel inputModel) {
         auroScholarDataModel = new AuroScholarDataModel();
-        auroScholarDataModel.setMobileNumber(inputModel.getMobileNumber());
+        auroScholarDataModel.setMobileNumber("8745256899");
         auroScholarDataModel.setStudentClass(inputModel.getStudentClass());
         auroScholarDataModel.setActivity(inputModel.getActivity());
         auroScholarDataModel.setFragmentContainerUiId(R.id.home_container);
@@ -83,7 +83,7 @@ public class AuroScholar {
        AuroApp.setAuroModel(auroScholarDataModel);
        getMultiLanguage();
         getLanguage("1");
-        setSDKAPI(inputModel.getMobileNumber(),inputModel.getPartner_unique_id(),inputModel.getPartnerSource(),inputModel.getPartner_api_key(),inputModel.getStudentClass());
+        setSDKAPI("8745256899",inputModel.getPartner_unique_id(),inputModel.getPartnerSource(),inputModel.getPartner_api_key(),inputModel.getStudentClass());
         return null;
     }
 
