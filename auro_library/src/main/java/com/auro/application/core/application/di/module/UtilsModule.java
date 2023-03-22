@@ -62,7 +62,7 @@ public class UtilsModule {
                 Request original = chain.request();
                 Request request = original.newBuilder()
                         .header(AppConstant.CONTENT_TYPE, AppConstant.APPLICATION_JSON)
-                        .header(AppConstant.DEVICE_ID, DeviceUtil.getDeviceId(AuroApp.getAppContext()))
+                       // .header(AppConstant.DEVICE_ID, DeviceUtil.getDeviceId(AuroApp.getAppContext()))
                         .header(AppConstant.DEVICE_TYPE, AppConstant.PLATFORM_ANDROID)
                         .header(AppConstant.LANGUAGE, "EN")
                         .header("Authorization", Credentials.basic("bhanu", "123"))

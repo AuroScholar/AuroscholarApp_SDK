@@ -64,7 +64,7 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
     }
 
     private CompositeDisposable getCompositeDisposable() {
-        if (compositeDisposable == null) {
+         if (compositeDisposable == null) {
             compositeDisposable = new CompositeDisposable();
         }
         return compositeDisposable;
@@ -77,7 +77,7 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
     }
 
     private void defaultError(Status status) {
-        serviceLiveData.setValue(new ResponseApi(Status.FAIL, context.getResources().getString(R.string.default_error), null));
+        serviceLiveData.setValue(new ResponseApi(Status.FAIL, context.getString(R.string.default_error), null));
     }
 
 
@@ -141,7 +141,7 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
                 }
             } else {
                 // please check your internet
-                serviceLiveData.setValue(new ResponseApi(Status.NO_INTERNET, context.getResources().getString(R.string.internet_check), Status.NO_INTERNET));
+                serviceLiveData.setValue(new ResponseApi(Status.NO_INTERNET, context.getString(R.string.internet_check), Status.NO_INTERNET));
             }
 
         });
