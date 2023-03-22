@@ -281,7 +281,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         binding.setLifecycleOwner(this);
         mContext = DashBoardMainActivity.this;
         setProgressVal();
-        funnelStudentDashBoard();
+     //   funnelStudentDashBoard();
         //  checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
         setListener();
 
