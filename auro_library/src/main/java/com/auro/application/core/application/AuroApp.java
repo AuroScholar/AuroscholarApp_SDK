@@ -26,7 +26,6 @@ public class AuroApp extends Application {
     public static AuroScholarDataModel auroScholarDataModel;
     public static int fragmentContainerUiId = 0;
 
-
     @Override
     public void onCreate() {
         super.onCreate();

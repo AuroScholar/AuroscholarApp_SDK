@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import androidx.annotation.Dimension;
 import androidx.annotation.NonNull;
 
-import com.auro.application.BuildConfig;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.di.component.DaggerWrapper;
