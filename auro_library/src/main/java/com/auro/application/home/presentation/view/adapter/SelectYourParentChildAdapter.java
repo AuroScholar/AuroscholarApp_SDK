@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.database.AuroAppPref;
@@ -170,11 +171,11 @@ public class SelectYourParentChildAdapter extends RecyclerView.Adapter<SelectYou
 //                binding.cardViewButton.setVisibility(View.VISIBLE);
 //            } else {
 
-            String userwallet = details.getWallet()!=null ? details.getWallet() : AuroApp.getAppContext().getResources().getString(R.string.wallet);
+            String userwallet = details.getWallet()!=null ? details.getWallet() : DaggerWrapper.getmContext().getString(R.string.wallet);
 
-            String userName = details.getUsername()!=null ? details.getUsername() : AuroApp.getAppContext().getResources().getString(R.string.username);
-            String name = details.getName()!=null ? details.getName() : AuroApp.getAppContext().getResources().getString(R.string.name);;
-            String grade = details.getGradeStudent()!=null ? details.getGradeStudent() : AuroApp.getAppContext().getResources().getString(R.string.grade_student_new);
+            String userName = details.getUsername()!=null ? details.getUsername() : DaggerWrapper.getmContext().getString(R.string.username);
+            String name = details.getName()!=null ? details.getName() : DaggerWrapper.getmContext().getString(R.string.name);;
+            String grade = details.getGradeStudent()!=null ? details.getGradeStudent() : DaggerWrapper.getmContext().getString(R.string.grade_student_new);
             if (mValues.get(position).getProfilepic().equals("")||mValues.get(position).getProfilepic().equals("null")||mValues.get(position).getProfilepic().isEmpty()){
                 Glide.with(mContext)
                         .load(mContext.getResources().getIdentifier("my_drawable_image_name", "drawable",mContext.getPackageName()))

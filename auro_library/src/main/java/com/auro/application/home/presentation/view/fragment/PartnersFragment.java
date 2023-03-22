@@ -419,8 +419,8 @@ public class PartnersFragment extends BaseFragment implements CommonCallBackList
     private void openAskNameDialog(PartnerDataModel model) {
         CustomDialogModel customDialogModel = new CustomDialogModel();
         customDialogModel.setContext(getActivity());
-        customDialogModel.setTitle(AuroApp.getAppContext().getResources().getString(R.string.update_auroscholar));
-        customDialogModel.setContent(AuroApp.getAppContext().getResources().getString(R.string.updateMessage));
+        customDialogModel.setTitle(DaggerWrapper.getmContext().getString(R.string.update_auroscholar));
+        customDialogModel.setContent(DaggerWrapper.getmContext().getString(R.string.updateMessage));
         askDetailCustomDialog = new AskDetailCustomDialog(getActivity(), customDialogModel, this, model, partnersLoginReqModel);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(askDetailCustomDialog.getWindow().getAttributes());

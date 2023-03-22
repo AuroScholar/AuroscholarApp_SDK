@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.MessgeNotifyStatus;
 import com.auro.application.core.common.ResponseApi;
 import com.auro.application.core.common.Status;
@@ -55,7 +56,7 @@ public class SendMoneyViewModel extends ViewModel {
             if (hasInternet) {
                 paytmWithdrawalApi(reqModel);
             } else {
-                serviceLiveData.setValue(new ResponseApi(Status.NO_INTERNET, AuroApp.getAppContext().getString(R.string.internet_check), Status.ACCEPT_INVITE_CLICK));
+                serviceLiveData.setValue(new ResponseApi(Status.NO_INTERNET, DaggerWrapper.getmContext().getString(R.string.internet_check), Status.ACCEPT_INVITE_CLICK));
             }
         });
         getCompositeDisposable().add(disposable);
@@ -66,7 +67,7 @@ public class SendMoneyViewModel extends ViewModel {
             if (hasInternet) {
                 paytmWithdrawalByBankAccountApi(reqModel);
             } else {
-                serviceLiveData.setValue(new ResponseApi(Status.NO_INTERNET, AuroApp.getAppContext().getString(R.string.internet_check), Status.ACCEPT_INVITE_CLICK));
+                serviceLiveData.setValue(new ResponseApi(Status.NO_INTERNET, DaggerWrapper.getmContext().getString(R.string.internet_check), Status.ACCEPT_INVITE_CLICK));
             }
         });
         getCompositeDisposable().add(disposable);
@@ -77,7 +78,7 @@ public class SendMoneyViewModel extends ViewModel {
             if (hasInternet) {
                 paytmWithdrawalByUpiApi(reqModel);
             } else {
-                serviceLiveData.setValue(new ResponseApi(Status.NO_INTERNET, AuroApp.getAppContext().getString(R.string.internet_check), Status.ACCEPT_INVITE_CLICK));
+                serviceLiveData.setValue(new ResponseApi(Status.NO_INTERNET, DaggerWrapper.getmContext().getString(R.string.internet_check), Status.ACCEPT_INVITE_CLICK));
             }
         });
         getCompositeDisposable().add(disposable);
@@ -165,7 +166,7 @@ public class SendMoneyViewModel extends ViewModel {
             if (hasInternet) {
                 paytmentTransferApi(reqModel);
             } else {
-                serviceLiveData.setValue(new ResponseApi(Status.NO_INTERNET, AuroApp.getAppContext().getString(R.string.internet_check), Status.ACCEPT_INVITE_CLICK));
+                serviceLiveData.setValue(new ResponseApi(Status.NO_INTERNET, DaggerWrapper.getmContext().getString(R.string.internet_check), Status.ACCEPT_INVITE_CLICK));
             }
         });
         getCompositeDisposable().add(disposable);
@@ -203,7 +204,7 @@ public class SendMoneyViewModel extends ViewModel {
     }
 
     private void defaultError() {
-        serviceLiveData.setValue(new ResponseApi(Status.FAIL, AuroApp.getAppContext().getResources().getString(R.string.default_error), null));
+        serviceLiveData.setValue(new ResponseApi(Status.FAIL, DaggerWrapper.getmContext().getString(R.string.default_error), null));
     }
 
     public LiveData<ResponseApi> serviceLiveData() {

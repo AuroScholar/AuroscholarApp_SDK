@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.Status;
 import com.auro.application.databinding.ScholarshipItemLayoutBinding;
@@ -55,7 +56,7 @@ public class QuizWonDetailAdapter extends RecyclerView.Adapter<QuizWonDetailAdap
             binding.subjectName.setText(resModel.getSubject());
             binding.quizName.setText(resModel.getQuizName());
             binding.amount.setText(resModel.getQuizName());
-            binding.amount.setText(AuroApp.getAppContext().getResources().getString(R.string.rs) + slabModel.getPrice());
+            binding.amount.setText(DaggerWrapper.getmContext().getString(R.string.rs) + slabModel.getPrice());
 
         }
 

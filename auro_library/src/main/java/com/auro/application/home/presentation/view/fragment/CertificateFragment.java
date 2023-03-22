@@ -243,7 +243,7 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
                     downloadFile(map.getValue());
                 }
             } else {
-                ViewUtil.showSnackBar(binding.getRoot(),details.getPlease_select_certificate()!= null ? details.getPlease_select_certificate() : AuroApp.getAppContext().getResources().getString(R.string.no_certificate_for_download));
+                ViewUtil.showSnackBar(binding.getRoot(),details.getPlease_select_certificate()!= null ? details.getPlease_select_certificate() : DaggerWrapper.getmContext().getString(R.string.no_certificate_for_download));
             }
         } else {
             ViewUtil.showSnackBar(binding.getRoot(), details.getNo_certificate_for_download()!= null ? details.getNo_certificate_for_download() : AuroApp.getAppContext().getResources().getString(R.string.please_select_certificate));
@@ -254,7 +254,7 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
 
     private void downloadFile(String url) {
         if (!TextUtil.isEmpty(url)) {
-            DownloadManager downloadManager = (DownloadManager) AuroApp.getAppContext().getSystemService(Context.DOWNLOAD_SERVICE);
+            DownloadManager downloadManager = (DownloadManager) DaggerWrapper.getmContext().getSystemService(Context.DOWNLOAD_SERVICE);
             Uri uri = Uri.parse(url);
             DownloadManager.Request request = new DownloadManager.Request(uri);
             request.setVisibleInDownloadsUi(true);
@@ -529,8 +529,8 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
         customDialogModel.setContext(getActivity());
 
 
-        customDialogModel.setTitle(details.getUpdate_auro()!= null?details.getUpdate_auro(): AuroApp.getAppContext().getResources().getString(R.string.update_auroscholar));
-        customDialogModel.setContent(details.getAuro_update_msg()!= null?details.getAuro_update_msg():AuroApp.getAppContext().getResources().getString(R.string.updateMessage));
+        customDialogModel.setTitle(details.getUpdate_auro()!= null?details.getUpdate_auro(): DaggerWrapper.getmContext().getString(R.string.update_auroscholar));
+        customDialogModel.setContent(details.getAuro_update_msg()!= null?details.getAuro_update_msg():DaggerWrapper.getmContext().getString(R.string.updateMessage));
         AskNameCustomDialog updateCustomDialog = new AskNameCustomDialog(getActivity(), customDialogModel, this);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(updateCustomDialog.getWindow().getAttributes());

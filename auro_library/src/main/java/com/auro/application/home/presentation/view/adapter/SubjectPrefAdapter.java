@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.Status;
 import com.auro.application.databinding.SubjectsPrefItemLayoutBinding;
@@ -74,11 +75,11 @@ public class SubjectPrefAdapter extends RecyclerView.Adapter<SubjectPrefAdapter.
             binding.RPTextViewTitle.setText(model.getSubjectname());
             binding.mainParentLayout.setBackground(model.getBackgroundImage());
             if (model.isLock()) {
-                binding.lockLayout.setBackground(AuroApp.getAppContext().getDrawable(R.drawable.disable_background));
+                binding.lockLayout.setBackground(DaggerWrapper.getmContext().getDrawable(R.drawable.disable_background));
                 binding.lockLayout.setVisibility(View.VISIBLE);
-                binding.checkIcon.setImageDrawable(AuroApp.getAppContext().getDrawable(R.drawable.ic_auro_check_disable));
+                binding.checkIcon.setImageDrawable(DaggerWrapper.getmContext().getDrawable(R.drawable.ic_auro_check_disable));
             } else {
-                binding.checkIcon.setImageDrawable(AuroApp.getAppContext().getDrawable(R.drawable.ic_auro_check));
+                binding.checkIcon.setImageDrawable(DaggerWrapper.getmContext().getDrawable(R.drawable.ic_auro_check));
                 binding.lockLayout.setVisibility(View.GONE);
             }
             if (model.isSelected()) {

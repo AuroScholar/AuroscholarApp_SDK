@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.Status;
 import com.auro.application.databinding.RatingLevelLayoutBinding;
@@ -49,7 +50,7 @@ public class LevelInfoAdapter extends RecyclerView.Adapter<LevelInfoAdapter.View
         }
 
         public void setData(SlabModel resModel, int position) {
-            binding.quizAmount.setText(AuroApp.getAppContext().getResources().getString(R.string.rs)+resModel.getPrice());
+            binding.quizAmount.setText(DaggerWrapper.getmContext().getString(R.string.rs)+resModel.getPrice());
             binding.rating.setRating(resModel.getDetails().size());
         }
 

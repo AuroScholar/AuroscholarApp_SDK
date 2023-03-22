@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.Status;
 import com.auro.application.databinding.SendQuizItemLayoutBinding;
@@ -77,9 +78,9 @@ public class SelectQuizOptionAdapter extends RecyclerView.Adapter<SelectQuizOpti
             binding.msgText.setText(Html.fromHtml(model.getOption()));
             String url = "";
             if (model.isCheck()) {
-                binding.checkIcon.setImageDrawable(AuroApp.getAppContext().getResources().getDrawable(R.drawable.ic_auro_check));
+                binding.checkIcon.setImageDrawable(DaggerWrapper.getmContext().getDrawable(R.drawable.ic_auro_check));
             } else {
-                binding.checkIcon.setImageDrawable(AuroApp.getAppContext().getResources().getDrawable(R.drawable.circle_auro_outline));
+                binding.checkIcon.setImageDrawable(DaggerWrapper.getmContext().getDrawable(R.drawable.circle_auro_outline));
 
             }
             binding.msgText.setVisibility(View.GONE);

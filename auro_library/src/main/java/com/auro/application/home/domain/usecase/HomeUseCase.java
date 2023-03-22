@@ -7,6 +7,7 @@ import android.util.SparseArray;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.ValidationModel;
 import com.auro.application.core.database.AuroAppPref;
@@ -85,7 +86,7 @@ public class HomeUseCase {
 
     public List<StateDataModel> readStateData() {
         List<StateDataModel> stateList = new ArrayList<>();
-        InputStream inStream = AuroApp.getAppContext().getResources().openRawResource(R.raw.state);
+        InputStream inStream = DaggerWrapper.getmContext().getResources().openRawResource(R.raw.state);
         BufferedReader buffer = new BufferedReader(new InputStreamReader(inStream));
         String line = "";
         try {
@@ -315,9 +316,9 @@ public class HomeUseCase {
 
             KYCDocumentDatamodel kyc_one = new KYCDocumentDatamodel();
             kyc_one.setDocumentId(AppConstant.DocumentType.ID_PROOF_FRONT_SIDE);
-            kyc_one.setDocumentName(details.getAadhar_front_side() != null ?details.getAadhar_front_side() : AuroApp.getAppContext().getResources().getString(R.string.upload_govt_id));
-            kyc_one.setDocumentFileName(details.getNoFileChosen() != null ? details.getNoFileChosen():AuroApp.getAppContext().getResources().getString(R.string.no_file_chosen));
-            kyc_one.setButtonText(details.getChooseFile() != null ? details.getChooseFile(): AuroApp.getAppContext().getResources().getString(R.string.choose_file));
+            kyc_one.setDocumentName(details.getAadhar_front_side() != null ?details.getAadhar_front_side() : DaggerWrapper.getmContext().getString(R.string.upload_govt_id));
+            kyc_one.setDocumentFileName(details.getNoFileChosen() != null ? details.getNoFileChosen():DaggerWrapper.getmContext().getString(R.string.no_file_chosen));
+            kyc_one.setButtonText(details.getChooseFile() != null ? details.getChooseFile(): DaggerWrapper.getmContext().getString(R.string.choose_file));
             kyc_one.setDocumentName(details.getIdProofFrontSide());
             kyc_one.setDocumentFileName(details.getNoFileChosen());
             kyc_one.setButtonText(details.getChooseFile());
@@ -335,9 +336,9 @@ public class HomeUseCase {
 
             KYCDocumentDatamodel kyc_two = new KYCDocumentDatamodel();
             kyc_two.setDocumentId(AppConstant.DocumentType.ID_PROOF_BACK_SIDE);
-            kyc_two.setDocumentName(details.getAadhar_back() != null ? details.getAadhar_back()  : AuroApp.getAppContext().getResources().getString(R.string.aadhar_back));
-            kyc_two.setDocumentFileName(details.getNoFileChosen() != null ? details.getNoFileChosen():AuroApp.getAppContext().getResources().getString(R.string.no_file_chosen));
-            kyc_two.setButtonText(details.getChooseFile() != null ? details.getChooseFile(): AuroApp.getAppContext().getResources().getString(R.string.choose_file));
+            kyc_two.setDocumentName(details.getAadhar_back() != null ? details.getAadhar_back()  : DaggerWrapper.getmContext().getString(R.string.aadhar_back));
+            kyc_two.setDocumentFileName(details.getNoFileChosen() != null ? details.getNoFileChosen():DaggerWrapper.getmContext().getString(R.string.no_file_chosen));
+            kyc_two.setButtonText(details.getChooseFile() != null ? details.getChooseFile(): DaggerWrapper.getmContext().getString(R.string.choose_file));
             kyc_two.setDocumentName(details.getIdProofBackSide());
             kyc_two.setDocumentFileName(details.getNoFileChosen());
             kyc_two.setButtonText(details.getChooseFile());

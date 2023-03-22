@@ -24,6 +24,7 @@ import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseDialog;
 
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 
 import com.auro.application.core.common.AppConstant;
@@ -348,7 +349,7 @@ public class UploadDocumentFragment extends BaseDialog implements View.OnClickLi
             }
             kycDocumentDatamodelArrayList.get(pos).setDocumentURi(Uri.parse(path));
             File file = new File(kycDocumentDatamodelArrayList.get(pos).getDocumentURi().getPath());
-            InputStream is = AuroApp.getAppContext().getApplicationContext().getContentResolver().openInputStream(Uri.fromFile(file));
+            InputStream is = DaggerWrapper.getmContext().getApplicationContext().getContentResolver().openInputStream(Uri.fromFile(file));
             kycDocumentDatamodelArrayList.get(pos).setImageBytes(kycViewModel.teacherUseCase.getBytes(is));
             AppLogger.e("calluploadApi-", "Step 2");
 

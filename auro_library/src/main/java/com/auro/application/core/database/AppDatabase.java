@@ -1,11 +1,14 @@
 package com.auro.application.core.database;
 
 
+import android.content.Context;
+
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.home.data.model.CategoryQuestion;
 import com.auro.application.teacher.data.datasource.database.TeacherModelDao;
 import com.auro.application.teacher.data.model.common.DistrictDataModel;
@@ -18,6 +21,7 @@ public abstract class AppDatabase extends RoomDatabase {
     private static AppDatabase instance;
     private static final String DB_NAME = "passengerhmi_database";
     public abstract TeacherModelDao teacherModelDao();
+    Context context;
 
    // public abstract OutletModelDao outletModelDao();
 
@@ -25,7 +29,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public static AppDatabase getAppDatabase() {
         if (instance == null) {
-            instance = Room.databaseBuilder(AuroApp.getAppContext(), AppDatabase.class, DB_NAME)
+            instance = Room.databaseBuilder(DaggerWrapper.getmContext(), AppDatabase.class, DB_NAME)
                             .allowMainThreadQueries()
                             .build();
         }

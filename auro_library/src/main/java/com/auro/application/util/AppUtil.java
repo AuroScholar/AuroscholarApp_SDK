@@ -23,6 +23,7 @@ import androidx.annotation.NonNull;
 import com.auro.application.BuildConfig;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;
 import com.auro.application.core.common.Status;
@@ -66,7 +67,7 @@ public class AppUtil {
     public static int getVersionCode(Context pContext) {
         int lStrVersion = 0;
         try {
-            PackageInfo pInfo = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), 0);
+            PackageInfo pInfo = DaggerWrapper.getmContext().getPackageManager().getPackageInfo(pContext.getPackageName(), 0);
             lStrVersion = pInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
 
@@ -166,7 +167,7 @@ public class AppUtil {
     public static String getAppVersionName() {
 
         try {
-            PackageInfo pInfo = AuroApp.getAppContext().getPackageManager().getPackageInfo(AuroApp.getAppContext().getPackageName(), 0);
+            PackageInfo pInfo = DaggerWrapper.getmContext().getPackageManager().getPackageInfo(DaggerWrapper.getmContext().getPackageName(), 0);
             AppLogger.e("getAppVersionName pInfo.versionName--", pInfo.versionName);
             return pInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
@@ -207,7 +208,7 @@ public class AppUtil {
     }
 
     public static String getIpAdress() {
-        WifiManager wm = (WifiManager) AuroApp.getAppContext().getApplicationContext().getSystemService(WIFI_SERVICE);
+        WifiManager wm = (WifiManager) DaggerWrapper.getmContext().getApplicationContext().getSystemService(WIFI_SERVICE);
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
         return ip;
     }
@@ -272,7 +273,7 @@ public class AppUtil {
 
 
     public static String getUniqueDeviceId() {
-        String android_id = Settings.Secure.getString(AuroApp.getAppContext().getContentResolver(),
+        String android_id = Settings.Secure.getString(DaggerWrapper.getmContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         return android_id;
     }

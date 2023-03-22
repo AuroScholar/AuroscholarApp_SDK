@@ -2,6 +2,7 @@ package com.auro.application.util.strings;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
 import com.auro.application.databinding.ActivityAppLanguageBinding;
@@ -65,10 +66,10 @@ public enum AppStringDynamic {
             LanguageMasterDynamic model = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic();
             Details details = model.getDetails();
             if (model != null) {
-                binding.tvTitle.setText(details.getDi_welcome() != null ? details.getDi_welcome(): AuroApp.getAppContext().getResources().getString(R.string.welcome));
-                binding.tvMessage.setText(details.getDi_seems()!= null ? details.getDi_seems(): AuroApp.getAppContext().getResources().getString(R.string.not_register_msg));
-                binding.tvNote.setHint(details.getDi_note()!= null ? details.getDi_note(): AuroApp.getAppContext().getResources().getString(R.string.not_register_note_msg));
-                binding.RPAccept.setText(details.getProceed_to_signup()!= null ? details.getProceed_to_signup(): AuroApp.getAppContext().getResources().getString(R.string.proceed_to_signup));
+                binding.tvTitle.setText(details.getDi_welcome() != null ? details.getDi_welcome(): DaggerWrapper.getmContext().getString(R.string.welcome));
+                binding.tvMessage.setText(details.getDi_seems()!= null ? details.getDi_seems(): DaggerWrapper.getmContext().getString(R.string.not_register_msg));
+                binding.tvNote.setHint(details.getDi_note()!= null ? details.getDi_note(): DaggerWrapper.getmContext().getString(R.string.not_register_note_msg));
+                binding.RPAccept.setText(details.getProceed_to_signup()!= null ? details.getProceed_to_signup(): DaggerWrapper.getmContext().getString(R.string.proceed_to_signup));
             }
         } catch (Exception e) {
             AppLogger.e(TAG, e.getMessage());
@@ -80,14 +81,14 @@ public enum AppStringDynamic {
             LanguageMasterDynamic model = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic();
             Details details = model.getDetails();
             if (model != null) {
-                binding.titleFirst.setText(details.getAuroHey() != null ? details.getAuroHey(): AuroApp.getAppContext().getResources().getString(R.string.auro_hey));
-                binding.headingTwo.setText(details.getLoginToYourAccount() != null ? details.getLoginToYourAccount(): AuroApp.getAppContext().getResources().getString(R.string.login_to_your_account));
-                binding.etMobileNumber.setHint(details.getMobileNumberUsername() != null ? details.getMobileNumberUsername(): AuroApp.getAppContext().getResources().getString(R.string.mobile_number_username));
-                binding.RPAccept.setText(details.getContinueExit() != null ? details.getContinueExit(): AuroApp.getAppContext().getResources().getString(R.string.accept_continue));
+                binding.titleFirst.setText(details.getAuroHey() != null ? details.getAuroHey(): DaggerWrapper.getmContext().getString(R.string.auro_hey));
+                binding.headingTwo.setText(details.getLoginToYourAccount() != null ? details.getLoginToYourAccount(): DaggerWrapper.getmContext().getString(R.string.login_to_your_account));
+                binding.etMobileNumber.setHint(details.getMobileNumberUsername() != null ? details.getMobileNumberUsername(): DaggerWrapper.getmContext().getString(R.string.mobile_number_username));
+                binding.RPAccept.setText(details.getContinueExit() != null ? details.getContinueExit(): DaggerWrapper.getmContext().getString(R.string.accept_continue));
                 binding.etPin.setHint(details.getEnter_the_pin());
-                binding.etPassword.setHint(details.getPassword() != null ? details.getPassword(): AuroApp.getAppContext().getResources().getString(R.string.password));
-                binding.forgotPassword.setText(details.getForgotPassword() != null ? details.getForgotPassword(): AuroApp.getAppContext().getResources().getString(R.string.forgot_password));
-                binding.loginWithOtp.setText(details.getLoginWithOtp()!= null ? details.getLoginWithOtp(): AuroApp.getAppContext().getResources().getString(R.string.login_with_otp));
+                binding.etPassword.setHint(details.getPassword() != null ? details.getPassword(): DaggerWrapper.getmContext().getString(R.string.password));
+                binding.forgotPassword.setText(details.getForgotPassword() != null ? details.getForgotPassword(): DaggerWrapper.getmContext().getString(R.string.forgot_password));
+                binding.loginWithOtp.setText(details.getLoginWithOtp()!= null ? details.getLoginWithOtp(): DaggerWrapper.getmContext().getString(R.string.login_with_otp));
               // binding.termsCondition.setText(details.getTermsOfService());
             }
         } catch (Exception e) {
@@ -102,10 +103,10 @@ public enum AppStringDynamic {
             LanguageMasterDynamic model = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic();
             Details details = model.getDetails();
             if (model != null) {
-                binding.RPTextView4.setText(details.getImposible_until()!= null ?details.getImposible_until():AuroApp.getAppContext().getResources().getString(R.string.impossible));
-                binding.RPTextView5.setText(details.getYour_score() != null ?details.getYour_score() : AuroApp.getAppContext().getResources().getString(R.string.you_have_scored));
-                binding.txtYou.setText(details.getScholarship_happen()!= null ?details.getScholarship_happen():AuroApp.getAppContext().getResources().getString(R.string.scholarship_happen));
-                binding.btnShare.setText(details.getShare_with()!= null ?details.getShare_with():AuroApp.getAppContext().getResources().getString(R.string.share_with_friends));
+                binding.RPTextView4.setText(details.getImposible_until()!= null ?details.getImposible_until():DaggerWrapper.getmContext().getString(R.string.impossible));
+                binding.RPTextView5.setText(details.getYour_score() != null ?details.getYour_score() : DaggerWrapper.getmContext().getString(R.string.you_have_scored));
+                binding.txtYou.setText(details.getScholarship_happen()!= null ?details.getScholarship_happen():DaggerWrapper.getmContext().getString(R.string.scholarship_happen));
+                binding.btnShare.setText(details.getShare_with()!= null ?details.getShare_with():DaggerWrapper.getmContext().getString(R.string.share_with_friends));
                binding.txtRetakeQuiz.setText(details.getRetakeQuiz());
             }
         } catch (Exception e) {
@@ -118,12 +119,12 @@ public enum AppStringDynamic {
             LanguageMasterDynamic model = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic();
             Details details = model.getDetails();
             if (model != null) {
-                binding.RPTextView6.setText(details.getYour_congrat() != null ?details.getYour_congrat() :AuroApp.getAppContext().getResources().getString(R.string.congratulation_new));
-                binding.RPTextView5.setText(details.getYour_score()!= null ?details.getYour_score() :AuroApp.getAppContext().getResources().getString(R.string.you_have_scored));
-                binding.scoreFifty.setText(details.getGet_scholar()!= null ?details.getGet_scholar():AuroApp.getAppContext().getResources().getString(R.string.auro_scholar_wallet));
+                binding.RPTextView6.setText(details.getYour_congrat() != null ?details.getYour_congrat() :DaggerWrapper.getmContext().getString(R.string.congratulation_new));
+                binding.RPTextView5.setText(details.getYour_score()!= null ?details.getYour_score() :DaggerWrapper.getmContext().getString(R.string.you_have_scored));
+                binding.scoreFifty.setText(details.getGet_scholar()!= null ?details.getGet_scholar():DaggerWrapper.getmContext().getString(R.string.auro_scholar_wallet));
                 binding.txtRetakeQuiz.setText(details.getRetakeQuiz());
                 binding.txtStartQuiz.setText(details.getNext());
-                binding.btnShare.setText(details.getShare_with()!= null ?details.getShare_with():AuroApp.getAppContext().getResources().getString(R.string.share_with_friends));
+                binding.btnShare.setText(details.getShare_with()!= null ?details.getShare_with():DaggerWrapper.getmContext().getString(R.string.share_with_friends));
             }
         } catch (Exception e) {
             AppLogger.e(TAG, e.getMessage());

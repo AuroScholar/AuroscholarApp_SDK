@@ -11,6 +11,7 @@ import static com.auro.application.core.common.Status.PAYTM_WITHDRAWAL;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.NetworkUtil;
 import com.auro.application.core.common.ResponseApi;
 import com.auro.application.core.common.Status;
@@ -104,7 +105,7 @@ public class KycRemoteUseCase extends NetworkUseCase {
                 return responseFail(apiTypeStatus);
 
             default:
-                return ResponseApi.fail(AuroApp.getAppContext().getString(R.string.default_error), apiTypeStatus);
+                return ResponseApi.fail(DaggerWrapper.getmContext().getString(R.string.default_error), apiTypeStatus);
         }
     }
 

@@ -37,6 +37,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.Status;
@@ -189,7 +190,7 @@ public class ViewUtil {
     public static String getPackageVersion() {
         String packageVersion = null;
         try {
-            PackageInfo pInfo = AuroApp.getAppContext().getPackageManager().getPackageInfo(AuroApp.getAppContext().getPackageName(), 0);
+            PackageInfo pInfo = DaggerWrapper.getmContext().getPackageManager().getPackageInfo(AuroApp.getAppContext().getPackageName(), 0);
             packageVersion = pInfo.versionName;
 
         } catch (PackageManager.NameNotFoundException e) {

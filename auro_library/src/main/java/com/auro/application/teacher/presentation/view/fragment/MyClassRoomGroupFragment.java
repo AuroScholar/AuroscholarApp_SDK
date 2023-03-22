@@ -25,6 +25,7 @@ import android.widget.Toast;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -430,7 +431,7 @@ public class MyClassRoomGroupFragment extends BaseFragment implements CommonCall
     }
 
     private boolean isAppInstalled(String packageName) {
-        PackageManager packageManager = AuroApp.getAppContext().getPackageManager();
+        PackageManager packageManager = DaggerWrapper.getmContext().getPackageManager();
         for (PackageInfo packageInfo : packageManager.getInstalledPackages(0)) {
             AppLogger.e("isAppInstalled-", packageInfo.packageName);
             if (packageInfo.packageName.equals(AppConstant.PACKAGE_WHATSAPP)) {

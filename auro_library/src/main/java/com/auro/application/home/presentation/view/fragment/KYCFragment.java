@@ -913,7 +913,7 @@ public class KYCFragment extends BaseFragment implements CommonCallBackListner, 
 
             @Override
             public void closeCallback() {
-                kycDocumentDatamodelArrayList.get(pos).setDocumentFileName(AuroApp.getAppContext().getResources().getString(R.string.no_file_chosen));
+                kycDocumentDatamodelArrayList.get(pos).setDocumentFileName(DaggerWrapper.getmContext().getString(R.string.no_file_chosen));
                 kyCuploadAdapter.updateList(kycDocumentDatamodelArrayList);
             }
         });

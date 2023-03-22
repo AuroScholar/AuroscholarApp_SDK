@@ -11,6 +11,7 @@ import androidx.databinding.DataBindingUtil;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.Status;
 import com.auro.application.databinding.StateSpinnerItemBinding;
@@ -32,7 +33,7 @@ public class SchoolMediumSpinnerAdapter extends ArrayAdapter {
 
     public SchoolMediumSpinnerAdapter(@NonNull Context context, int resource, List<SchoolLangData> list, CommonCallBackListner onItemClickState) {
         super(context, resource);
-        inflter = (LayoutInflater.from(AuroApp.getAppContext().getApplicationContext()));
+        inflter = (LayoutInflater.from(DaggerWrapper.getmContext().getApplicationContext()));
         this.list = list;
         this.onItemClickState = onItemClickState;
 

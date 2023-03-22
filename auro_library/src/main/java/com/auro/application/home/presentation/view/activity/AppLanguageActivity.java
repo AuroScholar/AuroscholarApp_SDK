@@ -321,7 +321,7 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
     }
 
     void callLanguageMasterApi() {
-        progressChanges(0, details.getFetch_data() !=null ?details.getFetch_data() : AuroApp.getAppContext().getResources().getString(R.string.fetch_data));
+        progressChanges(0, details.getFetch_data() !=null ?details.getFetch_data() : DaggerWrapper.getmContext().getString(R.string.fetch_data));
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         LanguageMasterReqModel languageMasterReqModel = new LanguageMasterReqModel();
         languageMasterReqModel.setLanguageId(prefModel.getUserLanguageId());

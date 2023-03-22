@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.Status;
 import com.auro.application.databinding.StartQuizItemLayoutBinding;
@@ -94,7 +95,7 @@ public class ChapterSelectAdapter extends RecyclerView.Adapter<ChapterSelectAdap
                 }
 
                 if (model.getAttempt() > 0) {
-                    binding.imageView7.setImageDrawable(AuroApp.getAppContext().getDrawable(R.drawable.restart_bg));
+                    binding.imageView7.setImageDrawable(DaggerWrapper.getmContext().getDrawable(R.drawable.restart_bg));
                     if (model.getAttempt() == 1) {
                         binding.RPTextView12.setText("Retake 1");
                         binding.RPTextView12.setTextSize(TypedValue.COMPLEX_UNIT_SP, mcontext.getResources().getDimension(R.dimen._3sdp));
@@ -138,10 +139,10 @@ public class ChapterSelectAdapter extends RecyclerView.Adapter<ChapterSelectAdap
                 binding.buttonStart.setEnabled(true);
             } else {
                 binding.buttonStart.setEnabled(false);
-                binding.serial.setTextColor(AuroApp.getAppContext().getColor(R.color.light_grey));
-                binding.RpScore.setTextColor(AuroApp.getAppContext().getColor(R.color.light_grey));
-                binding.RpChapter.setTextColor(AuroApp.getAppContext().getColor(R.color.ash_grey));
-                binding.imageView7.setImageDrawable(AuroApp.getAppContext().getDrawable(R.drawable.quiz_lock_image));
+                binding.serial.setTextColor(DaggerWrapper.getmContext().getColor(R.color.light_grey));
+                binding.RpScore.setTextColor(DaggerWrapper.getmContext().getColor(R.color.light_grey));
+                binding.RpChapter.setTextColor(DaggerWrapper.getmContext().getColor(R.color.ash_grey));
+                binding.imageView7.setImageDrawable(DaggerWrapper.getmContext().getDrawable(R.drawable.quiz_lock_image));
                 binding.RPTextView12.setText("");
             }
         }

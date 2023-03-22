@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.Status;
@@ -71,7 +72,7 @@ public class LanguageAdapter extends RecyclerView.Adapter<LanguageAdapter.Langua
 
             if (model.isCheck()) {
                 binding.checkItem.setVisibility(View.VISIBLE);
-                binding.checkItem.setImageDrawable(AuroApp.getAppContext().getResources().getDrawable(R.drawable.ic_auro_check));
+                binding.checkItem.setImageDrawable(DaggerWrapper.getmContext().getDrawable(R.drawable.ic_auro_check));
             } else {
                 //binding.checkItem.setImageDrawable(AuroApp.getAppContext().getResources().getDrawable(R.drawable.circle_auro_outline));
                 binding.checkItem.setVisibility(View.GONE);

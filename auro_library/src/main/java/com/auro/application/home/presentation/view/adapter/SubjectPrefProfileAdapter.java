@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.databinding.ClassItemLayoutBinding;
 import com.auro.application.home.data.model.response.CategorySubjectResModel;
@@ -70,8 +71,8 @@ public class SubjectPrefProfileAdapter extends RecyclerView.Adapter<SubjectPrefP
         public void bindUser(CategorySubjectResModel model, int position, CommonCallBackListner commonCallBackListner) {
             binding.txtClass.setText(model.getSubjectname());
             if(!model.isSelected()) {
-                binding.txtClass.setTextColor(AuroApp.getAppContext().getColor(R.color.color_light_grey));
-                binding.buttonClick.setBackground(AuroApp.getAppContext().getDrawable(R.drawable.class_disable_border_background));
+                binding.txtClass.setTextColor(DaggerWrapper.getmContext().getColor(R.color.color_light_grey));
+                binding.buttonClick.setBackground(DaggerWrapper.getmContext().getDrawable(R.drawable.class_disable_border_background));
             }
 
         }
