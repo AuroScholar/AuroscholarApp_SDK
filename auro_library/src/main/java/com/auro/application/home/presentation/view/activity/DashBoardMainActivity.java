@@ -1337,7 +1337,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     }
 
     private void funnelStudentDashBoard() {
-        AnalyticsRegistry.INSTANCE.getModelInstance().trackStudentDashBoard();
+        //AnalyticsRegistry.INSTANCE.getModelInstance().trackStudentDashBoard();
     }
 
     private void funnelStudentLogOut() {
