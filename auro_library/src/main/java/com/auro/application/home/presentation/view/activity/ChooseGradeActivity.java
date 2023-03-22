@@ -394,8 +394,6 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
                         if (response.isSuccessful())
                         {
 
-
-
                              if (response.body().getStatename().equals("")||response.body().getStatename().equals("null")||response.body().getStatename().equals(null)||response.body().getDistrictname().equals("")||response.body().getDistrictname().equals("null")||response.body().getDistrictname().equals(null)||response.body().getStudentName().equals("")||response.body().getStudentName().equals("null")||response.body().getStudentName().equals(null)||
                                     response.body().getStudentclass().equals("")||response.body().getStudentclass().equals("null")||response.body().getStudentclass().equals(null)||response.body().getStudentclass().equals("0")||response.body().getStudentclass().equals(0)){
                                 Intent i = new Intent(mContext, CompleteStudentProfileWithoutPin.class);

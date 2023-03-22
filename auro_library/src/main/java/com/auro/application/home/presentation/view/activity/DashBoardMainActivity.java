@@ -253,7 +253,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         editor.apply();
         init();
         setListener();
-        appUpdateManager = AppUpdateManagerFactory.create(AuroApp.getAppContext());
+        appUpdateManager = AppUpdateManagerFactory.create(getApplicationContext());  //AuroApp.getAppContext()
         AppLogger.e("DashbaordMain", "oncreate step 1");
 
     }
@@ -564,8 +564,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     private void openUpdateDialog() {
         CustomDialogModel customDialogModel = new CustomDialogModel();
         customDialogModel.setContext(this);
-        customDialogModel.setTitle(AuroApp.getAppContext().getResources().getString(R.string.update_auroscholar));
-        customDialogModel.setContent(AuroApp.getAppContext().getResources().getString(R.string.updateMessage));
+        customDialogModel.setTitle(getApplicationContext().getResources().getString(R.string.update_auroscholar));
+        customDialogModel.setContent(getApplicationContext().getResources().getString(R.string.updateMessage));
         updateCustomDialog = new UpdateCustomDialog(this, customDialogModel);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(updateCustomDialog.getWindow().getAttributes());
