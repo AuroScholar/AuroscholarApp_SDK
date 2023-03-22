@@ -334,7 +334,7 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
 
     public void getDashboardData(AuroScholarInputModel inputModel) {
         AuroScholarDataModel auroScholarDataModel = new AuroScholarDataModel();
-        auroScholarDataModel.setMobileNumber("8745256899");
+        auroScholarDataModel.setMobileNumber(inputModel.getMobileNumber());
         auroScholarDataModel.setStudentClass(inputModel.getStudentClass());
         auroScholarDataModel.setRegitrationSource(inputModel.getRegitrationSource());
         auroScholarDataModel.setActivity(inputModel.getActivity());

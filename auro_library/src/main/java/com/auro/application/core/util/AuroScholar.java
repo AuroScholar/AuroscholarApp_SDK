@@ -72,18 +72,18 @@ public class AuroScholar {
     /*For generic with PhoneNumber and class*/
     public static Fragment startAuroSDK(AuroScholarInputModel inputModel) {
         auroScholarDataModel = new AuroScholarDataModel();
-        auroScholarDataModel.setMobileNumber("8745256899");
-        auroScholarDataModel.setStudentClass("");
-       auroScholarDataModel.setActivity(auroScholarDataModel.getActivity());
+        auroScholarDataModel.setMobileNumber(inputModel.getMobileNumber());
+        auroScholarDataModel.setStudentClass(inputModel.getStudentClass());
+        auroScholarDataModel.setActivity(inputModel.getActivity());
         auroScholarDataModel.setFragmentContainerUiId(R.id.home_container);
-        auroScholarDataModel.setUserPartnerid("975231895620014");
-        auroScholarDataModel.setPartnerSource("Aeronuts_WEB");
-        auroScholarDataModel.setApikey("7611f0fafb1e3b96d1a78c57b0650b85985eace9f6aaa365c0b496e9ae1163e7");
+        auroScholarDataModel.setUserPartnerid(inputModel.getPartner_unique_id());
+        auroScholarDataModel.setPartnerSource(inputModel.getPartnerSource());
+        auroScholarDataModel.setApikey(inputModel.getPartner_api_key());
         DaggerWrapper.getComponent(inputModel.getActivity()).doInjection(inputModel.getActivity());
        AuroApp.setAuroModel(auroScholarDataModel);
        getMultiLanguage();
         getLanguage("1");
-        setSDKAPI("8745256899",inputModel.getPartner_unique_id(),inputModel.getPartnerSource(),inputModel.getPartner_api_key(),inputModel.getStudentClass());
+        setSDKAPI(inputModel.getMobileNumber(),inputModel.getPartner_unique_id(),inputModel.getPartnerSource(),inputModel.getPartner_api_key(),inputModel.getStudentClass());
         return null;
     }
 
