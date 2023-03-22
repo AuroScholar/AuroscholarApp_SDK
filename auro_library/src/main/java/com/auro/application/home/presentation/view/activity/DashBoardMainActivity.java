@@ -353,13 +353,16 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             AppLogger.v("sdkDeviceToken", newdeviceToken);
         }
         //Mandatory
+        inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
+        inputModel.setPartner_api_key(prefModel.getApikey());
         inputModel.setStudentClass(String.valueOf(AuroAppPref.INSTANCE.getModelInstance().getUserclass()));
         inputModel.setRegitrationSource(prefModel.getPartnersource());
+        inputModel.setMobileNumber(prefModel.getUserMobile());
         inputModel.setActivity(this); //Mandatory
         inputModel.setFragmentContainerUiId(R.id.home_container);
         //Mandatory
         inputModel.setReferralLink("");
-        inputModel.setPartnerSource(AppConstant.AURO_ID); //this id is provided by auroscholar for valid partner
+        inputModel.setPartnerSource(prefModel.getPartnersource()); //this id is provided by auroscholar for valid partner
         inputModel.setSdkcallback(new SdkCallBack() {
             @Override
             public void callBack(String message) {
@@ -489,6 +492,24 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
 
     public void callDashboardApi() {
+        inputModel = new AuroScholarInputModel();
+        inputModel.setMobileNumber(AuroAppPref.INSTANCE.getModelInstance().getUserMobile());
+        String newdeviceToken = deviceToken;
+        if (!TextUtil.isEmpty(newdeviceToken)) {
+            inputModel.setDeviceToken(newdeviceToken);
+            AppLogger.v("sdkDeviceToken", newdeviceToken);
+        }
+        //Mandatory
+        inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
+        inputModel.setPartner_api_key(prefModel.getApikey());
+        inputModel.setStudentClass(String.valueOf(AuroAppPref.INSTANCE.getModelInstance().getUserclass()));
+        inputModel.setRegitrationSource(prefModel.getPartnersource());
+        inputModel.setMobileNumber(prefModel.getUserMobile());
+        inputModel.setActivity(this); //Mandatory
+        inputModel.setFragmentContainerUiId(R.id.home_container);
+        //Mandatory
+        inputModel.setReferralLink("");
+        inputModel.setPartnerSource(prefModel.getPartnersource());
         viewModel.checkInternet(DASHBOARD_API, inputModel);
     }
 

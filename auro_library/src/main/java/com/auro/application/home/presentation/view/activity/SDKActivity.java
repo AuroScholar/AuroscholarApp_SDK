@@ -107,6 +107,8 @@ public class SDKActivity  extends AppCompatActivity {
                     inputModel.setPartnerSource(psource);
                     inputModel.setPartner_api_key(apikey);
                     inputModel.setActivity((Activity) SDKActivity.this);
+
+
                     AuroScholar.startAuroSDK(inputModel);
 
             }
