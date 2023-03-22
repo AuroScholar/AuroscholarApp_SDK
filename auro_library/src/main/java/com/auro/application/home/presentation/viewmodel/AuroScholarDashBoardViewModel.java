@@ -45,6 +45,8 @@ import static com.auro.application.core.common.Status.OTP_OVER_CALL;
 import static com.auro.application.core.common.Status.GET_SLABS_API;
 import static com.auro.application.core.common.Status.SEND_REFERRAL_API;
 
+import android.content.Context;
+
 public class AuroScholarDashBoardViewModel extends ViewModel {
 
 
@@ -53,6 +55,7 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
     HomeRemoteUseCase homeRemoteUseCase;
     CompositeDisposable compositeDisposable;
     public MutableLiveData<ResponseApi> serviceLiveData = new MutableLiveData<>();
+    Context context;
 
     public AuroScholarDashBoardViewModel(HomeUseCase homeUseCase, HomeDbUseCase homeDbUseCase, HomeRemoteUseCase homeRemoteUseCase) {
         this.homeUseCase = homeUseCase;
@@ -74,7 +77,7 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
     }
 
     private void defaultError(Status status) {
-        serviceLiveData.setValue(new ResponseApi(Status.FAIL, AuroApp.getAppContext().getResources().getString(R.string.default_error), null));
+        serviceLiveData.setValue(new ResponseApi(Status.FAIL, context.getResources().getString(R.string.default_error), null));
     }
 
 
@@ -138,7 +141,7 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
                 }
             } else {
                 // please check your internet
-                serviceLiveData.setValue(new ResponseApi(Status.NO_INTERNET, AuroApp.getAppContext().getResources().getString(R.string.internet_check), Status.NO_INTERNET));
+                serviceLiveData.setValue(new ResponseApi(Status.NO_INTERNET, context.getResources().getString(R.string.internet_check), Status.NO_INTERNET));
             }
 
         });
