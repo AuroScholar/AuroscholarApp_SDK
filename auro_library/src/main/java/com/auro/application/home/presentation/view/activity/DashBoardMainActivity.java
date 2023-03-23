@@ -730,7 +730,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         int itemId = menuItem.getItemId();
         if (itemId == R.id.item_home) {
             selectNavigationMenu(0);
-            openGenricSDK();
+            //openGenricSDK();
+            AuroScholar.opendashboard();
          //   auroStudentscholarSdk(0);
         } else if (itemId == R.id.item_passport) {
             funnelPassportScreen();
@@ -746,7 +747,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             closeItemMore();
             if (!isBackNormal) {
                 selectNavigationMenu(0);
-                openGenricSDK();
+               // openGenricSDK();
+                AuroScholar.opendashboard();
                 isBackNormal = true;
             }
         } else if (itemId == R.id.item_partner) {

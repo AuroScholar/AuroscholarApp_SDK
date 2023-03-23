@@ -49,6 +49,10 @@ public class AuroApp extends Application {
        // return appComponent;
         return null;
     }
+    public static AuroApp initializeWithDefaults(Context context){
+
+        return AuroApp.initializeWithDefaults(context);
+    }
 
     public static AuroApp getAppContext() {
 

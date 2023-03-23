@@ -29,7 +29,7 @@ public enum AuroAppPref {
       //  AppLogger.e("getModelInstance-","step 1");
         if (sharedPreferences == null) {
         //    AppLogger.e("getModelInstance-","step 2");
-            sharedPreferences = context.getSharedPreferences(PreferenceName, Context.MODE_PRIVATE);
+            sharedPreferences = DaggerWrapper.getmContext().getSharedPreferences(PreferenceName, Context.MODE_PRIVATE);
         }
       //  AppLogger.e("getModelInstance-","step 3");
         if (getPref() != null) {
@@ -94,7 +94,7 @@ public enum AuroAppPref {
 
     public void clearAuroAppPref()
     {
-        SharedPreferences preferences = context.getSharedPreferences(PreferenceName,Context.MODE_PRIVATE);
+        SharedPreferences preferences = DaggerWrapper.getmContext().getSharedPreferences(PreferenceName,Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.commit();
@@ -103,11 +103,18 @@ public enum AuroAppPref {
     public void setStringPref(String key, String value) {
 
 
-        sharedPreferenceEditor = context.getSharedPreferences(PreferenceName, Context.MODE_PRIVATE).edit();
+        sharedPreferenceEditor = DaggerWrapper.getmContext().getSharedPreferences(PreferenceName, Context.MODE_PRIVATE).edit();
         sharedPreferenceEditor.putString(key, value).apply();
     }
 
-
+    public void setBooleanTutorial(String key,boolean tutorial){
+        sharedPreferenceEditor = DaggerWrapper.getmContext().getSharedPreferences(PreferenceName, Context.MODE_PRIVATE).edit();
+        sharedPreferenceEditor.putBoolean(key, tutorial).apply();
+    }
+    public boolean getBooleanTutorial(String key){
+        sharedPreferences = DaggerWrapper.getmContext().getSharedPreferences(PreferenceName, Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(key, true);
+    }
 
     public String getPrefStringValueNotNull(String key) {
 
@@ -115,7 +122,7 @@ public enum AuroAppPref {
     }
 
     private String getStringValue(String key, String defaultValue) {
-        sharedPreferences = context.getSharedPreferences(PreferenceName, Context.MODE_PRIVATE);
+        sharedPreferences = DaggerWrapper.getmContext().getSharedPreferences(PreferenceName, Context.MODE_PRIVATE);
         return sharedPreferences.getString(key, defaultValue);
     }
 
