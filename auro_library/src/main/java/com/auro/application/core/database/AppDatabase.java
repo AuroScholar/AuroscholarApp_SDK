@@ -29,7 +29,7 @@ public abstract class AppDatabase extends RoomDatabase {
 
     public static AppDatabase getAppDatabase() {
         if (instance == null) {
-            instance = Room.databaseBuilder(DaggerWrapper.getmContext(), AppDatabase.class, DB_NAME)
+            instance = Room.databaseBuilder(AuroApp.getAppContext(), AppDatabase.class, DB_NAME)
                             .allowMainThreadQueries()
                             .build();
         }

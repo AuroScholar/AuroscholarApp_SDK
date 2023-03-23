@@ -190,7 +190,7 @@ public class ViewUtil {
     public static String getPackageVersion() {
         String packageVersion = null;
         try {
-            PackageInfo pInfo = DaggerWrapper.getmContext().getPackageManager().getPackageInfo(AuroApp.getAppContext().getPackageName(), 0);
+            PackageInfo pInfo = AuroApp.getAppContext().getPackageManager().getPackageInfo(AuroApp.getAppContext().getPackageName(), 0);
             packageVersion = pInfo.versionName;
 
         } catch (PackageManager.NameNotFoundException e) {

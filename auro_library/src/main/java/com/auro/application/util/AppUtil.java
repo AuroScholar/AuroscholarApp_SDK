@@ -66,7 +66,7 @@ public class AppUtil {
     public static int getVersionCode(Context pContext) {
         int lStrVersion = 0;
         try {
-            PackageInfo pInfo = DaggerWrapper.getmContext().getPackageManager().getPackageInfo(pContext.getPackageName(), 0);
+            PackageInfo pInfo = AuroApp.getAppContext().getPackageManager().getPackageInfo(pContext.getPackageName(), 0);
             lStrVersion = pInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
 
@@ -166,7 +166,7 @@ public class AppUtil {
     public static String getAppVersionName() {
 
         try {
-            PackageInfo pInfo = DaggerWrapper.getmContext().getPackageManager().getPackageInfo(DaggerWrapper.getmContext().getPackageName(), 0);
+            PackageInfo pInfo = AuroApp.getAppContext().getPackageManager().getPackageInfo(AuroApp.getAppContext().getPackageName(), 0);
             AppLogger.e("getAppVersionName pInfo.versionName--", pInfo.versionName);
             return pInfo.versionName;
         } catch (PackageManager.NameNotFoundException e) {
@@ -272,7 +272,7 @@ public class AppUtil {
 
 
     public static String getUniqueDeviceId() {
-        String android_id = Settings.Secure.getString(DaggerWrapper.getmContext().getContentResolver(),
+        String android_id = Settings.Secure.getString(AuroApp.getAppContext().getContentResolver(),
                 Settings.Secure.ANDROID_ID);
         return android_id;
     }

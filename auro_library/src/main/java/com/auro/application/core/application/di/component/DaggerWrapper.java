@@ -2,6 +2,7 @@ package com.auro.application.core.application.di.component;
 
 import android.content.Context;
 
+import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.di.module.AppModule;
 import com.auro.application.core.application.di.module.HomeModule;
 import com.auro.application.core.application.di.module.KycModule;
@@ -24,7 +25,7 @@ public class DaggerWrapper {
     }
 
     public static Context getmContext(){
-        return mContext;
+        return AuroApp.getAppContext();
     }
 
     private static void initComponent () {
