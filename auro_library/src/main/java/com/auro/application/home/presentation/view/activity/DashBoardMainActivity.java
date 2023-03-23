@@ -982,12 +982,12 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                             AppLogger.v("Notice", "else part  GET_INSTRUCTIONS_API");
                         }
                     }
-//                    else if (responseApi.apiTypeStatus == Status.NOTICE_INSTRUCTION){
-//                        NoticeInstruction noticeInstruction = (NoticeInstruction) responseApi.data;
-//                        AppLogger.v("Notice"," NOTICE_INSTRUCTION  last  "+noticeInstruction.getData().getMsgText());
-//                        openNoticeDialog(noticeInstruction);
-//                        AppLogger.v("Notice"," NOTICE_INSTRUCTION  last"+noticeInstruction.getData().getId());
-//                    }
+                    else if (responseApi.apiTypeStatus == Status.NOTICE_INSTRUCTION){
+                        NoticeInstruction noticeInstruction = (NoticeInstruction) responseApi.data;
+                        AppLogger.v("Notice"," NOTICE_INSTRUCTION  last  "+noticeInstruction.getData().getMsgText());
+                        openNoticeDialog(noticeInstruction);
+                        AppLogger.v("Notice"," NOTICE_INSTRUCTION  last"+noticeInstruction.getData().getId());
+                    }
                     else if (responseApi.apiTypeStatus == Status.GET_MESSAGE_POP_UP){
                         ShowDialogModel showDialogModel = (ShowDialogModel) responseApi.data;
                         openGradeDialog(showDialogModel);
@@ -1416,7 +1416,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             AppLogger.v("Notice", "checkDisclaimer else ");
 
             if(AppConstant.InstructionsType.SCHOLARSHIP_TRANSFER != typeGradeChange) {
-              //  viewModel.checkInternet(Status.NOTICE_INSTRUCTION, null);
+               viewModel.checkInternet(Status.NOTICE_INSTRUCTION, null);
             }
 
         }
@@ -1589,7 +1589,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     public void commonEventListner(CommonDataModel commonDataModel) {
         if(commonDataModel.getClickType()==Status.LOGIN_DISCLAMER_DIALOG){
             AppLogger.v("Notice","clickMethodNotification");
-            //viewModel.checkInternet(Status.NOTICE_INSTRUCTION, null);
+            viewModel.checkInternet(Status.NOTICE_INSTRUCTION, null);
         } else if(commonDataModel.getClickType()==Status.NOTICE_DIALOG){
             callingCongratsDialog();
         } else if(commonDataModel.getClickType() == Status.GRADE_CHANGE_DIALOG){
