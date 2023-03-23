@@ -22,7 +22,7 @@ import io.reactivex.plugins.RxJavaPlugins;
 public class AuroApp extends Application {
 
     AppComponent appComponent;
-    public static AuroApp context;
+    public static AuroApp context,mcontext;
     public static AuroScholarDataModel auroScholarDataModel;
     public static int fragmentContainerUiId = 0;
 
@@ -33,7 +33,7 @@ public class AuroApp extends Application {
         context = this;
         //Restring.init(context);
 
-
+        AuroApp.context = this;
         appComponent = DaggerAppComponent
                 .builder()
                 .appModule(new AppModule(this))
@@ -49,14 +49,16 @@ public class AuroApp extends Application {
        // return appComponent;
         return null;
     }
-    public static void initializeWithDefaults(Context mcontext){
+    public static void initializeWithDefaults(){
         if (context==null){
             context = (AuroApp) mcontext;
         }
     }
 
     public static AuroApp getAppContext() {
-
+        if (context==null){
+            context = (AuroApp) mcontext.getApplicationContext();
+        }
         return context;
     }
 
