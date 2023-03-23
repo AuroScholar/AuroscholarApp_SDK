@@ -1,6 +1,7 @@
 package com.auro.application.util.firebaseAnalytics;
 
 
+import android.app.Application;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -26,7 +27,7 @@ public class FirebaseAnalyticsEvent {
     FirebaseAnalytics mObjFirebaseAnalytics;
 
 
-    public FirebaseAnalyticsEvent(AuroApp appContext) {
+    public FirebaseAnalyticsEvent(Application appContext) {
         mObjFirebaseAnalytics = FirebaseAnalytics.getInstance(appContext);
     }
 
