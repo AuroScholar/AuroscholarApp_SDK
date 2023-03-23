@@ -158,8 +158,6 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
     QuizResModel quizResModel;
     AssignmentReqModel assignmentReqModel;
     AssignmentResModel testAssignmentResModel;
-    AuroScholarDataModel auroScholarDataModel;
-
     ProgressDialog quizProgressDialog;
     InstructionDialog customDialog;
     SlabsResModel slabsResModel;

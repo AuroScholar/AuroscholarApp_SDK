@@ -505,6 +505,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         inputModel.setMobileNumber(prefModel.getUserMobile());
         inputModel.setActivity(this); //Mandatory
         inputModel.setFragmentContainerUiId(R.id.home_container);
+        inputModel.setUserid(prefModel.getUserId());
+        inputModel.setDeviceToken(prefModel.getDeviceToken());
         //Mandatory
         inputModel.setReferralLink("");
         inputModel.setPartnerSource(prefModel.getPartnersource());
@@ -1180,6 +1182,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         auroScholarDataModel.setActivity(auroScholarDataModel.getActivity());
         auroScholarDataModel.setFragmentContainerUiId(auroScholarDataModel.getFragmentContainerUiId());
         auroScholarDataModel.setReferralLink(auroScholarDataModel.getReferralLink());
+        auroScholarDataModel.setDevicetoken(prefModel.getDeviceToken());
         if (TextUtil.isEmpty(auroScholarDataModel.getPartnerSource())) {
             auroScholarDataModel.setPartnerSource("");
         } else {
