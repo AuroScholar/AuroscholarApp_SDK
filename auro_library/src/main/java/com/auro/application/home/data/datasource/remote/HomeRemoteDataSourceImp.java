@@ -357,7 +357,7 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
         params.put(AppConstant.DashBoardParams.LANGUAGE_VERSION, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         params.put(AppConstant.DashBoardParams.API_VERSION, AppConstant.ParamsValue.API_VERSION_VAL);
         params.put(AppConstant.Language.USER_PREFERED_LANGUAGE,Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId()));
-        params.put("partner_unique_id",Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getPartneruniqueid()));
+        params.put("partner_unique_id",AuroAppPref.INSTANCE.getModelInstance().getPartneruniqueid());
 
         return homeRemoteApi.getAssignmentId(params);
     }
