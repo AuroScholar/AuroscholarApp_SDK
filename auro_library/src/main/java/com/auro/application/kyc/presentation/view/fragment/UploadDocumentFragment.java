@@ -349,7 +349,7 @@ public class UploadDocumentFragment extends BaseDialog implements View.OnClickLi
             }
             kycDocumentDatamodelArrayList.get(pos).setDocumentURi(Uri.parse(path));
             File file = new File(kycDocumentDatamodelArrayList.get(pos).getDocumentURi().getPath());
-            InputStream is = DaggerWrapper.getmContext().getApplicationContext().getContentResolver().openInputStream(Uri.fromFile(file));
+            InputStream is = AuroApp.getAppContext().getApplicationContext().getContentResolver().openInputStream(Uri.fromFile(file));
             kycDocumentDatamodelArrayList.get(pos).setImageBytes(kycViewModel.teacherUseCase.getBytes(is));
             AppLogger.e("calluploadApi-", "Step 2");
 

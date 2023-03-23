@@ -50,7 +50,7 @@ public class LevelInfoAdapter extends RecyclerView.Adapter<LevelInfoAdapter.View
         }
 
         public void setData(SlabModel resModel, int position) {
-            binding.quizAmount.setText(DaggerWrapper.getmContext().getString(R.string.rs)+resModel.getPrice());
+            binding.quizAmount.setText(AuroApp.getAppContext().getString(R.string.rs)+resModel.getPrice());
             binding.rating.setRating(resModel.getDetails().size());
         }
 

@@ -56,7 +56,7 @@ public class QuizWonDetailAdapter extends RecyclerView.Adapter<QuizWonDetailAdap
             binding.subjectName.setText(resModel.getSubject());
             binding.quizName.setText(resModel.getQuizName());
             binding.amount.setText(resModel.getQuizName());
-            binding.amount.setText(DaggerWrapper.getmContext().getString(R.string.rs) + slabModel.getPrice());
+            binding.amount.setText(AuroApp.getAppContext().getString(R.string.rs) + slabModel.getPrice());
 
         }
 

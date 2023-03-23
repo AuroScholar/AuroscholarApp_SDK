@@ -78,9 +78,9 @@ public class SelectQuizOptionAdapter extends RecyclerView.Adapter<SelectQuizOpti
             binding.msgText.setText(Html.fromHtml(model.getOption()));
             String url = "";
             if (model.isCheck()) {
-                binding.checkIcon.setImageDrawable(DaggerWrapper.getmContext().getDrawable(R.drawable.ic_auro_check));
+                binding.checkIcon.setImageDrawable(AuroApp.getAppContext().getDrawable(R.drawable.ic_auro_check));
             } else {
-                binding.checkIcon.setImageDrawable(DaggerWrapper.getmContext().getDrawable(R.drawable.circle_auro_outline));
+                binding.checkIcon.setImageDrawable(AuroApp.getAppContext().getDrawable(R.drawable.circle_auro_outline));
 
             }
             binding.msgText.setVisibility(View.GONE);

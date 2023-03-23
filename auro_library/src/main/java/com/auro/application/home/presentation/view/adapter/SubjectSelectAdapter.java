@@ -69,15 +69,15 @@ public class SubjectSelectAdapter extends RecyclerView.Adapter<SubjectSelectAdap
 
             Drawable drawable = null;
             if (position == 0) {
-                drawable = DaggerWrapper.getmContext().getDrawable(R.drawable.auro_math);
+                drawable = AuroApp.getAppContext().getDrawable(R.drawable.auro_math);
             } else if (position == 1) {
-                drawable = DaggerWrapper.getmContext().getDrawable(R.drawable.auro_english);
+                drawable = AuroApp.getAppContext().getDrawable(R.drawable.auro_english);
             } else if (position == 2) {
-                drawable = DaggerWrapper.getmContext().getDrawable(R.drawable.auro_hindi);
+                drawable = AuroApp.getAppContext().getDrawable(R.drawable.auro_hindi);
             } else if (position == 3) {
-                drawable = DaggerWrapper.getmContext().getDrawable(R.drawable.auro_sst);
+                drawable = AuroApp.getAppContext().getDrawable(R.drawable.auro_sst);
             } else {
-                drawable = DaggerWrapper.getmContext().getDrawable(R.drawable.auro_science);
+                drawable = AuroApp.getAppContext().getDrawable(R.drawable.auro_science);
             }
             binding.icSubjctBackground.setImageDrawable(getImageFromCode(model));
 
@@ -103,41 +103,41 @@ public class SubjectSelectAdapter extends RecyclerView.Adapter<SubjectSelectAdap
     private Drawable getImageFromCode(SubjectResModel subjectResModel) {
         switch (subjectResModel.getSubjectCode()) {
             case AppConstant.SubjectCodes.Mathematics:
-                return DaggerWrapper.getmContext().getDrawable(R.drawable.ic_maths_vertical);
+                return AuroApp.getAppContext().getDrawable(R.drawable.ic_maths_vertical);
 
             case AppConstant.SubjectCodes.English:
-                return DaggerWrapper.getmContext().getDrawable(R.drawable.ic_english_vertical);
+                return AuroApp.getAppContext().getDrawable(R.drawable.ic_english_vertical);
 
             case AppConstant.SubjectCodes.Hindi:
-                return DaggerWrapper.getmContext().getDrawable(R.drawable.ic_hindi_vertical);
+                return AuroApp.getAppContext().getDrawable(R.drawable.ic_hindi_vertical);
 
 
             case AppConstant.SubjectCodes.Social_Science:
-                return DaggerWrapper.getmContext().getDrawable(R.drawable.ic_social_science_vertical);
+                return AuroApp.getAppContext().getDrawable(R.drawable.ic_social_science_vertical);
 
             case AppConstant.SubjectCodes.Science:
-                return DaggerWrapper.getmContext().getDrawable(R.drawable.ic_science_vertical);
+                return AuroApp.getAppContext().getDrawable(R.drawable.ic_science_vertical);
 
             case AppConstant.SubjectCodes.Physics:
-                return DaggerWrapper.getmContext().getDrawable(R.drawable.ic_physics_vertical);
+                return AuroApp.getAppContext().getDrawable(R.drawable.ic_physics_vertical);
 
             case AppConstant.SubjectCodes.Chemistry:
-                return DaggerWrapper.getmContext().getDrawable(R.drawable.ic_chemistry_vertical);
+                return AuroApp.getAppContext().getDrawable(R.drawable.ic_chemistry_vertical);
 
             case AppConstant.SubjectCodes.Biology:
-                return DaggerWrapper.getmContext().getDrawable(R.drawable.ic_biology_vertical);
+                return AuroApp.getAppContext().getDrawable(R.drawable.ic_biology_vertical);
 
             case AppConstant.SubjectCodes.History:
-                return DaggerWrapper.getmContext().getDrawable(R.drawable.ic_history_vertical);
+                return AuroApp.getAppContext().getDrawable(R.drawable.ic_history_vertical);
 
             case AppConstant.SubjectCodes.Political_Science:
-                return DaggerWrapper.getmContext().getDrawable(R.drawable.ic_political_science_vertical);
+                return AuroApp.getAppContext().getDrawable(R.drawable.ic_political_science_vertical);
 
             case AppConstant.SubjectCodes.Geography:
-                return DaggerWrapper.getmContext().getDrawable(R.drawable.ic_geographic_vertical);
+                return AuroApp.getAppContext().getDrawable(R.drawable.ic_geographic_vertical);
 
             default:
-                return DaggerWrapper.getmContext().getDrawable(R.drawable.ic_physics_vertical);
+                return AuroApp.getAppContext().getDrawable(R.drawable.ic_physics_vertical);
 
         }
 

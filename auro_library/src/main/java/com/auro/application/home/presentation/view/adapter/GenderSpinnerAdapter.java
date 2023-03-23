@@ -32,7 +32,7 @@ public class GenderSpinnerAdapter extends ArrayAdapter {
 
     public GenderSpinnerAdapter(@NonNull Context context, int resource, List<GenderData> list, CommonCallBackListner onItemClickState) {
         super(context, resource);
-        inflter = (LayoutInflater.from(DaggerWrapper.getmContext().getApplicationContext()));
+        inflter = (LayoutInflater.from(AuroApp.getAppContext().getApplicationContext()));
         this.list = list;
         this.onItemClickState = onItemClickState;
 

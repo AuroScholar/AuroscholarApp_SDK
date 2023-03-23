@@ -33,7 +33,7 @@ public class SchoolMediumSpinnerAdapter extends ArrayAdapter {
 
     public SchoolMediumSpinnerAdapter(@NonNull Context context, int resource, List<SchoolLangData> list, CommonCallBackListner onItemClickState) {
         super(context, resource);
-        inflter = (LayoutInflater.from(DaggerWrapper.getmContext().getApplicationContext()));
+        inflter = (LayoutInflater.from(AuroApp.getAppContext().getApplicationContext()));
         this.list = list;
         this.onItemClickState = onItemClickState;
 

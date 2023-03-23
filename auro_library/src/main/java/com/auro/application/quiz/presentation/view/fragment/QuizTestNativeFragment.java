@@ -600,7 +600,7 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
                 try {
                     LanguageMasterDynamic model = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic();
                     Details details = model.getDetails();
-                    buttonText=details.getSaveSubmit() != null ? details.getSaveSubmit() : DaggerWrapper.getmContext().getString(R.string.save_submit);
+                    buttonText=details.getSaveSubmit() != null ? details.getSaveSubmit() : AuroApp.getAppContext().getString(R.string.save_submit);
                 } catch (Exception e) {
                     AppLogger.e(TAG, e.getMessage());
                 }
@@ -1076,7 +1076,7 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
                     LanguageMasterDynamic model = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic();
                     Details details = model.getDetails();
                     if (model != null) {
-                        binding.saveNextBt.setText(details.getSaving() != null ? details.getSaving() :DaggerWrapper.getmContext().getString(R.string.saving));
+                        binding.saveNextBt.setText(details.getSaving() != null ? details.getSaving() :AuroApp.getAppContext().getString(R.string.saving));
                     }
                 } catch (Exception e) {
                     AppLogger.e(TAG, e.getMessage());
@@ -1228,7 +1228,7 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
                                 LanguageMasterDynamic model = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic();
                                 Details details = model.getDetails();
                                 if (model != null) {
-                                    text=details.getSaveSubmit() != null ? details.getSaveSubmit() : DaggerWrapper.getmContext().getString(R.string.save_submit);
+                                    text=details.getSaveSubmit() != null ? details.getSaveSubmit() : AuroApp.getAppContext().getString(R.string.save_submit);
                                 }
                             } catch (Exception e) {
                                 AppLogger.e(TAG, e.getMessage());

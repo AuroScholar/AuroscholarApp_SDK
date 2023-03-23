@@ -75,11 +75,11 @@ public class SubjectPrefAdapter extends RecyclerView.Adapter<SubjectPrefAdapter.
             binding.RPTextViewTitle.setText(model.getSubjectname());
             binding.mainParentLayout.setBackground(model.getBackgroundImage());
             if (model.isLock()) {
-                binding.lockLayout.setBackground(DaggerWrapper.getmContext().getDrawable(R.drawable.disable_background));
+                binding.lockLayout.setBackground(AuroApp.getAppContext().getDrawable(R.drawable.disable_background));
                 binding.lockLayout.setVisibility(View.VISIBLE);
-                binding.checkIcon.setImageDrawable(DaggerWrapper.getmContext().getDrawable(R.drawable.ic_auro_check_disable));
+                binding.checkIcon.setImageDrawable(AuroApp.getAppContext().getDrawable(R.drawable.ic_auro_check_disable));
             } else {
-                binding.checkIcon.setImageDrawable(DaggerWrapper.getmContext().getDrawable(R.drawable.ic_auro_check));
+                binding.checkIcon.setImageDrawable(AuroApp.getAppContext().getDrawable(R.drawable.ic_auro_check));
                 binding.lockLayout.setVisibility(View.GONE);
             }
             if (model.isSelected()) {

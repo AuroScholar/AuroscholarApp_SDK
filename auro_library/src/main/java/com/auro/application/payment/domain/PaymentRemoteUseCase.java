@@ -105,7 +105,7 @@ public class PaymentRemoteUseCase extends NetworkUseCase {
                 return responseFail(apiTypeStatus);
 
             default:
-                return ResponseApi.fail(DaggerWrapper.getmContext().getString(R.string.default_error), apiTypeStatus);
+                return ResponseApi.fail(AuroApp.getAppContext().getString(R.string.default_error), apiTypeStatus);
         }
     }
 

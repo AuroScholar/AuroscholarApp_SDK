@@ -431,7 +431,7 @@ public class MyClassRoomGroupFragment extends BaseFragment implements CommonCall
     }
 
     private boolean isAppInstalled(String packageName) {
-        PackageManager packageManager = DaggerWrapper.getmContext().getPackageManager();
+        PackageManager packageManager = AuroApp.getAppContext().getPackageManager();
         for (PackageInfo packageInfo : packageManager.getInstalledPackages(0)) {
             AppLogger.e("isAppInstalled-", packageInfo.packageName);
             if (packageInfo.packageName.equals(AppConstant.PACKAGE_WHATSAPP)) {

@@ -207,7 +207,7 @@ public class AppUtil {
     }
 
     public static String getIpAdress() {
-        WifiManager wm = (WifiManager) DaggerWrapper.getmContext().getApplicationContext().getSystemService(WIFI_SERVICE);
+        WifiManager wm = (WifiManager) AuroApp.getAppContext().getApplicationContext().getSystemService(WIFI_SERVICE);
         String ip = Formatter.formatIpAddress(wm.getConnectionInfo().getIpAddress());
         return ip;
     }

@@ -3,9 +3,9 @@ package com.auro.application.core.network;
 import com.auro.application.BuildConfig;
 
 public interface URLConstant {
-    //  String BASE_URL = BuildConfig.BASE_URL; // live
+     String BASE_URL = BuildConfig.BASE_URL; // live
    // String BASE_URL = "https://app.auroscholar.org/api/";
-   String BASE_URL = "https://staging.auroscholar.com/api/";
+   //String BASE_URL = "https://staging.auroscholar.com/api/";
    // String BASE_URL = "192.168.0.2/auroscholar-product/api/"
     String OTP_SEND_API = BASE_URL + "send_otp";
     String OTP_VERIFY = BASE_URL + "verify_otp_new";

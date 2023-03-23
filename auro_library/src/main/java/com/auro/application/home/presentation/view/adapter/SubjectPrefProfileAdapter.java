@@ -71,8 +71,8 @@ public class SubjectPrefProfileAdapter extends RecyclerView.Adapter<SubjectPrefP
         public void bindUser(CategorySubjectResModel model, int position, CommonCallBackListner commonCallBackListner) {
             binding.txtClass.setText(model.getSubjectname());
             if(!model.isSelected()) {
-                binding.txtClass.setTextColor(DaggerWrapper.getmContext().getColor(R.color.color_light_grey));
-                binding.buttonClick.setBackground(DaggerWrapper.getmContext().getDrawable(R.drawable.class_disable_border_background));
+                binding.txtClass.setTextColor(AuroApp.getAppContext().getColor(R.color.color_light_grey));
+                binding.buttonClick.setBackground(AuroApp.getAppContext().getDrawable(R.drawable.class_disable_border_background));
             }
 
         }
