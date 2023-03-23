@@ -1179,7 +1179,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         auroScholarDataModel.setMobileNumber(prefModel.getUserMobile());
         auroScholarDataModel.setStudentClass(String.valueOf(prefModel.getUserclass()));
         auroScholarDataModel.setRegitrationSource(auroScholarDataModel.getRegitrationSource());
-        auroScholarDataModel.setActivity(auroScholarDataModel.getActivity());
+        auroScholarDataModel.setActivity((Activity) DashBoardMainActivity.this);
         auroScholarDataModel.setFragmentContainerUiId(auroScholarDataModel.getFragmentContainerUiId());
         auroScholarDataModel.setReferralLink(auroScholarDataModel.getReferralLink());
         auroScholarDataModel.setDevicetoken(prefModel.getDeviceToken());

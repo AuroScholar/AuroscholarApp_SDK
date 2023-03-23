@@ -3,6 +3,7 @@ package com.auro.application.home.presentation.view.adapter;
 import static android.content.Context.MODE_PRIVATE;
 
 import static com.auro.application.core.application.AuroApp.auroScholarDataModel;
+import static com.auro.application.core.application.AuroApp.context;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -19,6 +20,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.auro.application.R;
+import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.database.AuroAppPref;
@@ -288,7 +290,7 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                                 mContext.startActivity(i);
                             }
                             else{
-                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), DashBoardMainActivity.class));
+                                auroScholarDataModel.getActivity().startActivity(new Intent(AuroApp.getAppContext(), DashBoardMainActivity.class));
 
                                 // openGenricSDK(mobileno,partnersource,parnteruniqueid, apikey);
 
