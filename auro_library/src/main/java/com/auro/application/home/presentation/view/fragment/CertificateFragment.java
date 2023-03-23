@@ -231,6 +231,7 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
         } else if (id == R.id.language_layout) {
             ((DashBoardMainActivity) getActivity()).openChangeLanguageDialog();
         } else if (id == R.id.cardView2) {
+
             ((DashBoardMainActivity) getActivity()).openProfileFragment();
         }
     }

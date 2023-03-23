@@ -209,7 +209,13 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         getSchoolmedium(language_id);
         init();
         setListener();
-
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+            String newToken = instanceIdResult.getToken();
+            Log.e("newToken", newToken);
+            PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+            prefModel.setDeviceToken(newToken);
+            getPreferences(Context.MODE_PRIVATE).edit().putString("fb_device_token", newToken).apply();
+        });
 
 
 

@@ -43,6 +43,7 @@ import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.Status;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
+import com.auro.application.core.util.AuroScholar;
 import com.auro.application.home.data.model.Details;
 import com.auro.application.home.data.model.response.LanguageResModel;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
@@ -448,9 +449,9 @@ public class ViewUtil {
                 AuroApp.getAppContext().getBaseContext().getResources().getDisplayMetrics());
         config.setLocale(locale);*/
         activity.finish();
-
-        Intent refresh = new Intent(activity, DashBoardMainActivity.class);
-        activity.startActivity(refresh);
+        AuroScholar.opendashboard();
+//        Intent refresh = new Intent(activity, DashBoardMainActivity.class);
+//        activity.startActivity(refresh);
 
     }
 

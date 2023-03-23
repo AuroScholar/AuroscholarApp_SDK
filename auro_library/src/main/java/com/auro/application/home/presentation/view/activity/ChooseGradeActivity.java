@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ import com.auro.application.util.TextUtil;
 import com.auro.application.util.ViewUtil;
 import com.auro.application.util.strings.AppStringDynamic;
 import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.truecaller.android.sdk.ErrorResponse;
 
 import org.json.JSONException;
@@ -99,7 +101,12 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
         editor.putString("statuschoosedashboardscreen", "false");
         editor.putString("statusopenprofilewithoutpin", "false");
         editor.apply();
-
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+            String newToken = instanceIdResult.getToken();
+            Log.e("newToken", newToken);
+            prefModel.setDeviceToken(newToken);
+            getPreferences(Context.MODE_PRIVATE).edit().putString("fb_device_token", newToken).apply();
+        });
         init();
         setListener();
 

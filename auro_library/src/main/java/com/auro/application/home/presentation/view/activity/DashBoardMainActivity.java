@@ -229,18 +229,16 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         DaggerWrapper.getComponent(this).doInjection(this);
         ViewUtil.setLanguageonUi(this);
 
-        // for sdk
-//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-//            deviceToken = instanceIdResult.getToken();
-//            Log.e("newToken", deviceToken);
+
         prefModel = AuroAppPref.INSTANCE.getModelInstance();
-//            prefModel.setDeviceToken(deviceToken);
-//         getPreferences(Context.MODE_PRIVATE).edit().putString("fb_device_token", deviceToken).apply();
-//        });
-        // getInstabug();
-        // getBranch();
-        //  PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();  // for sdk
-        //  checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
+        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+            String newToken = instanceIdResult.getToken();
+            Log.e("newToken", newToken);
+            PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+            prefModel.setDeviceToken(newToken);
+            getPreferences(Context.MODE_PRIVATE).edit().putString("fb_device_token", newToken).apply();
+        });
+
         String mobilenumber = AuroAppPref.INSTANCE.getModelInstance().getUserMobile();
         SharedPreferences.Editor editor = getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
         editor.putString("statusparentprofile", "false");
@@ -390,10 +388,10 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                 AuroAppPref.INSTANCE.clearPref();
 
                 funnelStudentLogOut();
-
-                Intent intent = new Intent(DashBoardMainActivity.this, SDKActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                       finishAffinity();
+//                Intent intent = new Intent(DashBoardMainActivity.this, SDKActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
             }
 
             @Override
