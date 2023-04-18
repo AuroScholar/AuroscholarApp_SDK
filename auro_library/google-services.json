@@ -13,12 +13,7 @@
           "package_name": "com.auro.application"
         }
       },
-      "oauth_client": [
-        {
-          "client_id": "366052618270-un8fu5m3uu431moie72vcati005spavg.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
+      "oauth_client": [],
       "api_key": [
         {
           "current_key": "AIzaSyDzCM4cOe5GFZ0Rtl8Ficv7lXMJIJFChZQ"
@@ -28,7 +23,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "366052618270-un8fu5m3uu431moie72vcati005spavg.apps.googleusercontent.com",
+              "client_id": "366052618270-hld23okhe7g0tg08lefi05h91qq92vq8.apps.googleusercontent.com",
               "client_type": 3
             }
           ]

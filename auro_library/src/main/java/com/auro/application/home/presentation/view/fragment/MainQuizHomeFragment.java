@@ -106,16 +106,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
-import com.instabug.apm.APM;
-import com.instabug.bug.BugReporting;
-import com.instabug.crash.CrashReporting;
-import com.instabug.library.Feature;
-import com.instabug.library.Instabug;
-import com.instabug.library.invocation.InstabugInvocationEvent;
-import com.instabug.library.ui.onboarding.WelcomeMessage;
-import com.instabug.library.visualusersteps.State;
-
-
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -391,10 +381,7 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
             case NEXT_QUIZ_CLICK:
                 quizResModel = (QuizResModel) commonDataModel.getObject();
                 callGetQuizInstructionsApi();
-                // checkPreQuizDisclaimer();
-               /* funnelRetakeQuiz();
-                AppLogger.e("chhonker NEXT_QUIZ_CLICK-- ", "ClickCallBack");
-                askPermission();*/
+
                 break;
 
             case START_QUIZ_BUTON:

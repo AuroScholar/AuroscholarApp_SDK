@@ -171,12 +171,6 @@ public class AuroScholar {
                                         progress.dismiss();
                                         openBottomSheetDialog();
                                     }
-
-
-
-
-
-
                                 }
                                 else {
                                     progress.dismiss();
@@ -275,11 +269,7 @@ public class AuroScholar {
                             }
 
                         }
-                        else
-                        {
 
-
-                        }
                     }
 
                     @Override

@@ -3,8 +3,8 @@
     <!--App-->
     <string name="app_name">AuroScholar</string>
     <string name="partnerKey">cHsPa895adcc1632d4ea489b0006d4e72865f</string>
-
     <string name="facebook_app_id">376950950122226</string>
+    <string name="crashlyticsCollectionEnabled" translatable="false">true</string>
 
     <string name="internet_check">Oops, No internet found.Please check your connection or try again.</string>
     <string name="default_error">Unable to connect. Please try after sometime.</string>

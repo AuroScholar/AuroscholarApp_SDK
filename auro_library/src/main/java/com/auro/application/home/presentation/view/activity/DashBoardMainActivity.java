@@ -137,16 +137,6 @@ import com.google.android.play.core.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.googlejavaformat.Indent;
 import com.google.gson.Gson;
-import com.instabug.apm.APM;
-import com.instabug.bug.BugReporting;
-import com.instabug.crash.CrashReporting;
-import com.instabug.library.Feature;
-import com.instabug.library.Instabug;
-import com.instabug.library.invocation.InstabugInvocationEvent;
-import com.instabug.library.ui.onboarding.WelcomeMessage;
-import com.instabug.library.visualusersteps.State;
-
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -279,7 +269,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         binding.setLifecycleOwner(this);
         mContext = DashBoardMainActivity.this;
         setProgressVal();
-     //   funnelStudentDashBoard();
+     funnelStudentDashBoard();
         //  checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
         setListener();
 
@@ -1359,7 +1349,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     }
 
     private void funnelStudentDashBoard() {
-        //AnalyticsRegistry.INSTANCE.getModelInstance().trackStudentDashBoard();
+        AnalyticsRegistry.INSTANCE.getModelInstance().trackStudentDashBoard();
     }
 
     private void funnelStudentLogOut() {
