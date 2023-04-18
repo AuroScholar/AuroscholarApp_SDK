@@ -133,7 +133,7 @@ public class ParentProfileActivity extends BaseActivity implements View.OnFocusC
     PrefModel prefModel;
     RequestBody  lRequestBody;
     String filename;
-    String fbnewToken;
+    String fbnewToken="test123";
     String maindistrictid,mainstateid;
     List<StateData> state_list = new ArrayList<>();
     List<GenderData> genderList = new ArrayList<>();
@@ -655,10 +655,10 @@ public class ParentProfileActivity extends BaseActivity implements View.OnFocusC
         String userid = prefModel.getCheckUserResModel().getUserDetails().get(0).getUserId();
         String username = prefModel.getCheckUserResModel().getUserDetails().get(0).getUserName();
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            fbnewToken = instanceIdResult.getToken();
-            Log.e("newToken", fbnewToken);
-        });
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+//            fbnewToken = instanceIdResult.getToken();
+//            Log.e("newToken", fbnewToken);
+//        });
         RequestBody useridp  = RequestBody.create(MediaType.parse("text/plain"), userid);
         RequestBody namep  = RequestBody.create(MediaType.parse("text/plain"), name);
         RequestBody stateid  = RequestBody.create(MediaType.parse("text/plain"), stateCode);
@@ -768,10 +768,10 @@ public class ParentProfileActivity extends BaseActivity implements View.OnFocusC
         studentProfileModel.setStateId(stateCode);
         studentProfileModel.setDistrictId(districtCode);
         /*Device Detail*/
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            fbnewToken = instanceIdResult.getToken();
-            Log.e("newToken", fbnewToken);
-        });
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+//            fbnewToken = instanceIdResult.getToken();
+//            Log.e("newToken", fbnewToken);
+//        });
         studentProfileModel.setDeviceToken(fbnewToken);
         studentProfileModel.setMobileVersion(DeviceUtil.getVersionName());
         studentProfileModel.setMobileManufacturer(DeviceUtil.getManufacturer(this));

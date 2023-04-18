@@ -239,10 +239,7 @@ CompleteStudentProfileWithPinActivity extends BaseActivity implements View.OnCli
         AppUtil.loadAppLogo(binding.auroScholarLogo, this);
         prefModel =  AuroAppPref.INSTANCE.getModelInstance();
         String language_id = prefModel.getUserLanguageId();
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            fbnewToken = instanceIdResult.getToken();
-            Log.e("newTokens", fbnewToken);
-        });
+
         getGrade();
         getAllStateList();
         getGender();

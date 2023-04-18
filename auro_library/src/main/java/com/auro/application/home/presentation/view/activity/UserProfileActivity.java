@@ -479,10 +479,10 @@ public class UserProfileActivity extends BaseActivity implements View.OnFocusCha
         studentProfileModel.setUserId(prefModel.getStudentData().getUserId());
         studentProfileModel.setStateId(stateCode);
         studentProfileModel.setDistrictId(districtCode);
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            fbnewToken = instanceIdResult.getToken();
-            Log.e("newToken", fbnewToken);
-        });
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+//            fbnewToken = instanceIdResult.getToken();
+//            Log.e("newToken", fbnewToken);
+//        });
         studentProfileModel.setDeviceToken(fbnewToken);
         studentProfileModel.setMobileVersion(DeviceUtil.getVersionName());
         studentProfileModel.setMobileManufacturer(DeviceUtil.getManufacturer(this));

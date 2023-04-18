@@ -212,7 +212,8 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
     String stateCode = "";
     String districtCode = "";
     String Schoolsearch = "";
-    String fullname,studentemail,filename,image_path,SchoolName,gradeid,fbnewToken,state_Code,district_code;
+    String fbnewToken = "Test123";
+    String fullname,studentemail,filename,image_path,SchoolName,gradeid,state_Code,district_code;
     String gender_pass,tutiontype_pass,tution_pass,schoolmedium_pass,board_pass, final_state_id,final_district_id,f_state,f_district;
     RequestBody lRequestBody;
     String schooltype_pass = "";
@@ -258,14 +259,14 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(StudentProfileViewModel.class);
         binding.setLifecycleOwner(this);
         setRetainInstance(true);
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( getActivity(),  new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                fbnewToken = instanceIdResult.getToken();
-                Log.v("fbtoken", fbnewToken);
-
-            }
-        });
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( getActivity(),  new OnSuccessListener<InstanceIdResult>() {
+//            @Override
+//            public void onSuccess(InstanceIdResult instanceIdResult) {
+//                fbnewToken = instanceIdResult.getToken();
+//                Log.v("fbtoken", fbnewToken);
+//
+//            }
+//        });
         details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
 
         init();

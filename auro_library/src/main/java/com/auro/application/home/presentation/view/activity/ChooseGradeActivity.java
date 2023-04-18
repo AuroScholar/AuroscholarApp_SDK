@@ -101,12 +101,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
         editor.putString("statuschoosedashboardscreen", "false");
         editor.putString("statusopenprofilewithoutpin", "false");
         editor.apply();
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            String newToken = instanceIdResult.getToken();
-            Log.e("newToken", newToken);
-            prefModel.setDeviceToken(newToken);
-            getPreferences(Context.MODE_PRIVATE).edit().putString("fb_device_token", newToken).apply();
-        });
+
         init();
         setListener();
 

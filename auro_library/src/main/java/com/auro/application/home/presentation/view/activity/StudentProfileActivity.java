@@ -125,7 +125,7 @@ public class StudentProfileActivity extends BaseActivity implements View.OnFocus
     String GenderName = "";
     String Schoolsearch = "";
     PrefModel prefModel;
-    String fbnewToken="";
+    String fbnewToken="Test123";
     List<StateData> state_list = new ArrayList<>();
     List<GenderData> genderList = new ArrayList<>();
     String image_path;
@@ -147,10 +147,10 @@ public class StudentProfileActivity extends BaseActivity implements View.OnFocus
         binding.setLifecycleOwner(this);
         AppUtil.loadAppLogo(binding.auroScholarLogo, this);
         prefModel =  AuroAppPref.INSTANCE.getModelInstance();
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            fbnewToken = instanceIdResult.getToken();
-            Log.e("newTokens", fbnewToken);
-        });
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+//            fbnewToken = instanceIdResult.getToken();
+//            Log.e("newTokens", fbnewToken);
+//        });
 
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         prefModel.setLogin(true);
@@ -675,10 +675,10 @@ else {
         studentProfileModel.setStateId(stateCode);
         studentProfileModel.setDistrictId(districtCode);
         /*Device Detail*/
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            fbnewToken = instanceIdResult.getToken();
-            Log.e("newToken", fbnewToken);
-        });
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+//            fbnewToken = instanceIdResult.getToken();
+//            Log.e("newToken", fbnewToken);
+//        });
         studentProfileModel.setDeviceToken(fbnewToken);
         studentProfileModel.setMobileVersion(DeviceUtil.getVersionName());
         studentProfileModel.setMobileManufacturer(DeviceUtil.getManufacturer(this));

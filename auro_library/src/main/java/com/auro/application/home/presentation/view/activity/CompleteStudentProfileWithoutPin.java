@@ -152,7 +152,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     String districtCode = "";
     String Schoolsearch = "";
     String GenderName = "";
-    String fbnewToken = "";
+    String fbnewToken = "test123";
     String image_path = "";
     String filename = "";
     String SchoolName = "";
@@ -209,13 +209,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         getSchoolmedium(language_id);
         init();
         setListener();
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            String newToken = instanceIdResult.getToken();
-            Log.e("newToken", newToken);
-            PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-            prefModel.setDeviceToken(newToken);
-            getPreferences(Context.MODE_PRIVATE).edit().putString("fb_device_token", newToken).apply();
-        });
+
 
 
 

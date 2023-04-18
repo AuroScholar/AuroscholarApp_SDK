@@ -100,13 +100,7 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
         mContext = AppLanguageActivity.this;
         AppUtil.loadAppLogo(binding.auroScholarLogo, this);
         //setContentView(R.layout.activity_app_language);
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            String newToken = instanceIdResult.getToken();
-            Log.e("newToken", newToken);
-            PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-            prefModel.setDeviceToken(newToken);
-            getPreferences(Context.MODE_PRIVATE).edit().putString("fb_device_token", newToken).apply();
-        });
+
         init();
         setListener();
     }

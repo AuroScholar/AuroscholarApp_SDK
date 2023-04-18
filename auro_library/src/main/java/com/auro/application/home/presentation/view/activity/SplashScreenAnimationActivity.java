@@ -90,13 +90,15 @@ public class SplashScreenAnimationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen_animation);
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            String newToken = instanceIdResult.getToken();
-            Log.e("newToken", newToken);
-            PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-            prefModel.setDeviceToken(newToken);
-            getPreferences(Context.MODE_PRIVATE).edit().putString("fb_device_token", newToken).apply();
-        });
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+//            String newToken = instanceIdResult.getToken();
+//            Log.e("newToken", newToken);
+//            PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+//            prefModel.setDeviceToken(newToken);
+//            getPreferences(Context.MODE_PRIVATE).edit().putString("fb_device_token", newToken).apply();
+//        });
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        prefModel.setDeviceToken("Test123");
 
         init();
         setListener();
