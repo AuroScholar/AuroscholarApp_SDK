@@ -1,3 +1,4 @@
+/*
 package com.auro.application.util.firebase;
 
 import android.app.PendingIntent;
@@ -90,10 +91,12 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         return mapAsString.toString();
     }
 
-    /**
+    */
+/**
      * Downloading push notification image before displaying it in
      * the notification tray
-     */
+     *//*
+
 
     @Override
     public void onNewToken(String token) {
@@ -124,9 +127,11 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
 
     }
 
-    /**
+    */
+/**
      * SEND NOTIFICATION TO MULTIPLE DEVICE ON ONE CLICK BY USING SUBCRIBETO TOPIC
-     */
+     *//*
+
     private void subscribeToTopic() {
         try {
             FirebaseMessaging.getInstance().subscribeToTopic("auroscholar")
@@ -146,19 +151,23 @@ public class FirebaseMessagingService extends com.google.firebase.messaging.Fire
         }
     }
 
-    /**
+    */
+/**
      * Showing notification with text only
-     */
+     *//*
+
     private void showNotificationMessage(Context context, String title, String message, String timeStamp, PendingIntent intent) {
         notificationUtils = new NotificationUtils(context);
         notificationUtils.showNotificationMessage(title, message, timeStamp, intent);
     }
 
-    /**
+    */
+/**
      * Showing notification with text and image
-     */
+     *//*
+
     private void showNotificationMessageWithBigImage(Context context, String title, String message, String timeStamp, PendingIntent intent, String imageUrl) {
         notificationUtils = new NotificationUtils(context);
         notificationUtils.showNotificationMessage(title, message, timeStamp, intent, imageUrl);
     }
-}
+}*/

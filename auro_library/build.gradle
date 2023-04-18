@@ -88,7 +88,7 @@ dependencies {
     implementation FacebookDependencies.facebook
     implementation OtpDependencies.otpdependencies
 
-   // implementation FirebaseDependencies.values()
+    implementation FirebaseDependencies.values()
     // OTHER Dependencies
     implementation otherDependencies.glide
     annotationProcessor otherDependencies.glideCompiler
@@ -126,7 +126,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.AuroScholar'
                 artifactId = 'auroscholar-android-sdk'
-                version = '2.2.2'
+                version = '2.2.3'
             }
         }
     }
