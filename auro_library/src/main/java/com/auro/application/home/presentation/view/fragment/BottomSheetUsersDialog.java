@@ -107,6 +107,7 @@ public class BottomSheetUsersDialog extends BottomSheetDialogFragment implements
                             else if (response.code() == 200) {
                                 userDetails.clear();
                                 userDetails = response.body().getUser_details();
+                                checkUserResModel = (SDKDataModel) response.body();
                                 for (int i = 0; i<response.body().getUser_details().size(); i++){
                                     auto_userid = response.body().getUser_details().get(0).getUser_id();
 
