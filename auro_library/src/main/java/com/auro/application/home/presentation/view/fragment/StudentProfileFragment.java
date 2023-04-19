@@ -1335,6 +1335,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         String childid = prefModel.getUserId();
 
 
+
         schoolnameprofile = binding.etSchoolname.getText().toString();
         if (GenderName.equals("")){
             gender_pass = "Please Select Your Gender";
