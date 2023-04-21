@@ -13,6 +13,10 @@ import com.auro.application.core.application.di.module.UtilsModule;
 import com.auro.application.home.data.model.AuroScholarDataModel;
 
 
+import java.io.IOException;
+import java.net.SocketException;
+
+import io.reactivex.exceptions.UndeliverableException;
 import io.reactivex.plugins.RxJavaPlugins;
 
 /**
@@ -31,6 +35,23 @@ public class AuroApp extends Application {
     public void onCreate() {
         super.onCreate();
         RxJavaPlugins.setErrorHandler(throwable -> {}); // nothing or some logging// bY pradeep Kumar
+      //  RxJavaPlugins.setErrorHandler(e -> {});
+
+        RxJavaPlugins.setErrorHandler(e -> {
+            if (e instanceof UndeliverableException) {
+                e = e.getCause();
+            }
+            if ((e instanceof IOException) || (e instanceof SocketException)) {
+                return;
+            }
+            if (e instanceof InterruptedException) {
+                return;
+            }
+
+
+        });
+
+
         context = this;
         //Restring.init(context);
 

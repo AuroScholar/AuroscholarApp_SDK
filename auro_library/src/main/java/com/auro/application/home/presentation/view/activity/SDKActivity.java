@@ -66,8 +66,8 @@ public class SDKActivity  extends AppCompatActivity {
         partner_unique_id=findViewById(R.id.partner_unique_id);
         partner_api_key=findViewById(R.id.partner_api_key);
         gradeid=findViewById(R.id.grade);
-        mobile_number.setText("8745256899");
-        partner_unique_id.setText("975231");
+        mobile_number.setText("7984268169");
+        partner_unique_id.setText("89456523");
         partner_source.setText("Aeronuts_WEB");
         partner_api_key.setText("7611f0fafb1e3b96d1a78c57b0650b85985eace9f6aaa365c0b496e9ae1163e7");
         DaggerWrapper.getComponent(this).doInjection(this);

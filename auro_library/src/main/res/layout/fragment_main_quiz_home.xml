@@ -334,7 +334,7 @@
                                 android:gravity="center_horizontal"
                                 android:text="@string/privacy_policy_auro"
                                 android:textAlignment="center"
-                                android:textColor="@color/blue_color"
+                                android:textColor="@color/white"
                                 android:textSize="@dimen/_10sdp"
                                 app:Font="Poppins-Regular.ttf"
                                 app:layout_constraintTop_toBottomOf="@+id/quizwon_type_list" />
@@ -356,7 +356,7 @@
                                 android:gravity="center_horizontal"
                                 android:text="@string/terms_of_service"
                                 android:textAlignment="center"
-                                android:textColor="@color/blue_color"
+                                android:textColor="@color/white"
                                 android:textSize="@dimen/_10sdp"
                                 app:Font="Poppins-Regular.ttf"
                                 app:layout_constraintTop_toBottomOf="@+id/quizwon_type_list" />
