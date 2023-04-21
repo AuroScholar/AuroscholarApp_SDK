@@ -1092,22 +1092,22 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                             setDataonUi();
                             AppLogger.v("GET_USER_PROFILE_DATA apiResponse", getStudentUpdateProfile + "");
                         }
-                        else if (responseApi.apiTypeStatus == CHECKVALIDUSER) {
-                            CheckUserResModel checkUserResModel = (CheckUserResModel) responseApi.data;
-                            if (!checkUserResModel.getError()) {
-                                PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-                                prefModel.setCheckUserResModel(checkUserResModel);
-                                AuroAppPref.INSTANCE.setPref(prefModel);
-                                checkForAddStudentVisibility();
-                            }
-
-                        }
-                        else if (responseApi.apiTypeStatus == Status.STUDENT_KYC_STATUS_API) {
-                            studentKycStatusResModel = (StudentKycStatusResModel) responseApi.data;
-                            if (!studentKycStatusResModel.getError()) {
-                             //   callCheckUserApi();
-                            }
-                        }
+//                        else if (responseApi.apiTypeStatus == CHECKVALIDUSER) {
+//                            CheckUserResModel checkUserResModel = (CheckUserResModel) responseApi.data;
+//                            if (!checkUserResModel.getError()) {
+//                                PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+//                                prefModel.setCheckUserResModel(checkUserResModel);
+//                                AuroAppPref.INSTANCE.setPref(prefModel);
+//                                checkForAddStudentVisibility();
+//                            }
+//
+//                        }
+//                        else if (responseApi.apiTypeStatus == Status.STUDENT_KYC_STATUS_API) {
+//                            studentKycStatusResModel = (StudentKycStatusResModel) responseApi.data;
+//                            if (!studentKycStatusResModel.getError()) {
+//                               callCheckUserApi();
+//                            }
+//                        }
                     }
                     break;
 

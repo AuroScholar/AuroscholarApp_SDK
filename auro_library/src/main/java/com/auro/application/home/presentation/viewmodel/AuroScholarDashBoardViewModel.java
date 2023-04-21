@@ -363,7 +363,7 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
     private void dashBoardApi(AuroScholarDataModel model) {
         getCompositeDisposable()
                 .add(homeRemoteUseCase.getDashboardData(model)
-                        .subscribeOn(Schedulers.io())
+                        .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Consumer<ResponseApi>() {
                                        @Override

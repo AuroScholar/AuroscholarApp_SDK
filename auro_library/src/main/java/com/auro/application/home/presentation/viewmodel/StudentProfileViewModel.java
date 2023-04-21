@@ -125,7 +125,7 @@ public class StudentProfileViewModel  extends ViewModel {
     private void preferenceSubjectList() {
         getCompositeDisposable()
                 .add(homeRemoteUseCase.preferenceSubjectList()
-                        .subscribeOn(Schedulers.io())
+                        .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Consumer<ResponseApi>() {
                                        @Override
@@ -352,7 +352,7 @@ public class StudentProfileViewModel  extends ViewModel {
     }
 
     private void getUserProfileData(String  userId) {
-        getCompositeDisposable().add(homeRemoteUseCase.getUserProfileData(userId).subscribeOn(Schedulers.io())
+        getCompositeDisposable().add(homeRemoteUseCase.getUserProfileData(userId).subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe(new Consumer<Disposable>() {
                     @Override
