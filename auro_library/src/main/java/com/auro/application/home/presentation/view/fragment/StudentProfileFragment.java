@@ -1105,7 +1105,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                         else if (responseApi.apiTypeStatus == Status.STUDENT_KYC_STATUS_API) {
                             studentKycStatusResModel = (StudentKycStatusResModel) responseApi.data;
                             if (!studentKycStatusResModel.getError()) {
-                                callCheckUserApi();
+                             //   callCheckUserApi();
                             }
                         }
                     }
