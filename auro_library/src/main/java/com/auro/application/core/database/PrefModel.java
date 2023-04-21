@@ -43,7 +43,7 @@ public class PrefModel implements Serializable {
 
     private String emailId;
 
-    private String deviceToken;
+    private String deviceToken="Test@123";
 
 
     private String updateMobileNum;

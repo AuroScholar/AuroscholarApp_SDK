@@ -33,7 +33,7 @@ public class AuroScholarDataModel implements Parcelable {
     String gender="";
     String email="";
     String partnerName="";
-    String devicetoken="";
+    String devicetoken="Test@123";
     String UserId;
     String apikey;
 

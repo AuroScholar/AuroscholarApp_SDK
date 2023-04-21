@@ -19,10 +19,12 @@ android {
 
     buildTypes {
         debug {
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "BASE_URL", "\"https://auroscholar.com/api/\""
         }
 
         release {
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             buildConfigField "String", "BASE_URL", "\"https://auroscholar.com/api/\""
         }
     }
@@ -126,7 +128,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.AuroScholar'
                 artifactId = 'auroscholar-android-sdk'
-                version = '2.2.8'
+                version = '2.2.9'
             }
         }
     }

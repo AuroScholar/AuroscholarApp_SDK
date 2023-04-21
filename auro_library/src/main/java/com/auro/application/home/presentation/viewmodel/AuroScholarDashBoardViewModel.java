@@ -354,7 +354,7 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
         if (prefModel.getDeviceToken() != null && !TextUtil.isEmpty(prefModel.getDeviceToken())) {
             auroScholarDataModel.setDevicetoken(prefModel.getDeviceToken());
         } else {
-            auroScholarDataModel.setDevicetoken("");
+            auroScholarDataModel.setDevicetoken("Test@123");
         }
         AppLogger.v("QuizNew", "Dashboard step 5");
         dashBoardApi(auroScholarDataModel);

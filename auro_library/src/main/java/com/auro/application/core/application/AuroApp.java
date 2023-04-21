@@ -47,8 +47,6 @@ public class AuroApp extends Application {
             if (e instanceof InterruptedException) {
                 return;
             }
-
-
         });
 
 

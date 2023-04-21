@@ -481,7 +481,7 @@ public class HomeRemoteUseCase extends NetworkUseCase {
         if (prefModel.getDeviceToken() != null && !TextUtil.isEmpty(prefModel.getDeviceToken())) {
             model.setDevicetoken(prefModel.getDeviceToken());
         } else {
-            model.setDevicetoken(prefModel.getDeviceToken());
+            model.setDevicetoken("Test@123");
         }
 
         model.setUserId(prefModel.getUserId());

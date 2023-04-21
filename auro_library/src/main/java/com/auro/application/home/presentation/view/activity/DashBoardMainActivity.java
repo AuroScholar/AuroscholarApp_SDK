@@ -1174,7 +1174,13 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         auroScholarDataModel.setActivity((Activity) DashBoardMainActivity.this);
         auroScholarDataModel.setFragmentContainerUiId(auroScholarDataModel.getFragmentContainerUiId());
         auroScholarDataModel.setReferralLink(auroScholarDataModel.getReferralLink());
-        auroScholarDataModel.setDevicetoken(prefModel.getDeviceToken());
+
+        if (prefModel.getDeviceToken() != null && !TextUtil.isEmpty(prefModel.getDeviceToken())) {
+            auroScholarDataModel.setDevicetoken(prefModel.getDeviceToken());
+        } else {
+            auroScholarDataModel.setDevicetoken("Test@123");
+        }
+
         if (TextUtil.isEmpty(auroScholarDataModel.getPartnerSource())) {
             auroScholarDataModel.setPartnerSource("");
         } else {
