@@ -68,8 +68,8 @@ public class SDKActivity  extends AppCompatActivity {
         gradeid=findViewById(R.id.grade);
         mobile_number.setText("7984268169");
         partner_unique_id.setText("89456523");
-        partner_source.setText("Aeronuts_WEB");
-        partner_api_key.setText("7611f0fafb1e3b96d1a78c57b0650b85985eace9f6aaa365c0b496e9ae1163e7");
+        partner_source.setText("VidyaSaarthi_ANDROID");
+        partner_api_key.setText("88c79e7ba48457f1557600c6084ef25c5052ede9a5e989fbf4fb1a87c7ede19e");
         DaggerWrapper.getComponent(this).doInjection(this);
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         if (prefModel.isLogin()){

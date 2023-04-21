@@ -34,10 +34,36 @@ public class AuroApp extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        RxJavaPlugins.setErrorHandler(throwable -> {}); // nothing or some logging// bY pradeep Kumar
-        RxJavaPlugins.setErrorHandler(e -> {});
-        context = this;
-        //Restring.init(context);
+//        RxJavaPlugins.setErrorHandler(throwable -> {}); // nothing or some logging// bY pradeep Kumar
+//        RxJavaPlugins.setErrorHandler(e -> {});
+        RxJavaPlugins.setErrorHandler(e -> {
+            if (e instanceof UndeliverableException) {
+                e = e.getCause();
+            }
+            if ((e instanceof IOException) || (e instanceof SocketException)) {
+
+                return;
+            }
+            if (e instanceof InterruptedException) {
+
+                return;
+            }
+            if ((e instanceof NullPointerException) || (e instanceof IllegalArgumentException)) {
+
+                Thread.currentThread().getUncaughtExceptionHandler()
+                        .uncaughtException(Thread.currentThread(), e);
+                return;
+            }
+            if (e instanceof IllegalStateException) {
+
+                Thread.currentThread().getUncaughtExceptionHandler()
+                        .uncaughtException(Thread.currentThread(), e);
+                return;
+            }
+
+        });
+        //context = this;
+
 
         AuroApp.context = this;
         appComponent = DaggerAppComponent
@@ -47,7 +73,6 @@ public class AuroApp extends Application {
                 .build();
 
         appComponent.injectAppContext(this);
-        //FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(!BuildConfig.DEBUG);
 
     }
 
@@ -59,9 +84,9 @@ public class AuroApp extends Application {
         mcontext = mApplication;
     }
 
-    /*public static AuroApp getAppContext() {
-        return context;
-    }*/
+//    public static AuroApp getAppContext() {
+//        return context;
+//    }
 
     public static Application getAppContext() {
         return mcontext;
