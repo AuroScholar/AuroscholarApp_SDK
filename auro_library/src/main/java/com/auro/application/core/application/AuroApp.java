@@ -35,21 +35,7 @@ public class AuroApp extends Application {
     public void onCreate() {
         super.onCreate();
         RxJavaPlugins.setErrorHandler(throwable -> {}); // nothing or some logging// bY pradeep Kumar
-      //  RxJavaPlugins.setErrorHandler(e -> {});
-
-        RxJavaPlugins.setErrorHandler(e -> {
-            if (e instanceof UndeliverableException) {
-                e = e.getCause();
-            }
-            if ((e instanceof IOException) || (e instanceof SocketException)) {
-                return;
-            }
-            if (e instanceof InterruptedException) {
-                return;
-            }
-        });
-
-
+        RxJavaPlugins.setErrorHandler(e -> {});
         context = this;
         //Restring.init(context);
 
