@@ -1341,8 +1341,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.apply();
-
-        finishAffinity();
+        finish();
+      //  finishAffinity();
     }
 
 
@@ -1672,7 +1672,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                             menuDashboard.findItem(R.id.item_more).setTitle(genderList.get(4).getTranslatedName());
 
                             Menu backMenuDashboard = binding.naviagtionContent.bottomSecondnavigation.getMenu();
-                            backMenuDashboard.findItem(R.id.item_logout).setTitle(genderList.get(5).getTranslatedName());
+                            backMenuDashboard.findItem(R.id.item_logout).setTitle("Logout");
                             backMenuDashboard.findItem(R.id.item_aurofriend).setTitle(genderList.get(6).getTranslatedName());
                             backMenuDashboard.findItem(R.id.item_kyc).setTitle(genderList.get(7).getTranslatedName());
                             backMenuDashboard.findItem(R.id.item_back).setTitle(genderList.get(9).getTranslatedName());
