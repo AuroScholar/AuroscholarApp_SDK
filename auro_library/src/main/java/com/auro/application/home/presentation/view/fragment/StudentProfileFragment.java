@@ -411,14 +411,6 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                 observeServiceResponse();
             }
         });
-        Details details1 = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
-
-
-
-
-
-
-
 
     }
 
@@ -938,8 +930,8 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
     }
     private void getKYCStatus()
     {
-
-        String suserid =  AuroAppPref.INSTANCE.getModelInstance().getUserId();
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String suserid =  prefModel.getUserId();
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("user_id",suserid);
 
@@ -1064,8 +1056,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                             funnelProfileSubmitScreen();
 
                             callingStudentUpdateProfile();
-                        }
-                        else if (responseApi.apiTypeStatus == SUBJECT_PREFRENCE_LIST_API) {
+                        } else if (responseApi.apiTypeStatus == SUBJECT_PREFRENCE_LIST_API) {
                             SubjectPreferenceResModel subjectPreferenceResModel = (SubjectPreferenceResModel) responseApi.data;
                             if (!TextUtil.checkListIsEmpty(subjectPreferenceResModel.getSubjects())) {
                                 setSubjectListVisibility(true);
@@ -1075,39 +1066,34 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                             } else {
                                 setSubjectListVisibility(false);
                             }
-                        }
-                        else if (responseApi.apiTypeStatus == FETCH_STUDENT_PREFERENCES_API) {
+                        } else if (responseApi.apiTypeStatus == FETCH_STUDENT_PREFERENCES_API) {
                             FetchStudentPrefResModel fetchStudentPrefResModel = (FetchStudentPrefResModel) responseApi.data;
                             PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
                             prefModel.setFetchStudentPrefResModel(fetchStudentPrefResModel);
                             AuroAppPref.INSTANCE.setPref(prefModel);
                             callSubjectListPreference();
-                            // Toast.makeText(getActivity(), "FETCH_STUDENT_PREFERENCES_API", Toast.LENGTH_SHORT).show();
 
-                        }
-                        else if (responseApi.apiTypeStatus == GET_USER_PROFILE_DATA) {
+                        } else if (responseApi.apiTypeStatus == GET_USER_PROFILE_DATA) {
                             AppLogger.v("GET_USER_PROFILE_DATA callApi", firstTimeCome + "   main");
                             handleProgress(1, "");
                             getStudentUpdateProfile = (GetStudentUpdateProfile) responseApi.data;
                             setDataonUi();
                             AppLogger.v("GET_USER_PROFILE_DATA apiResponse", getStudentUpdateProfile + "");
+                        } else if (responseApi.apiTypeStatus == CHECKVALIDUSER) {
+                            CheckUserResModel checkUserResModel = (CheckUserResModel) responseApi.data;
+                            if (!checkUserResModel.getError()) {
+                                PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+                                prefModel.setCheckUserResModel(checkUserResModel);
+                                AuroAppPref.INSTANCE.setPref(prefModel);
+                            //    checkForAddStudentVisibility();
+                            }
+
+                        } else if (responseApi.apiTypeStatus == Status.STUDENT_KYC_STATUS_API) {
+                            studentKycStatusResModel = (StudentKycStatusResModel) responseApi.data;
+                            if (!studentKycStatusResModel.getError()) {
+                                callCheckUserApi();
+                            }
                         }
-//                        else if (responseApi.apiTypeStatus == CHECKVALIDUSER) {
-//                            CheckUserResModel checkUserResModel = (CheckUserResModel) responseApi.data;
-//                            if (!checkUserResModel.getError()) {
-//                                PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-//                                prefModel.setCheckUserResModel(checkUserResModel);
-//                                AuroAppPref.INSTANCE.setPref(prefModel);
-//                                checkForAddStudentVisibility();
-//                            }
-//
-//                        }
-//                        else if (responseApi.apiTypeStatus == Status.STUDENT_KYC_STATUS_API) {
-//                            studentKycStatusResModel = (StudentKycStatusResModel) responseApi.data;
-//                            if (!studentKycStatusResModel.getError()) {
-//                               callCheckUserApi();
-//                            }
-//                        }
                     }
                     break;
 
@@ -1125,7 +1111,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
                 default:
                     if (isVisible()) {
-                        // handleProgress(1, (String) responseApi.data);
+
                         AppLogger.v("apiData", responseApi.data + "   pradeep");
                         handleProgress(2, (String) responseApi.data);
                         showSnackbarError(prefModel.getLanguageMasterDynamic().getDetails().getDefaultError() != null ? prefModel.getLanguageMasterDynamic().getDetails().getDefaultError() : getActivity().getString(R.string.default_error));
@@ -1993,10 +1979,11 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
     void callCheckUserApi() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+
         CheckUserApiReqModel checkUserApiReqModel = new CheckUserApiReqModel();
         checkUserApiReqModel.setEmailId("");
         checkUserApiReqModel.setMobileNo("");
-        checkUserApiReqModel.setUserType("0");
+        checkUserApiReqModel.setUserType(String.valueOf(0));
         checkUserApiReqModel.setUserName(prefModel.getUserMobile());
         viewModel.checkInternetForApi(Status.CHECKVALIDUSER, checkUserApiReqModel);
     }
