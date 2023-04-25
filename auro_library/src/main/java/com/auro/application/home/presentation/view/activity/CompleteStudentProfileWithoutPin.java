@@ -157,7 +157,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     String boardtype = "";
     String schooltype = "";
     String ExistGrade;
-    int ExistGradenew;
+    String ExistGradenew;
     String kycgrade;
     CustomDialog customDialog;
     List<SchoolData> districtList = new ArrayList<>();
@@ -266,7 +266,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                 if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
                     binding.etgrade.showDropDown();
                 }
-                else if (ExistGradenew > 0){
+                else if (ConversionUtil.INSTANCE.convertStringToInteger(ExistGradenew) > 0){
                     binding.etgrade.showDropDown();
                 }
                 else{
@@ -285,7 +285,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                         binding.etgrade.showDropDown();
                     }
 
-                    else if (ExistGradenew > 0){
+                    else if (ConversionUtil.INSTANCE.convertStringToInteger(ExistGradenew) > 0){
                         binding.etgrade.showDropDown();
                     }
                     else{
@@ -644,7 +644,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                             String district = response.body().getDistrictname();
                             String email = response.body().getEmailId();
                             ExistGrade = response.body().getStudentclass();
-                            ExistGradenew = Integer.parseInt(response.body().getStudentclass());
+                            ExistGradenew = response.body().getStudentclass();
                             String name = response.body().getStudentName();
                             String schooltype = response.body().getSchoolType();
                             String board = response.body().getBoardType();
@@ -1768,7 +1768,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                 if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
                     binding.etgrade.showDropDown();
                 }
-                else if (ExistGradenew > 0){
+                else if (ConversionUtil.INSTANCE.convertStringToInteger(ExistGradenew) > 0){
                     binding.etgrade.showDropDown();
                 }
                 else{
@@ -1809,7 +1809,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
             if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
                 binding.etgrade.showDropDown();
             }
-            else if (ExistGradenew > 0){
+            else if (ConversionUtil.INSTANCE.convertStringToInteger(ExistGradenew) > 0){
                 binding.etgrade.showDropDown();
             }
             else{
@@ -1846,41 +1846,47 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
             if (gradeid == null || gradeid.equals("null") || gradeid.equals("")||gradeid.isEmpty()||gradeid.equals(0)||gradeid.equals("0")){
                 gradeid = "0";
             }
-            String message = prefModel.getLanguageMasterDynamic().getDetails().getYou_have_changed_you_grade()+" " + ExistGrade + "th - " + gradeid + "th. "+prefModel.getLanguageMasterDynamic().getDetails().getYou_will_loose_your_current();
-            CustomDialogModel customDialogModel = new CustomDialogModel();
-            customDialogModel.setContext(CompleteStudentProfileWithoutPin.this);
-            customDialogModel.setTitle(prefModel.getLanguageMasterDynamic().getDetails().getInformation() != null ? prefModel.getLanguageMasterDynamic().getDetails().getInformation() : AuroApp.getAppContext().getResources().getString(R.string.information));
-            customDialogModel.setContent(message);
-            customDialogModel.setTwoButtonRequired(true);
-            customDialog = new CustomDialog(CompleteStudentProfileWithoutPin.this, customDialogModel);
-            customDialog.setSecondBtnTxt(prefModel.getLanguageMasterDynamic().getDetails().getYes()+"");//Yes
-            customDialog.setFirstBtnTxt(prefModel.getLanguageMasterDynamic().getDetails().getNo()+"");//No
 
-            customDialog.setFirstCallcack(new CustomDialog.FirstCallcack() {
-                @Override
-                public void clickNoCallback() {
-                    binding.etgrade.setText(ExistGrade);
-                    customDialog.dismiss();
-                }
-            });
+          if (ExistGrade == null || ExistGrade.equals("null") || ExistGrade.equals("")||ExistGrade.isEmpty()||ExistGrade.equals(0)||ExistGrade.equals("0")){
 
-            customDialog.setSecondCallcack(new CustomDialog.SecondCallcack() {
-                @Override
-                public void clickYesCallback() {
-                    binding.etgrade.setText(gradeid);
-                    customDialog.dismiss();
+          }
+          else {
+              String message = prefModel.getLanguageMasterDynamic().getDetails().getYou_have_changed_you_grade() + " " + ExistGrade + "th - " + gradeid + "th. " + prefModel.getLanguageMasterDynamic().getDetails().getYou_will_loose_your_current();
+              CustomDialogModel customDialogModel = new CustomDialogModel();
+              customDialogModel.setContext(CompleteStudentProfileWithoutPin.this);
+              customDialogModel.setTitle(prefModel.getLanguageMasterDynamic().getDetails().getInformation() != null ? prefModel.getLanguageMasterDynamic().getDetails().getInformation() : AuroApp.getAppContext().getResources().getString(R.string.information));
+              customDialogModel.setContent(message);
+              customDialogModel.setTwoButtonRequired(true);
+              customDialog = new CustomDialog(CompleteStudentProfileWithoutPin.this, customDialogModel);
+              customDialog.setSecondBtnTxt(prefModel.getLanguageMasterDynamic().getDetails().getYes() + "");//Yes
+              customDialog.setFirstBtnTxt(prefModel.getLanguageMasterDynamic().getDetails().getNo() + "");//No
 
-                }
-            });
+              customDialog.setFirstCallcack(new CustomDialog.FirstCallcack() {
+                  @Override
+                  public void clickNoCallback() {
+                      binding.etgrade.setText(ExistGrade);
+                      customDialog.dismiss();
+                  }
+              });
 
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-            lp.copyFrom(customDialog.getWindow().getAttributes());
-            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            customDialog.getWindow().setAttributes(lp);
-            Objects.requireNonNull(customDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            customDialog.setCancelable(false);
-            customDialog.show();
+              customDialog.setSecondCallcack(new CustomDialog.SecondCallcack() {
+                  @Override
+                  public void clickYesCallback() {
+                      binding.etgrade.setText(gradeid);
+                      customDialog.dismiss();
+
+                  }
+              });
+
+              WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+              lp.copyFrom(customDialog.getWindow().getAttributes());
+              lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+              lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+              customDialog.getWindow().setAttributes(lp);
+              Objects.requireNonNull(customDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+              customDialog.setCancelable(false);
+              customDialog.show();
+          }
 
         }
         else  if (kycgrade.equals("Approve")||kycgrade == "Approve"||kycgrade.equals("Approved")||kycgrade == "Approved"){
