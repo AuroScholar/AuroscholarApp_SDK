@@ -152,7 +152,6 @@ public class SelectParentAdapter extends RecyclerView.Adapter<SelectParentAdapte
                 Glide.with(mContext)
                         .load(mContext.getResources().getIdentifier("my_drawable_image_name", "drawable",mContext.getPackageName()))
                         .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))
-                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                         .placeholder(R.drawable.account_circle)
                         .override(Target.SIZE_ORIGINAL, Target.SIZE_ORIGINAL))
                         .into(binding.studentImage);

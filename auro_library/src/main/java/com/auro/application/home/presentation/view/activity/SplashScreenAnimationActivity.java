@@ -90,13 +90,15 @@ public class SplashScreenAnimationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen_animation);
 
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            String newToken = instanceIdResult.getToken();
-            Log.e("newToken", newToken);
-            PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-            prefModel.setDeviceToken(newToken);
-            getPreferences(Context.MODE_PRIVATE).edit().putString("fb_device_token", newToken).apply();
-        });
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+//            String newToken = instanceIdResult.getToken();
+//            Log.e("newToken", newToken);
+//            PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+//            prefModel.setDeviceToken(newToken);
+//            getPreferences(Context.MODE_PRIVATE).edit().putString("fb_device_token", newToken).apply();
+//        });
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        prefModel.setDeviceToken("Test123");
 
         init();
         setListener();
@@ -268,6 +270,7 @@ public class SplashScreenAnimationActivity extends BaseActivity {
         FirebaseDynamicLink mfirebase = new FirebaseDynamicLink(this);
         //mfirebase.dynamiclinking();
         mfirebase.getFirebaseData();
+      //  DaggerWrapper.getComponent(this).doInjection(this);
         ViewUtil.setLanguageonUi(this);
 
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
@@ -615,7 +618,7 @@ public class SplashScreenAnimationActivity extends BaseActivity {
                 }
             }
         });
-        AuroScholar.startTeacherSDK(auroScholarDataModel);
+      //  AuroScholar.startTeacherSDK(auroScholarDataModel);
 
     }
 

@@ -10,6 +10,7 @@ import androidx.databinding.DataBindingUtil;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.databinding.PassportSpinnerItemBinding;
 import com.auro.application.teacher.data.model.common.MonthDataModel;
 
@@ -51,7 +52,7 @@ public class PassportSpinnerAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         binding = DataBindingUtil.inflate(LayoutInflater.from(parent.getContext()),
                 R.layout.passport_spinner_item, parent, false);
-        binding.parentLayout.setBackground(AuroApp.getAppContext().getResources().
+        binding.parentLayout.setBackground(AuroApp.getAppContext().
 
                 getDrawable(R.drawable.button_bg_dark_blue));
         binding.titleText.setText(list.get(position).getMonth());

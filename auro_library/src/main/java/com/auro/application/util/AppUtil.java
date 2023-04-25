@@ -20,9 +20,9 @@ import android.widget.ImageView;
 import androidx.annotation.Dimension;
 import androidx.annotation.NonNull;
 
-import com.auro.application.BuildConfig;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;
 import com.auro.application.core.common.Status;
@@ -66,7 +66,7 @@ public class AppUtil {
     public static int getVersionCode(Context pContext) {
         int lStrVersion = 0;
         try {
-            PackageInfo pInfo = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), 0);
+            PackageInfo pInfo = AuroApp.getAppContext().getPackageManager().getPackageInfo(pContext.getPackageName(), 0);
             lStrVersion = pInfo.versionCode;
         } catch (PackageManager.NameNotFoundException e) {
 

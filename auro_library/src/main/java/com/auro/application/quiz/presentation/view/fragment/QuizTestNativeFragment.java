@@ -3,6 +3,7 @@ package com.auro.application.quiz.presentation.view.fragment;
 import static com.auro.application.RealTimeFaceDetection.CameraxActivity.lens;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.BroadcastReceiver;
@@ -55,10 +56,12 @@ import com.auro.application.core.common.CommonDataModel;
 import com.auro.application.core.common.ResponseApi;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
+import com.auro.application.core.util.AuroScholar;
 import com.auro.application.databinding.QuizTestNativeLayoutBinding;
 
 import com.auro.application.home.data.model.AssignmentReqModel;
 import com.auro.application.home.data.model.AssignmentResModel;
+import com.auro.application.home.data.model.AuroScholarInputModel;
 import com.auro.application.home.data.model.DashboardResModel;
 import com.auro.application.home.data.model.Details;
 import com.auro.application.home.data.model.LanguageMasterDynamic;
@@ -597,7 +600,7 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
                 try {
                     LanguageMasterDynamic model = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic();
                     Details details = model.getDetails();
-                    buttonText=details.getSaveSubmit() != null ? details.getSaveSubmit() : AuroApp.getAppContext().getResources().getString(R.string.save_submit);
+                    buttonText=details.getSaveSubmit() != null ? details.getSaveSubmit() : AuroApp.getAppContext().getString(R.string.save_submit);
                 } catch (Exception e) {
                     AppLogger.e(TAG, e.getMessage());
                 }
@@ -1073,7 +1076,7 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
                     LanguageMasterDynamic model = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic();
                     Details details = model.getDetails();
                     if (model != null) {
-                        binding.saveNextBt.setText(details.getSaving() != null ? details.getSaving() :AuroApp.getAppContext().getResources().getString(R.string.saving));
+                        binding.saveNextBt.setText(details.getSaving() != null ? details.getSaving() :AuroApp.getAppContext().getString(R.string.saving));
                     }
                 } catch (Exception e) {
                     AppLogger.e(TAG, e.getMessage());
@@ -1225,7 +1228,7 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
                                 LanguageMasterDynamic model = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic();
                                 Details details = model.getDetails();
                                 if (model != null) {
-                                    text=details.getSaveSubmit() != null ? details.getSaveSubmit() : AuroApp.getAppContext().getResources().getString(R.string.save_submit);
+                                    text=details.getSaveSubmit() != null ? details.getSaveSubmit() : AuroApp.getAppContext().getString(R.string.save_submit);
                                 }
                             } catch (Exception e) {
                                 AppLogger.e(TAG, e.getMessage());
@@ -1383,19 +1386,20 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
         if (!viewModel.quizNativeUseCase.checkDemographicStatus(dashboardResModel)) {
             closeAllDialog();
             AppLogger.v("SaveQuiz", "Step 003" + "Assignment req Model" + quizResModel.getSubjectPos());
-          //  openDemographicFragment();
+            //  openDemographicFragment();
             AppLogger.v("SaveQuiz", "Step 004" + "Assignment req Model" + quizResModel.getSubjectPos());
             ((DashBoardMainActivity) getActivity()).setListner(this);
             AppLogger.v("QuizNew", "Dashboard step 1");
             // ((DashBoardMainActivity)getActivity()).callDashboardApi();
-            getActivity().getSupportFragmentManager().popBackStack();
-        } else {
+           // getActivity().getSupportFragmentManager().popBackStack();
+        }
+        else {
             //open quiz home fragment
             AppLogger.v("SaveQuiz", "Step 004" + "Assignment req Model" + quizResModel.getSubjectPos());
             ((DashBoardMainActivity) getActivity()).setListner(this);
             AppLogger.v("QuizNew", "Dashboard step 1");
             // ((DashBoardMainActivity)getActivity()).callDashboardApi();
-            getActivity().getSupportFragmentManager().popBackStack();
+          //  getActivity().getSupportFragmentManager().popBackStack();
         }
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         if (prefModel != null) {
@@ -1403,6 +1407,8 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
             prefModel.setAssignmentReqModel(assignmentReqModel);
             AuroAppPref.INSTANCE.setPref(prefModel);
         }
+
+        openGenricSDK();
     }
 
     public void openDemographicFragment() {
@@ -1412,6 +1418,19 @@ public class QuizTestNativeFragment extends BaseFragment implements CommonCallBa
         bundle.putParcelable(AppConstant.DASHBOARD_RES_MODEL, dashboardResModel);
         demographicFragment.setArguments(bundle);
         openFragment(demographicFragment);
+    }
+    public void openGenricSDK() {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        int userclass = prefModel.getUserclass();
+        AuroScholarInputModel inputModel = new AuroScholarInputModel();
+        inputModel.setMobileNumber(prefModel.getUserMobile());
+        inputModel.setStudentClass(String.valueOf(userclass));
+        inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
+        inputModel.setPartnerSource(prefModel.getPartnersource());
+        inputModel.setPartner_api_key(prefModel.getApikey());
+        inputModel.setActivity((Activity) getActivity());
+        AuroScholar.opendashboard();
+
     }
 
 

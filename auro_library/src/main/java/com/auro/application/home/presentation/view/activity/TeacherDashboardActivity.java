@@ -26,6 +26,7 @@ import android.view.WindowManager;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseActivity;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -103,6 +104,7 @@ public class TeacherDashboardActivity extends BaseActivity implements OnItemClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
+        DaggerWrapper.getComponent(this).doInjection(this);
         // getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         ViewUtil.setLanguageonUi(this);
         init();

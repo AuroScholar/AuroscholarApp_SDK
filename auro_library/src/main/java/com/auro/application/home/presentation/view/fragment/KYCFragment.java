@@ -37,6 +37,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -115,11 +116,14 @@ public class KYCFragment extends BaseFragment implements CommonCallBackListner, 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
-        ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+       // ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
+        DaggerWrapper.getComponent(getActivity()).doInjection(this);
+
         kycViewModel = ViewModelProviders.of(this, viewModelFactory).get(KYCViewModel.class);
         binding.setLifecycleOwner(this);
         binding.setKycViewModel(kycViewModel);
         setRetainInstance(true);
+
         ViewUtil.setLanguageonUi(getActivity());
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         AppLogger.v("CheckKyc", "Prefrence" + prefModel.isPreKycDisclaimer());
@@ -909,7 +913,7 @@ public class KYCFragment extends BaseFragment implements CommonCallBackListner, 
 
             @Override
             public void closeCallback() {
-                kycDocumentDatamodelArrayList.get(pos).setDocumentFileName(AuroApp.getAppContext().getResources().getString(R.string.no_file_chosen));
+                kycDocumentDatamodelArrayList.get(pos).setDocumentFileName(AuroApp.getAppContext().getString(R.string.no_file_chosen));
                 kyCuploadAdapter.updateList(kycDocumentDatamodelArrayList);
             }
         });

@@ -28,6 +28,7 @@ import androidx.exifinterface.media.ExifInterface;
 
 import com.auro.application.R;
 import com.auro.application.core.application.base_component.BaseActivity;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.databinding.CameraFragmentLayoutBinding;
 import com.auro.application.util.AppLogger;
@@ -88,6 +89,7 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE,
                 WindowManager.LayoutParams.FLAG_SECURE);
+
         ViewUtil.setLanguageonUi(this);
         init();
     }

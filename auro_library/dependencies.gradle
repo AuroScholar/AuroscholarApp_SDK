@@ -6,6 +6,7 @@ ext {
     //Version
     def loggingInterceptor = '3.12.1'
     def retrofit = '2.5.0'
+    def gsonretrofit = '2.0.0'
     def dagger  = '2.13'
     def googleVersion = '16.0.0'
     def gson = '2.8.0'
@@ -62,15 +63,15 @@ ext {
 
 
     FirebaseDependencies = [
-            bom                  :     'com.google.firebase:firebase-bom:25.12.0',
+            bom                  :     'com.google.firebase:firebase-bom:31.5.0',  //25.12.0
             auth                 :     'com.google.firebase:firebase-auth:19.4.0',
             services_auth        :     'com.google.android.gms:play-services-auth:18.1.0',
-            msging               :     'com.google.firebase:firebase-messaging:20.2.4',
+            //msging               :     'com.google.firebase:firebase-messaging:20.2.4',
             dynamicLink          :     'com.google.firebase:firebase-dynamic-links:16.1.8',
             //firebaseCrash        :     'com.google.firebase:firebase-crash:16.2.1',
             core                 :     'com.google.firebase:firebase-core:16.0.8',
             perfomance           :     'com.google.firebase:firebase-perf:19.0.8',
-            analytics            :     'com.google.firebase:firebase-analytics:17.5.0'
+            analytics            :     'com.google.firebase:firebase-analytics:21.2.2' //17.5.0
     ]
 
     CrashLyticsDependencies = [

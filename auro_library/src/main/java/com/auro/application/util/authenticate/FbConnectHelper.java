@@ -14,6 +14,8 @@ import android.util.Log;
 
 import androidx.fragment.app.Fragment;
 
+import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookAuthorizationException;
@@ -141,7 +143,7 @@ public class FbConnectHelper {
     }
     public static void printHashKey(Context pContext) {
         try {
-            PackageInfo info = pContext.getPackageManager().getPackageInfo(pContext.getPackageName(), PackageManager.GET_SIGNATURES);
+            PackageInfo info = AuroApp.getAppContext().getPackageManager().getPackageInfo(pContext.getPackageName(), PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
                 md.update(signature.toByteArray());

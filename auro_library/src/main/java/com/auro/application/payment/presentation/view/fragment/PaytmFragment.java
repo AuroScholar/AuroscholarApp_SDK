@@ -19,6 +19,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.database.AuroAppPref;
+import com.auro.application.core.database.PrefModel;
 import com.auro.application.home.data.model.response.StudentWalletResModel;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
 import com.auro.application.payment.data.model.request.PaytmWithdrawalByBankAccountReqModel;
@@ -41,6 +42,7 @@ import com.auro.application.util.alert_dialog.CustomDialog;
 import com.auro.application.util.alert_dialog.CustomDialogModel;
 import com.auro.application.util.alert_dialog.CustomPaymentTranferDialog;
 import com.auro.application.util.alert_dialog.CustomProgressDialog;
+import com.auro.application.util.alert_dialog.disclaimer.CustomOtpDialog;
 import com.auro.application.util.strings.AppStringDynamic;
 
 import java.util.Objects;
@@ -62,6 +64,7 @@ public class PaytmFragment extends BaseFragment implements CommonCallBackListner
     StudentWalletResModel studentWalletResModel;
     private final String TAG = "PaytmFragment";
     CustomProgressDialog customProgressDialog;
+    CustomOtpDialog customOtpDialog;
 
 
     @Override
@@ -72,6 +75,7 @@ public class PaytmFragment extends BaseFragment implements CommonCallBackListner
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DaggerWrapper.getComponent(getActivity()).doInjection(this);
         ViewUtil.setLanguageonUi(getActivity());
     }
 
@@ -102,6 +106,7 @@ public class PaytmFragment extends BaseFragment implements CommonCallBackListner
         } else {
             observeServiceResponse();
         }
+        observeServiceResponse();
         ((DashBoardMainActivity) getActivity()).setProgressVal();
         AppStringDynamic.setPaytmMoneyTransferPageStrings(binding);
 
@@ -168,7 +173,8 @@ public class PaytmFragment extends BaseFragment implements CommonCallBackListner
             ValidationModel validation = viewModel.paymentUseCase.isVlaidPhoneNumber(phonenumber);
             if (validation.isStatus()) {
                 ((DashBoardMainActivity) getActivity()).setListner(this);
-                ((DashBoardMainActivity) getActivity()).sendOtpApiReqPass();
+               // checkOtpDialog();
+              ((DashBoardMainActivity) getActivity()).sendOtpApiReqPass();
             } else {
                 showSnackbarError(validation.getMessage());
             }
@@ -178,40 +184,14 @@ public class PaytmFragment extends BaseFragment implements CommonCallBackListner
     }
 
 
-    private void reloadFragment() {
-        FragmentTransaction ft = getFragmentManager().beginTransaction();
-        if (Build.VERSION.SDK_INT >= 26) {
-            ft.setReorderingAllowed(false);
-        }
-        ft.detach(this).attach(this).commit();
-    }
 
-    private void paytmwithdrawalAmountApi() {
-        String phonenumber = binding.numberEdittext.getText().toString();
-
-        ValidationModel validation = viewModel.paymentUseCase.isVlaidPhoneNumber(phonenumber);
-        if (validation.isStatus()) {
-            //!Pattern.matches("[a-zA-Z]+",  phonenumber.toString())&& phonenumber.length() > 9 && phonenumber.length() <= 10  && phonenumber.toString() !=  null
-            PaytmWithdrawalReqModel reqModel = new PaytmWithdrawalReqModel();
-            reqModel.setMobileno(AuroApp.getAuroScholarModel().getMobileNumber());
-            reqModel.setDisbursementmonth(DateUtil.getcurrentYearMothsNumber());
-            reqModel.setDisbursement(""+studentWalletResModel.getApprovedScholarshipMoney());
-            reqModel.setPurpose(getActivity().getResources().getString(R.string.others));
-            reqModel.setBeneficiarymobileno(phonenumber);
-            reqModel.setBeneficiaryname("");
-            viewModel.paytmWithdrawal(reqModel);
-        } else {
-            showSnackbarError(validation.getMessage());
-        }
-    }
 
     private void paytmentTransferApi() {
-
         String phonenumber = binding.numberEdittext.getText().toString();
         //!Pattern.matches("[a-zA-Z]+",  phonenumber.toString())&& phonenumber.length() > 9 && phonenumber.length() <= 10  && phonenumber.toString() !=  null
         PaytmWithdrawalByBankAccountReqModel reqModel = new PaytmWithdrawalByBankAccountReqModel();
         reqModel.setMobileNo(AuroApp.getAuroScholarModel().getMobileNumber());
-        reqModel.setStudentId(AuroAppPref.INSTANCE.getModelInstance().getDashboardResModel().getStudent_id());
+        reqModel.setStudentId(AuroAppPref.INSTANCE.getModelInstance().getUserId());
         reqModel.setPaymentMode(AppConstant.PaymenMode.WALLET);
         reqModel.setDisbursementMonth(DateUtil.getMonthNameForPayment());
         reqModel.setBeneficiary_mobileNum(phonenumber);
@@ -219,7 +199,6 @@ public class PaytmFragment extends BaseFragment implements CommonCallBackListner
         reqModel.setAmount(""+studentWalletResModel.getApprovedScholarshipMoney());
         //reqModel.setAmount("1");
         reqModel.setPurpose("Payment Transfer");
-
         viewModel.paytmentTransfer(reqModel);
 
     }

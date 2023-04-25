@@ -49,7 +49,7 @@ public class CustomOtpDialog extends Dialog implements OTPListener, View.OnClick
 
         prefModel = AuroAppPref.INSTANCE.getModelInstance();
         AppStringDynamic.setCustomOtpStrings(binding);
-        binding.mobileNumberText.setText(prefModel.getStudentData().getUserMobile());
+        binding.mobileNumberText.setText(prefModel.getUserMobile());
         binding.RPVerify.setOnClickListener(this);
         binding.optOverCallTxt.setOnClickListener(this);
         binding.closeButton.setOnClickListener(this);

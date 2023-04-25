@@ -72,7 +72,7 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
         params.put(AppConstant.DashBoardParams.LANGUAGE_VERSION, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         params.put(AppConstant.DashBoardParams.API_VERSION, AppConstant.ParamsValue.API_VERSION_VAL);
         params.put(AppConstant.DashBoardParams.REGISTRATION_SOURCE_NEW, AppConstant.ParamsValue.REGISTRATION_SOURCE_VAL);
-        params.put(AppConstant.DashBoardParams.PARTNER_SOURCE, AppConstant.ParamsValue.PARTNER_SOURCE_VAL);
+        params.put(AppConstant.DashBoardParams.PARTNER_SOURCE, prefModel2.getPartnersource());
         params.put(AppConstant.DashBoardParams.LANGUAGE_VERSION, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         params.put(AppConstant.DashBoardParams.API_VERSION, AppConstant.ParamsValue.API_VERSION_VAL);
         params.put(AppConstant.Language.USER_PREFERED_LANGUAGE,prefModel2.getUserLanguageId());
@@ -129,6 +129,8 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
         RequestBody user_id = RequestBody.create(okhttp3.MultipartBody.FORM, AuroAppPref.INSTANCE.getModelInstance().getUserId());
         RequestBody langVersion = RequestBody.create(okhttp3.MultipartBody.FORM, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         RequestBody apiVersion = RequestBody.create(okhttp3.MultipartBody.FORM, AppConstant.ParamsValue.API_VERSION_VAL);
+        RequestBody preferedlangid = RequestBody.create(okhttp3.MultipartBody.FORM, AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId());
+
         MultipartBody.Part id_proof_front = ConversionUtil.INSTANCE.makeMultipartRequest(list.get(0));
         MultipartBody.Part id_proof_back = ConversionUtil.INSTANCE.makeMultipartRequest(list.get(1));
         MultipartBody.Part school_id_card = ConversionUtil.INSTANCE.makeMultipartRequest(list.get(2));
@@ -144,6 +146,7 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
                 user_id,
                 langVersion,
                 apiVersion,
+                preferedlangid,
                 id_proof_front,
                 id_proof_back,
                 school_id_card,
@@ -153,15 +156,14 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
 
     @Override
     public Single<Response<JsonObject>> studentUpdateProfile(GetStudentUpdateProfile model) {
-
+      PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         if (model.getDeviceToken() == null) {
             model.setDeviceToken("");
         }
         try {
             RequestBody buildVersion = RequestBody.create(okhttp3.MultipartBody.FORM, model.getBuildVersion());
             AppLogger.e("update profile api-", "step 10 " + model.getBuildVersion());
-            RequestBody partnersource = RequestBody.create(okhttp3.MultipartBody.FORM, "AURO3VE4j7");//model.getPartnerSource()
-            AppLogger.e("update profile api-", "step 11 - " + "AURO3VE4j7");
+            RequestBody partnersource = RequestBody.create(okhttp3.MultipartBody.FORM, prefModel.getPartnersource());//model.getPartnerSource()
             RequestBody schoolName = RequestBody.create(okhttp3.MultipartBody.FORM, model.getSchoolName());
             AppLogger.e("update profile api-", "step 12" + model.getSchoolName());
             RequestBody email = RequestBody.create(okhttp3.MultipartBody.FORM, model.getEmailId());
@@ -268,20 +270,16 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
         reqModel.setApiVersion(AppConstant.ParamsValue.API_VERSION_VAL);
         reqModel.setLangVersion(AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        if (prefModel.getUserType() == AppConstant.UserType.TEACHER) {
-            reqModel.setIsType(AppConstant.userTypeLogin.API_PARAM_TEACHER);
-            params.put(AppConstant.SendOtpRequest.USER_TYPE, AppConstant.userTypeLogin.API_PARAM_TEACHER);
-        } else {
+//        if (prefModel.getUserType() == AppConstant.UserType.TEACHER) {
+//            reqModel.setIsType(AppConstant.userTypeLogin.API_PARAM_TEACHER);
+//            params.put(AppConstant.SendOtpRequest.USER_TYPE, AppConstant.userTypeLogin.API_PARAM_TEACHER);
+//        }
+//        else {
             reqModel.setIsType(AppConstant.userTypeLogin.API_PARAM_STUDENT);
             params.put(AppConstant.SendOtpRequest.USER_TYPE, AppConstant.userTypeLogin.API_PARAM_STUDENT);
-        }
+       // }
         int userType = prefModel.getUserType();
-        AppLogger.e("enter Number Activity --", "" + userType);
-       /* if (userType == AppConstant.UserType.TEACHER) {
-            return homeRemoteApi.oldSendOtpApi(params);
-        } else {
-            return homeRemoteApi.sendOTP(reqModel);
-        }*/
+
 
         params.put(AppConstant.Language.USER_PREFERED_LANGUAGE,Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId()));
         return homeRemoteApi.sendOTP(reqModel);
@@ -359,7 +357,7 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
         params.put(AppConstant.DashBoardParams.LANGUAGE_VERSION, AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
         params.put(AppConstant.DashBoardParams.API_VERSION, AppConstant.ParamsValue.API_VERSION_VAL);
         params.put(AppConstant.Language.USER_PREFERED_LANGUAGE,Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId()));
-        params.put("partner_unique_id",Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getPartneruniqueid()));
+        params.put("partner_unique_id",AuroAppPref.INSTANCE.getModelInstance().getPartneruniqueid());
 
         return homeRemoteApi.getAssignmentId(params);
     }

@@ -2,6 +2,9 @@ package com.auro.application.home.presentation.view.adapter;
 
 import static android.content.Context.MODE_PRIVATE;
 
+import static com.auro.application.core.application.AuroApp.auroScholarDataModel;
+import static com.auro.application.core.application.AuroApp.context;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -17,6 +20,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.auro.application.R;
+import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.database.AuroAppPref;
@@ -35,6 +39,7 @@ import com.auro.application.home.presentation.view.activity.CompleteStudentProfi
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
 import com.auro.application.home.presentation.view.activity.EnterPinActivity;
 import com.auro.application.home.presentation.view.activity.SDKActivity;
+import com.auro.application.util.ConversionUtil;
 import com.auro.application.util.RemoteApi;
 
 
@@ -93,11 +98,11 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
             @Override
             public void onClick(View v) {
                 String userid = mValues.get(position).getUser_id();
-                String gradeid = mValues.get(position).getGrade();
+                int gradeid = mValues.get(position).getGrade();
                 SharedPreferences.Editor editor = mContext.getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
                 editor.putString("usertype", "StudentLogin");
                 editor.putString("studentuserid", userid);
-                editor.putString("studentgradeid", gradeid);
+                editor.putString("studentgradeid", String.valueOf(gradeid));
                 editor.apply();
                 checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData().getUser_details().get(position);
                 checkUserResModel2 = AuroAppPref.INSTANCE.getModelInstance().getChildData();
@@ -105,7 +110,7 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                     String user_mobile =  mValues.get(position).getMobile_no();
                     String student_name =  mValues.get(position).getStudent_name();
                     String user_language =  mValues.get(position).getUser_prefered_language_id();
-                    String user_grade =  mValues.get(position).getGrade();
+                    int user_grade =  mValues.get(position).getGrade();
                     String user_kyc =  mValues.get(position).getKyc_status();
                 String user_name =  mValues.get(position).getUser_name();
                 String partner_logo =  mValues.get(position).getPartner_logo();
@@ -226,13 +231,10 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                                         e.printStackTrace();
                                     }
 
-
                                 }
                                 else if (response.code() == 200) {
-
-                                    getProfile(userid,langid);
                                     setSDKAPIGrade();
-
+                                    getProfile(userid,langid);
                                 }
                                 else {
                                     Toast.makeText(mContext, response.message(), Toast.LENGTH_SHORT).show();
@@ -256,7 +258,8 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         String partnersource = prefModel.getPartnersource();
         String parnteruniqueid = prefModel.getPartneruniqueid();
-        int userclass = Integer.parseInt(prefModel.getUserclass());
+        String apikey = prefModel.getApikey();
+        int userclass = prefModel.getUserclass();
         String mobileno = prefModel.getUserMobile();
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("user_id",userid);
@@ -287,7 +290,9 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                                 mContext.startActivity(i);
                             }
                             else{
-                                openGenricSDK(mobileno,partnersource,parnteruniqueid);
+                                auroScholarDataModel.getActivity().startActivity(new Intent(AuroApp.getAppContext(), DashBoardMainActivity.class));
+
+                                // openGenricSDK(mobileno,partnersource,parnteruniqueid, apikey);
 
                             }
 
@@ -314,14 +319,14 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
         String source = prefModel.getPartnersource();
         String apikey = prefModel.getApikey();
         String userid = prefModel.getUserId();
-        String gradeid = prefModel.getUserclass();
+        int gradeid = prefModel.getUserclass();
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("mobile_no",mobile);
         map_data.put("partner_unique_id",uniqueid); //456456
         map_data.put("partner_source",source);
         map_data.put("partner_api_key",apikey);
         map_data.put("user_id",userid);
-        map_data.put("grade",gradeid);
+        map_data.put("grade", String.valueOf(gradeid));
 
         RemoteApi.Companion.invoke().getSDKDataerror(map_data)
                 .enqueue(new Callback<ErrorResponseModel>() {
@@ -371,15 +376,15 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
 
 
     }
-    public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource  ) {
+    public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource,String apikey  ) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String userclass = prefModel.getUserclass();
+        int userclass = prefModel.getUserclass();
         AuroScholarInputModel inputModel = new AuroScholarInputModel();
         inputModel.setMobileNumber(mobileNumber);
-        inputModel.setStudentClass(userclass);
+        inputModel.setStudentClass(String.valueOf(userclass));
         inputModel.setPartner_unique_id(partneruniqueid);
-        inputModel.setPartnerSource(partnersource);
-        inputModel.setPartner_api_key("");
+        inputModel.setPartnerSource(prefModel.getPartnersource());
+        inputModel.setPartner_api_key(apikey);
         inputModel.setActivity((Activity) mContext);
         AuroScholar.startAuroSDK(inputModel);
         //  AuroScholar.startAuroSDK(inputModel);

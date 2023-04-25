@@ -104,6 +104,7 @@ public class GradeChangeFragment extends BaseFragment implements View.OnClickLis
         //((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
         DaggerWrapper.getComponent(getActivity()).doInjection(this);
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(GradeChangeViewModel.class);
+
         ViewUtil.setLanguageonUi(getActivity());
         setRetainInstance(true);
         init();
@@ -232,7 +233,7 @@ public class GradeChangeFragment extends BaseFragment implements View.OnClickLis
     private void setClassInPref(int studentClass) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         prefModel.getUserclass();
-        // prefModel.setStudentClass(studentClass);
+         prefModel.setUserclass(studentClass);
         AuroAppPref.INSTANCE.setPref(prefModel);
     }
 
@@ -294,6 +295,10 @@ public class GradeChangeFragment extends BaseFragment implements View.OnClickLis
                 classtype = position;
                 if (position > 0) {
                     studentClass = ConversionUtil.INSTANCE.convertStringToInteger(classesNewMap.get("" + position));
+
+                    PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+                    prefModel.setUserclass(studentClass);
+                    AuroAppPref.INSTANCE.setPref(prefModel);
                 } else {
                     studentClass = 0;
                 }
@@ -327,7 +332,7 @@ public class GradeChangeFragment extends BaseFragment implements View.OnClickLis
                 openErrorDialog();
                 AppLogger.e("Grade change--", "step 6 ");
                 // onClickButton.onClickListener();
-              //  ((DashBoardMainActivity) getActivity()).popBackStack();
+                //  ((DashBoardMainActivity) getActivity()).popBackStack();
             }
         }
         else {
@@ -390,8 +395,10 @@ public class GradeChangeFragment extends BaseFragment implements View.OnClickLis
         handleProgress(0);
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         CheckUserValidResModel reqModel = new CheckUserValidResModel();
-        reqModel.setMobileNo(prefModel.getChildData().getUser_details().get(0).getUser_id());
+        reqModel.setMobileNo(prefModel.getUserId());
         reqModel.setStudentClass("" + studentClass);
+        prefModel.setUserclass(studentClass);
+        AuroAppPref.INSTANCE.setPref(prefModel);
         viewModel.changeGrade(reqModel);
     }
 

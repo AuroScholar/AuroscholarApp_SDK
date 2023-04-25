@@ -2,6 +2,7 @@ package com.auro.application.payment.domain;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.NetworkUtil;
 import com.auro.application.core.common.ResponseApi;
 import com.auro.application.core.common.Status;

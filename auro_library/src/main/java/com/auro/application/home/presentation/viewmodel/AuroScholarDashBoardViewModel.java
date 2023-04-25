@@ -45,6 +45,8 @@ import static com.auro.application.core.common.Status.OTP_OVER_CALL;
 import static com.auro.application.core.common.Status.GET_SLABS_API;
 import static com.auro.application.core.common.Status.SEND_REFERRAL_API;
 
+import android.content.Context;
+
 public class AuroScholarDashBoardViewModel extends ViewModel {
 
 
@@ -53,6 +55,7 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
     HomeRemoteUseCase homeRemoteUseCase;
     CompositeDisposable compositeDisposable;
     public MutableLiveData<ResponseApi> serviceLiveData = new MutableLiveData<>();
+    Context context;
 
     public AuroScholarDashBoardViewModel(HomeUseCase homeUseCase, HomeDbUseCase homeDbUseCase, HomeRemoteUseCase homeRemoteUseCase) {
         this.homeUseCase = homeUseCase;
@@ -61,7 +64,7 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
     }
 
     private CompositeDisposable getCompositeDisposable() {
-        if (compositeDisposable == null) {
+         if (compositeDisposable == null) {
             compositeDisposable = new CompositeDisposable();
         }
         return compositeDisposable;
@@ -74,7 +77,7 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
     }
 
     private void defaultError(Status status) {
-        serviceLiveData.setValue(new ResponseApi(Status.FAIL, AuroApp.getAppContext().getResources().getString(R.string.default_error), null));
+        serviceLiveData.setValue(new ResponseApi(Status.FAIL, AuroApp.getAppContext().getString(R.string.default_error), null));
     }
 
 
@@ -138,7 +141,7 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
                 }
             } else {
                 // please check your internet
-                serviceLiveData.setValue(new ResponseApi(Status.NO_INTERNET, AuroApp.getAppContext().getResources().getString(R.string.internet_check), Status.NO_INTERNET));
+                serviceLiveData.setValue(new ResponseApi(Status.NO_INTERNET, AuroApp.getAppContext().getString(R.string.internet_check), Status.NO_INTERNET));
             }
 
         });
@@ -351,7 +354,7 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
         if (prefModel.getDeviceToken() != null && !TextUtil.isEmpty(prefModel.getDeviceToken())) {
             auroScholarDataModel.setDevicetoken(prefModel.getDeviceToken());
         } else {
-            auroScholarDataModel.setDevicetoken("");
+            auroScholarDataModel.setDevicetoken("Test@123");
         }
         AppLogger.v("QuizNew", "Dashboard step 5");
         dashBoardApi(auroScholarDataModel);
@@ -360,7 +363,7 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
     private void dashBoardApi(AuroScholarDataModel model) {
         getCompositeDisposable()
                 .add(homeRemoteUseCase.getDashboardData(model)
-                        .subscribeOn(Schedulers.io())
+                        .subscribeOn(Schedulers.newThread())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new Consumer<ResponseApi>() {
                                        @Override

@@ -32,6 +32,7 @@ import com.android.installreferrer.api.ReferrerDetails;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseActivity;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -59,15 +60,6 @@ import com.auro.application.util.ViewUtil;
 import com.auro.application.util.alert_dialog.LanguageChangeDialog;
 import com.auro.application.util.firebaseAnalytics.AnalyticsRegistry;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.instabug.apm.APM;
-import com.instabug.bug.BugReporting;
-import com.instabug.crash.CrashReporting;
-import com.instabug.library.Feature;
-import com.instabug.library.Instabug;
-import com.instabug.library.invocation.InstabugInvocationEvent;
-import com.instabug.library.ui.onboarding.WelcomeMessage;
-import com.instabug.library.visualusersteps.State;
-
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -125,6 +117,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
+        DaggerWrapper.getComponent(this).doInjection(this);
         // getWindow().setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE);
         ViewUtil.setLanguageonUi(this);
 
@@ -165,24 +158,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
         boolean instantExperienceLaunched = response.getGooglePlayInstantParam();
 
 
-        new Instabug.Builder(getApplication(),"ed30d18815acf92a8e7a3391ddf2ac1c").
-                setInvocationEvents(InstabugInvocationEvent.NONE).
-                build();
-        Instabug.setReproStepsState(State.ENABLED);
-//        Instabug.show();
-        BugReporting.setShakingThreshold(800);
-        Instabug.setSessionProfilerState(Feature.State.ENABLED);
-        CrashReporting.setState(Feature.State.ENABLED);
-        CrashReporting.setAnrState(Feature.State.ENABLED);
-        CrashReporting.reportException(new NullPointerException("Test issue"));
-        CrashReporting.reportException(new NullPointerException("Test issue"), "Exception identifier");
-        CrashReporting.setNDKCrashesState(Feature.State.ENABLED);
-        APM.setColdAppLaunchEnabled(true);
-        APM.setHotAppLaunchEnabled(true);
-        APM.endAppLaunch();
-        Instabug.setTrackingUserStepsState(Feature.State.ENABLED);
-        Instabug.setWelcomeMessageState(WelcomeMessage.State.LIVE);
-        Instabug.showWelcomeMessage(WelcomeMessage.State.LIVE);
+
 
         init();
         setListener();
@@ -209,7 +185,7 @@ public class HomeActivity extends BaseActivity implements OnItemClickListener, V
     protected void init() {
         memberType = "Member";
         binding = DataBindingUtil.setContentView(this, getLayout());
-        ((AuroApp) this.getApplication()).getAppComponent().doInjection(this);
+
         //view model and handler setup
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MyClassroomViewModel.class);
 

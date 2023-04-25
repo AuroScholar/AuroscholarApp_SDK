@@ -27,6 +27,41 @@ public class KYCResListModel implements Parcelable {
     @Expose
     String status;
 
+    @SerializedName("details")
+    @Expose
+    List<KYCOCRDetailsModel> details;
+
+    @SerializedName("compare")
+    @Expose
+    List<CompareKYCDetailsModel> compare;
+
+    @SerializedName("show_popup")
+    @Expose
+    String show_popup;
+
+    public String getShow_popup() {
+        return show_popup;
+    }
+
+    public void setShow_popup(String show_popup) {
+        this.show_popup = show_popup;
+    }
+
+    public List<KYCOCRDetailsModel> getDetails() {
+        return details;
+    }
+
+    public void setDetails(List<KYCOCRDetailsModel> details) {
+        this.details = details;
+    }
+
+    public List<CompareKYCDetailsModel> getCompare() {
+        return compare;
+    }
+
+    public void setCompare(List<CompareKYCDetailsModel> compare) {
+        this.compare = compare;
+    }
 
     protected KYCResListModel(Parcel in) {
         list = in.createTypedArrayList(KYCResItemModel.CREATOR);

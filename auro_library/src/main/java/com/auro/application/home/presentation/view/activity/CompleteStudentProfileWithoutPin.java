@@ -10,10 +10,10 @@ import static com.auro.application.core.common.Status.SCHOOL;
 import static com.auro.application.core.common.Status.STATE;
 import static com.auro.application.core.common.Status.TUTION;
 import static com.auro.application.core.common.Status.TUTIONTYPE;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,7 +31,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -43,7 +45,6 @@ import androidx.lifecycle.ViewModelProviders;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseActivity;
-import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;
@@ -51,8 +52,10 @@ import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
 import com.auro.application.core.util.AuroScholar;
 import com.auro.application.databinding.FragmentStudentUpdateProfileBinding;
+import com.auro.application.home.data.model.AddNewSchoolResModel;
 import com.auro.application.home.data.model.AuroScholarInputModel;
 import com.auro.application.home.data.model.BoardData;
+import com.auro.application.home.data.model.CheckUserResModel;
 import com.auro.application.home.data.model.DashboardResModel;
 import com.auro.application.home.data.model.Details;
 import com.auro.application.home.data.model.DistrictData;
@@ -80,13 +83,14 @@ import com.auro.application.home.presentation.view.adapter.SchoolBoardSpinnerAda
 import com.auro.application.home.presentation.view.adapter.SchoolMediumSpinnerAdapter;
 import com.auro.application.home.presentation.view.adapter.SchoolSpinnerAdapter;
 import com.auro.application.home.presentation.view.adapter.SchoolTypeSpinnerAdapter;
+import com.auro.application.home.presentation.view.adapter.SelectYourParentChildAdapter;
 import com.auro.application.home.presentation.view.adapter.StateSpinnerAdapter;
 import com.auro.application.home.presentation.view.adapter.TutionTypeSpinnerAdapter;
 import com.auro.application.home.presentation.viewmodel.CompleteStudentProfileWithPinViewModel;
-import com.auro.application.teacher.data.model.common.DistrictDataModel;
-import com.auro.application.teacher.data.model.common.StateDataModel;
+
 import com.auro.application.util.AppLogger;
 import com.auro.application.util.AppUtil;
+import com.auro.application.util.ConversionUtil;
 import com.auro.application.util.DeviceUtil;
 import com.auro.application.util.RemoteApi;
 import com.auro.application.util.ViewUtil;
@@ -95,7 +99,6 @@ import com.auro.application.util.alert_dialog.CustomDialogModel;
 import com.auro.application.util.alert_dialog.CustomProgressDialog;
 import com.auro.application.util.permission.LocationHandler;
 import com.auro.application.util.strings.AppStringDynamic;
-import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.Target;
@@ -127,22 +130,24 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     @Inject
     @Named("CompleteStudentProfileWithoutPin")
     ViewModelFactory viewModelFactory;
-
+    String getschool_id;
+    List<String> genderListString = new ArrayList<>();
+    List<UserDetailResModel> listchilds = new ArrayList<>();
+    List<UserDetailResModel> list = new ArrayList<>();
     private static final int CAMERA_REQUEST = 1888;
-
+    UserDetailResModel checkUserResModel;
     FragmentStudentUpdateProfileBinding binding;
-
     GetStudentUpdateProfile studentProfileModel = new GetStudentUpdateProfile();
 
     boolean firstTimeCome;
     String TAG = "StudentProfileFragment";
     PrefModel prefModel;
-    String auto_userid;
+    String schoolnamesearch;
     String stateCode = "";
     String districtCode = "";
     String Schoolsearch = "";
     String GenderName = "";
-    String fbnewToken = "";
+    String fbnewToken = "test123";
     String image_path = "";
     String filename = "";
     String SchoolName = "";
@@ -151,9 +156,11 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     String Schoolmedium = "";
     String boardtype = "";
     String schooltype = "";
-    String ExistGrade="";
+    String ExistGrade;
+    String ExistGradenew;
     String kycgrade;
     CustomDialog customDialog;
+    List<SchoolData> districtList = new ArrayList<>();
 
     List<GenderData> genderList = new ArrayList<>();
     List<TutionData> tutiontypeList = new ArrayList<>();
@@ -167,15 +174,13 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     RequestBody lRequestBody;
     String gradeid;
 
-
+    StudentKycStatusResModel studentKycStatusResModel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-      binding = DataBindingUtil.setContentView(this, getLayout());
-     //   ((AuroApp) this.getApplication()).getAppComponent().doInjection(this);
-       // DaggerWrapper.getComponent(this).doInjection(this);
-  //   viewModel = ViewModelProviders.of(CompleteStudentProfileWithoutPin.this, viewModelFactory).get(CompleteStudentProfileWithPinViewModel.class);
+
+        binding = DataBindingUtil.setContentView(this, getLayout());
 
         binding.setLifecycleOwner(this);
 
@@ -188,7 +193,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
 //        });
         binding.layoutSetusernamepin.setVisibility(View.GONE);
         binding.mainParentLayout.setVisibility(View.VISIBLE);
-        String auto_userid = getIntent().getStringExtra("auto_userid");
+        binding.usernametxt.setVisibility(View.GONE);
         getProfile();
         getGrade();
         getAllStateList();
@@ -201,13 +206,20 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         init();
         setListener();
 
+
+
+
         SharedPreferences.Editor editor = getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
         editor.putString("statusparentprofile", "false");
+        editor.putString("isLogin","true");
         editor.putString("statusfillstudentprofile", "false");
         editor.putString("statussetpasswordscreen", "false");
         editor.putString("statuschoosegradescreen", "false");
+        editor.putString("statusopenprofileteacher", "false");
+        editor.putString("statusopendashboardteacher", "false");
         editor.putString("statuschoosedashboardscreen", "false");
         editor.putString("statusopenprofilewithoutpin", "true");
+        editor.putString("statussubjectpref","false");
         editor.apply();
         binding.etstate.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -247,17 +259,14 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                 return false;
             }
         });
-        binding.etschool.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                binding.etschool.showDropDown();
-                return false;
-            }
-        });
+
         binding.etgrade.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)||ExistGrade.isEmpty()){
+                if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
+                    binding.etgrade.showDropDown();
+                }
+                else if (ConversionUtil.INSTANCE.convertStringToInteger(ExistGradenew) > 0){
                     binding.etgrade.showDropDown();
                 }
                 else{
@@ -266,21 +275,17 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                 return false;
             }
         });
-        binding.etschool.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus)
-                {
-                    binding.etschool.showDropDown();
-                }
-            }
-        });
+
         binding.etgrade.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus)
                 {
-                    if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)||ExistGrade.isEmpty()){
+                    if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
+                        binding.etgrade.showDropDown();
+                    }
+
+                    else if (ConversionUtil.INSTANCE.convertStringToInteger(ExistGradenew) > 0){
                         binding.etgrade.showDropDown();
                     }
                     else{
@@ -290,15 +295,125 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
             }
         });
 
+
+        binding.etschool.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (districtList!=null||!districtList.isEmpty()){
+                    binding.etschool.showDropDown();
+
+                    addDropDownSchool(districtList);
+                }
+
+
+                return false;
+            }
+        });
+        binding.etschool.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus)
+                {
+                    if (districtList!=null||!districtList.isEmpty()){
+                        binding.etschool.showDropDown();
+
+                        addDropDownSchool(districtList);
+                    }
+
+
+                }
+            }
+        });
+        binding.btnsearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (binding.editsearch.getText().toString().isEmpty()||binding.editsearch.getText().toString().equals("")){
+                    //   binding.editsearch.setHint("Search school here..");
+                }
+                else{
+                    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);                    String search = binding.editsearch.getText().toString();
+                    binding.etschool.setText("");
+                    String search2 = binding.editsearch.getText().toString();
+                    getSchoolsearch(stateCode,districtCode,search2);
+
+
+                }
+
+            }
+        });
+        binding.editsearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (binding.editsearch.getText().toString().isEmpty()||binding.editsearch.getText().toString().equals("")){
+
+                    Schoolsearch="";
+                    binding.etschool.dismissDropDown();
+                    getSchool(stateCode,districtCode,Schoolsearch);
+
+                }
+                else{
+                    if (s.toString().equals("")||s.toString().isEmpty()){
+                        binding.etschool.dismissDropDown();
+                    }
+                    else{
+                        Schoolsearch = s.toString();
+                        getSchool(stateCode,districtCode,s.toString());
+
+                    }
+                }
+            }
+        });
+
+        binding.autoCompleteTextView1.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItem=binding.autoCompleteTextView1.getAdapter().getItem(position).toString();
+                String schoolname = binding.autoCompleteTextView1.getText().toString();
+                binding.etschool.setText(schoolname);
+            }
+        });
+        binding.autoCompleteTextView1.setAdapter(getEmailAddressAdapter(CompleteStudentProfileWithoutPin.this));
+        binding.autoCompleteTextView1.setThreshold(1);
+        binding.autoCompleteTextView1.setTextColor(Color.BLACK);
+        binding.autoCompleteTextView1.setDropDownBackgroundResource(R.color.white);
+        binding.addnewschool.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Details details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
+                if (binding.autoCompleteTextView1.getText().toString().isEmpty()){
+                    Toast.makeText(CompleteStudentProfileWithoutPin.this, "Please enter school name", Toast.LENGTH_SHORT).show();
+                }
+                else if (binding.autoCompleteTextView1.getText().toString().startsWith(" ")){
+                    Toast.makeText(CompleteStudentProfileWithoutPin.this, details.getEnter_space_schoolname(), Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    String search = binding.autoCompleteTextView1.getText().toString();
+                    binding.etschool.setText(search);
+                    addNewSchool(stateCode,districtCode,search);
+                }
+            }
+        });
     }
     @Override
     protected void init() {
         prefModel = AuroAppPref.INSTANCE.getModelInstance();
         firstTimeCome = true;
-      DashBoardMainActivity.setListingActiveFragment(DashBoardMainActivity.STUDENT_PROFILE_FRAGMENT);
-      AppUtil.commonCallBackListner = this;
-      AppUtil.loadAppLogo(binding.auroScholarLogo, this);
-      String parentmobileno = prefModel.getStudentName();
+        DashBoardMainActivity.setListingActiveFragment(DashBoardMainActivity.STUDENT_PROFILE_FRAGMENT);
+        AppUtil.commonCallBackListner = this;
+        AppUtil.loadAppLogo(binding.auroScholarLogo, this);
+
+        String parentmobileno = prefModel.getUserMobile();
         binding.editPhone.setText(parentmobileno);
         AppStringDynamic.setStudentUpdateProfilePageStrings(binding);
     }
@@ -356,7 +471,6 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         return R.layout.fragment_student_update_profile;
     }
 
-
     @Override
     public void onClick(View v) {
 
@@ -366,10 +480,8 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                 askPermission();
             } else {
                 askPermission();
-
             }
-        }
-        else if (id == R.id.btdonenew) {
+        } else if (id == R.id.btdonenew) {
             String pin = binding.pinView.getText().toString();
             String confirmpin = binding.confirmPin.getText().toString();
 
@@ -378,23 +490,23 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
             if (binding.etUsername.getText().toString().isEmpty() || binding.etUsername.getText().toString().equals("")) {
                 Toast.makeText(this, details.getEnter_user_name(), Toast.LENGTH_SHORT).show();
             } else if (binding.etUsername.getText().toString().length() < 5) {
-                Toast.makeText(this, "Please enter minimum 5 character username", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, details.getEnter_min_char(), Toast.LENGTH_SHORT).show();
 
             } else if (binding.etUsername.getText().toString().startsWith(" ")) {
-                Toast.makeText(this, "Can not enter space at first in username", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, details.getEnter_space_username(), Toast.LENGTH_SHORT).show();
             } else if (binding.pinView.getText().toString().isEmpty() || binding.pinView.getText().toString().equals("")) {
                 Toast.makeText(this, details.getEnter_the_pin(), Toast.LENGTH_SHORT).show();
             } else if (pin.length() < 4) {
-                Toast.makeText(this, "Please enter 4 digits pin", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, details.getEnter_pin_digit(), Toast.LENGTH_SHORT).show();
             } else if (binding.confirmPin.getText().toString().isEmpty() || binding.confirmPin.getText().toString().equals("")) {
                 Toast.makeText(this, details.getEnter_the_confirm_pin(), Toast.LENGTH_SHORT).show();
             } else if (confirmpin.length() < 4) {
-                Toast.makeText(this, "Please enter 4 digits confirm pin", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, details.getEnter_confirmpin_digit(), Toast.LENGTH_SHORT).show();
             } else if (pin.startsWith(" ")) {
-                Toast.makeText(this, "Can not enter space at first in pin", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, details.getEnter_space_pin(), Toast.LENGTH_SHORT).show();
 
             } else if (confirmpin.startsWith(" ")) {
-                Toast.makeText(this, "Can not enter space at first in confirm pin", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, details.getEnter_space_confirmpin(), Toast.LENGTH_SHORT).show();
 
             } else if (pin == confirmpin || pin.equals(confirmpin)) {
 
@@ -420,6 +532,9 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                 } else if (binding.etdistrict.getText().toString().equals("District") || binding.etdistrict.getText().toString().equals("City") || binding.etdistrict.getText().toString().equals("") || binding.etdistrict.getText().toString().isEmpty()) {
                     Toast.makeText(this, details1.getPlease_select_district(), Toast.LENGTH_SHORT).show();
 
+                } else if (binding.etSchooltype.getText().toString().equals(schooltypeList.get(0).getTranslatedName())) {
+                    Toast.makeText(this, "Please select school type", Toast.LENGTH_SHORT).show();
+
                 } else if (binding.etschool.getText().toString().equals("Select School") || binding.etschool.getText().toString().equals("School Name") || binding.etschool.getText().toString().equals("School Your School") || binding.etschool.getText().toString().isEmpty() || binding.etschool.getText().toString().equals("")) {
                     Toast.makeText(this, details1.getPlease_select_school(), Toast.LENGTH_SHORT).show();
 
@@ -434,24 +549,19 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                     Toast.makeText(CompleteStudentProfileWithoutPin.this, details1.getPlease_enter_valid_email(), Toast.LENGTH_SHORT).show();
 
                 } else if (binding.edtusername.getText().toString().startsWith(" ")) {
-                    Toast.makeText(this, "Can not enter space in name", Toast.LENGTH_SHORT).show();
-                } else if (binding.editemail.getText().toString().startsWith(" ")) {
-                    Toast.makeText(this, "Can not enter space in email", Toast.LENGTH_SHORT).show();
-                } else if (binding.etschool.getText().toString().startsWith(" ")) {
-                    Toast.makeText(this, "Can not enter space in school name", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(this, details1.getEnter_space_username(), Toast.LENGTH_SHORT).show();
+                } else if (binding.editemail.getText().toString().startsWith(" ") || binding.editemail.getText().toString().endsWith(" ")) {
+                    Toast.makeText(this, details1.getEnter_space_email(), Toast.LENGTH_SHORT).show();
                 } else {
 
                     updateChild();
-                   // setAutoRegister();
 
                 }
 
             } else {
 
             }
-        }
-        else if (id == R.id.submitbutton) {
+        } else if (id == R.id.submitbutton) {
             String email = binding.editemail.getText().toString().trim();
             String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
             Details details1 = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
@@ -469,6 +579,9 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                 } else if (binding.etdistrict.getText().toString().equals("District") || binding.etdistrict.getText().toString().equals("City") || binding.etdistrict.getText().toString().equals("") || binding.etdistrict.getText().toString().isEmpty()) {
                     Toast.makeText(this, details1.getPlease_select_district(), Toast.LENGTH_SHORT).show();
 
+                } else if (binding.etSchooltype.getText().toString().equals(schooltypeList.get(0).getTranslatedName())) {
+                    Toast.makeText(this, "Please select school type", Toast.LENGTH_SHORT).show();
+
                 } else if (binding.etschool.getText().toString().equals("Select School") || binding.etschool.getText().toString().equals("School Name") || binding.etschool.getText().toString().equals("School Your School") || binding.etschool.getText().toString().isEmpty() || binding.etschool.getText().toString().equals("")) {
                     Toast.makeText(this, details1.getPlease_select_school(), Toast.LENGTH_SHORT).show();
 
@@ -483,14 +596,11 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                     Toast.makeText(CompleteStudentProfileWithoutPin.this, details1.getPlease_enter_valid_email(), Toast.LENGTH_SHORT).show();
 
                 } else if (binding.edtusername.getText().toString().startsWith(" ")) {
-                    Toast.makeText(this, "Can not enter space in name", Toast.LENGTH_SHORT).show();
-                } else if (binding.editemail.getText().toString().startsWith(" ")) {
-                    Toast.makeText(this, "Can not enter space in email", Toast.LENGTH_SHORT).show();
-                } else if (binding.etschool.getText().toString().startsWith(" ")) {
-                    Toast.makeText(this, "Can not enter space in school name", Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(this, details1.getEnter_space_username(), Toast.LENGTH_SHORT).show();
+                } else if (binding.editemail.getText().toString().startsWith(" ") || binding.editemail.getText().toString().endsWith(" ")) {
+                    Toast.makeText(this, details1.getEnter_space_email(), Toast.LENGTH_SHORT).show();
                 } else {
-                    String auto_userid = getIntent().getStringExtra("auto_userid");
+
                     updateChild();
 
                 }
@@ -513,13 +623,13 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         ViewUtil.showSnackBar(((DashBoardMainActivity) getApplicationContext()).binding.naviagtionContent.homeView, message);
     }
 
-
-
     private void getProfile()
     {
-       String childid =  AuroAppPref.INSTANCE.getModelInstance().getUserId();
+        String childid =  AuroAppPref.INSTANCE.getModelInstance().getUserId();
+        String userlangid = prefModel.getUserLanguageId();
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("user_id",childid);
+        map_data.put("user_prefered_language_id",userlangid);
 
         RemoteApi.Companion.invoke().getStudentData(map_data)
                 .enqueue(new Callback<GetStudentUpdateProfile>()
@@ -530,19 +640,11 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                         if (response.isSuccessful()) {
 
 
-                                String state = response.body().getStatename();
-                                String district = response.body().getDistrictname();
+                            String state = response.body().getStatename();
+                            String district = response.body().getDistrictname();
                             String email = response.body().getEmailId();
                             ExistGrade = response.body().getStudentclass();
-                            if (response.body().getStudentclass().equals("0")||response.body().getStudentclass().isEmpty()||response.body().getStudentclass().equals("")){
-                                binding.etgrade.setEnabled(true);
-                                binding.etgrade.setClickable(true);
-                            }
-                            else  if (!ExistGrade.equals("null")||!ExistGrade.equals(null)||!ExistGrade.equals("")||!ExistGrade.isEmpty()||!ExistGrade.equals("0")||!ExistGrade.equals(0)){
-                                binding.etgrade.setText(ExistGrade);
-                                binding.etgrade.setEnabled(false);
-                                binding.etgrade.setClickable(false);
-                            }
+                            ExistGradenew = response.body().getStudentclass();
                             String name = response.body().getStudentName();
                             String schooltype = response.body().getSchoolType();
                             String board = response.body().getBoardType();
@@ -563,9 +665,11 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                             if (!district.equals("null")||!district.equals(null)||!district.equals("")||!district.isEmpty()){
                                 binding.etdistrict.setText(district);
                             }
-
+                            if (!ExistGrade.equals("null")||!ExistGrade.equals(null)||!ExistGrade.equals("")||!ExistGrade.isEmpty()||!ExistGrade.equals("0")||!ExistGrade.equals(0)){
+                                binding.etgrade.setText(ExistGrade);
+                            }
                             if (!name.equals("null")||!name.equals(null)||!name.equals("")||!name.isEmpty()){
-                                binding.edtusername.setText(name);
+                                binding.etUsername.setText(name);
                             }
                             if (!email.equals("null")||!email.equals(null)||!email.equals("")||!email.isEmpty()){
                                 binding.editemail.setText(email);
@@ -588,8 +692,17 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                             if (!schoolname.equals("null")||!schoolname.equals(null)||!schoolname.equals("")||!schoolname.isEmpty()){
                                 binding.etschool.setText(schoolname);
                             }
-                        }
 
+
+
+
+
+
+
+
+
+
+                        }
                         else
                         {
                             Log.d(TAG, "onResponser: "+response.message().toString());
@@ -603,61 +716,67 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                     }
                 });
     }
-
-    private void setAutoRegister()
+    private void addNewSchool(String state_id, String district_id, String search)
     {
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String mobileno = prefModel.getUserMobile();
-        String partnersource = prefModel.getPartnersource();
-        String partneruniqueid = prefModel.getPartneruniqueid();
+        Details details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
+
+        ProgressDialog progress = new ProgressDialog(CompleteStudentProfileWithoutPin.this);
+        progress.setTitle(details.getProcessing());
+        progress.setMessage(details.getProcessing());
+        progress.setCancelable(true); // disable dismiss by tapping outside of the dialog
+        progress.show();
+
         HashMap<String,String> map_data = new HashMap<>();
-        map_data.put("mobile_no",mobileno);
-        map_data.put("partner_unique_id",partneruniqueid);
-        map_data.put("partner_source",partnersource);
-        map_data.put("add_new","1");
-        map_data.put("partner_api_key","7611f0fafb1e3b96d1a78c57b0650b85985eace9f6aaa365c0b496e9ae1163e7");
-        RemoteApi.Companion.invoke().getSDKData(map_data)
-                .enqueue(new Callback<SDKDataModel>() {
+        map_data.put("school_name", search);
+        map_data.put("state_id",state_id);
+        map_data.put("district_id",district_id);
+
+        RemoteApi.Companion.invoke().addNewSchool(map_data)
+                .enqueue(new Callback<AddNewSchoolResModel>() {
                     @Override
-                    public void onResponse(Call<SDKDataModel> call, Response<SDKDataModel> response)
+                    public void onResponse(Call<AddNewSchoolResModel> call, Response<AddNewSchoolResModel> response) {
+                        if (response.code()==400){
+                            progress.dismiss();
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response.errorBody().string());
+                                String message = jsonObject.getString("message");
+                                Toast.makeText(CompleteStudentProfileWithoutPin.this,message, Toast.LENGTH_SHORT).show();
+
+                            } catch (JSONException | IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        else if (response.isSuccessful()) {
+
+                            progress.dismiss();
+                            getschool_id = String.valueOf(response.body().getSchoolID());
+
+                            Toast.makeText(CompleteStudentProfileWithoutPin.this, response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+
+
+                        }
+                        else{
+                            progress.dismiss();
+                            Toast.makeText(CompleteStudentProfileWithoutPin.this, response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<AddNewSchoolResModel> call, Throwable t)
                     {
-                        try {
-                            if (response.code() == 400) {
-                                Toast.makeText(CompleteStudentProfileWithoutPin.this, "Error!", Toast.LENGTH_SHORT).show();
-                            }
-                            else if (response.code() == 200) {
-
-
-                                for (int i = 0; i<response.body().getUser_details().size(); i++){
-                                    auto_userid = response.body().getUser_details().get(0).getUser_id();
-
-                                }
-
-
-
-                            }
-                            else {
-                                Toast.makeText(CompleteStudentProfileWithoutPin.this, response.message(), Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                        catch (Exception e) {
-                            Toast.makeText(CompleteStudentProfileWithoutPin.this, "Internet connection", Toast.LENGTH_SHORT).show();
-                        }
+                        progress.dismiss();
+                        Log.d(TAG, "onDistrictFailure: "+t.getMessage());
                     }
-
-                    @Override
-                    public void onFailure(Call<SDKDataModel> call, Throwable t) {
-                        Toast.makeText(CompleteStudentProfileWithoutPin.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
                 });
-
-
     }
-
     private void updateChild()
     {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        Details details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
 
         String child_name = binding.edtusername.getText().toString();
         String mobileversion =DeviceUtil.getVersionName();
@@ -666,14 +785,30 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         String buildversion =AppUtil.getAppVersionName();
         String ipaddress = AppUtil.getIpAdress();
         String languageid = prefModel.getUserLanguageId();
-        String partnersourceid = prefModel.getPartnersource();
-
-        String childid = prefModel.getUserId();
+        SharedPreferences prefs = getSharedPreferences("My_Pref", MODE_PRIVATE);
+        String childid =  AuroAppPref.INSTANCE.getModelInstance().getUserId();
         String childuserid = childid;
         String gendertype = binding.etStudentGender.getText().toString();
+
         String parentemail = binding.editemail.getText().toString();
-        String schoolname = binding.etschool.getText().toString();
-        RequestBody schoolname_c  = RequestBody.create(MediaType.parse("text/plain"), schoolname);
+        if (districtList!=null||!districtList.isEmpty()){
+            schoolnamesearch = binding.etschool.getText().toString();
+        }
+        else{
+            schoolnamesearch = binding.autoCompleteTextView1.getText().toString();
+        }
+
+        if (gradeid == null || gradeid.equals("null") || gradeid.equals("")||gradeid.isEmpty()){
+            gradeid = binding.etgrade.getText().toString();
+        }
+        else{
+            gradeid = binding.etgrade.getText().toString();
+        }
+
+
+
+
+        RequestBody schoolname_c  = RequestBody.create(MediaType.parse("text/plain"), schoolnamesearch);
         RequestBody gender_c  = RequestBody.create(MediaType.parse("text/plain"), GenderName);
         RequestBody schooltype_c  = RequestBody.create(MediaType.parse("text/plain"), schooltype);
         RequestBody schoolboard_c  = RequestBody.create(MediaType.parse("text/plain"), boardtype);
@@ -691,11 +826,14 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         RequestBody mobileversion_c  = RequestBody.create(MediaType.parse("text/plain"), mobileversion);
         RequestBody email_c  = RequestBody.create(MediaType.parse("text/plain"), parentemail);
         RequestBody name_c  = RequestBody.create(MediaType.parse("text/plain"), child_name);
-        RequestBody prtnersource  = RequestBody.create(MediaType.parse("text/plain"), partnersourceid);
+        RequestBody prtnersource  = RequestBody.create(MediaType.parse("text/plain"), prefModel.getPartnersource());
         RequestBody regsource = RequestBody.create(MultipartBody.FORM, "AuroScholr");//model.getPartnerSource()
         RequestBody sharetype = RequestBody.create(MultipartBody.FORM, "telecaller");//model.getPartnerSource()
         RequestBody devicetoken  = RequestBody.create(MediaType.parse("text/plain"), fbnewToken);
+
         RequestBody  studentname  = RequestBody.create(MediaType.parse("text/plain"), child_name);
+
+
         RequestBody language_veriosn  = RequestBody.create(MediaType.parse("text/plain"), "0.0.1");
         RequestBody api_veriosn  = RequestBody.create(MediaType.parse("text/plain"), "0.0.1");
         RequestBody grade_c  = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(gradeid));
@@ -712,92 +850,166 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
 
         }
         MultipartBody.Part lFile = MultipartBody.Part.createFormData("user_profile_image", filename, lRequestBody);
+
         RemoteApi.Companion.invoke()
-                    .updateaddnewchilddetail(buildversion_c,prtnersource,schoolname_c,email_c,schoolboard_c,
-                            gender_c,regsource,sharetype,devicetoken,emptyfield,isnew_c,grade_c,
-                            emptyfield,emptyfield,ipaddress_c,mobileversion_c,modelname_c,privatetutiontype_c,privatetution_c,
-                            emptyfield,emptyfield,languagemedium_c,mobilemanufacture_c,stateid_c,districtid_c,name_c,schooltype_c,
-                            userid_c,languageid_c,api_veriosn,language_veriosn,studentname,languagemedium_c,lFile)
-                    .enqueue(new Callback<StudentResponselDataModel>() {
-                        @Override
-                        public void onResponse(Call<StudentResponselDataModel> call, Response<StudentResponselDataModel> response)
-                        {
-                            try {
-                                if (response.code() == 400) {
-                                    JSONObject jsonObject = null;
-                                    try {
-                                        jsonObject = new JSONObject(response.errorBody().string());
-                                        String message = jsonObject.getString("message");
-                                        Toast.makeText(CompleteStudentProfileWithoutPin.this,message, Toast.LENGTH_SHORT).show();
+                .updateaddnewchilddetail(buildversion_c,prtnersource,schoolname_c,email_c,schoolboard_c,
+                        gender_c,regsource,sharetype,devicetoken,emptyfield,isnew_c,grade_c,
+                        emptyfield,emptyfield,ipaddress_c,mobileversion_c,modelname_c,privatetutiontype_c,privatetution_c,
+                        emptyfield,emptyfield,languageid_c,mobilemanufacture_c,stateid_c,districtid_c,name_c,schooltype_c,
+                        userid_c,language_veriosn,api_veriosn,languageid_c,studentname,languagemedium_c,lFile)
+                .enqueue(new Callback<StudentResponselDataModel>() {
+                    @Override
+                    public void onResponse(Call<StudentResponselDataModel> call, Response<StudentResponselDataModel> response)
+                    {
+                        try {
+                            if (response.code()==400){
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(response.errorBody().string());
+                                    String message = jsonObject.getString("message");
+                                    Toast.makeText(CompleteStudentProfileWithoutPin.this,message, Toast.LENGTH_SHORT).show();
 
-                                    } catch (JSONException | IOException e) {
-                                        e.printStackTrace();
-                                    }
-
-
+                                } catch (JSONException | IOException e) {
+                                    e.printStackTrace();
                                 }
-                                else if (response.isSuccessful()) {
-                                    Log.d(TAG, "onImageResponse: ");
-                                    String status = response.body().getStatus().toString();
-                                    String msg = response.body().getMessage();
-                                    if (status.equalsIgnoreCase("success")) {
-                                        binding.submitbutton.setVisibility(View.GONE);
-                                        Toast.makeText(CompleteStudentProfileWithoutPin.this, msg, Toast.LENGTH_SHORT).show();
-                                        SharedPreferences.Editor editor1 = getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
-                                        editor1.putString("dashboardopen", "true");
-                                        editor1.putString("gradeforsubjectpreference", binding.etgrade.getText().toString());
-                                        editor1.putString("gradeforsubjectpreference", gradeid);
-                                        editor1.putString("gradeforsubjectpreferencefinalprofile", gradeid);
-                                        editor1.putString("gradeforsubjectpreferencefinalprofile", binding.etgrade.getText().toString());
-                                        editor1.putString("gradeforsubjectpreferencewithoutpin", "true");
-                                        editor1.apply();
-                                        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-                                        prefModel.setUserclass(String.valueOf(gradeid));
-                                        AuroAppPref.INSTANCE.setPref(prefModel);
 
-
-                                        String userclass = prefModel.getUserclass();
-                                        AuroScholarInputModel inputModel = new AuroScholarInputModel();
-                                        inputModel.setMobileNumber(prefModel.getUserMobile());
-                                        inputModel.setStudentClass(userclass);
-                                        inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
-                                        inputModel.setPartnerSource(prefModel.getPartnersource());
-                                        inputModel.setPartner_api_key(prefModel.getApikey());
-                                        inputModel.setActivity((Activity) CompleteStudentProfileWithoutPin.this);
-                                        AuroScholar.startAuroSDK(inputModel);
-                                    }
-                                } else {
-
-                                    Log.d(TAG, "onImageerrorResponse: " + response.errorBody().toString());
-
-                                    Toast.makeText(CompleteStudentProfileWithoutPin.this, response.message(), Toast.LENGTH_SHORT).show();
-                                    //  showSnackbarError(response.message());
-                                }
-                            } catch (Exception e) {
-                                Toast.makeText(CompleteStudentProfileWithoutPin.this, "Internet connection", Toast.LENGTH_SHORT).show();
                             }
-                        }
 
-                        @Override
-                        public void onFailure(Call<StudentResponselDataModel> call, Throwable t)
-                        {
-                            Log.d(TAG, "onImgFailure: "+t.getMessage());
+                            else if (response.isSuccessful()) {
+                                Log.d(TAG, "onImageResponse: ");
+                                String status = response.body().getStatus().toString();
+                                String msg = response.body().getMessage();
+                                if (status.equalsIgnoreCase("success")) {
+                                    binding.submitbutton.setVisibility(View.GONE);
+                                    Toast.makeText(CompleteStudentProfileWithoutPin.this, msg, Toast.LENGTH_SHORT).show();
+                                    SharedPreferences.Editor editor1 = getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
+                                    editor1.putString("dashboardopen", "true");
+                                    editor1.putString("gradeforsubjectpreference", binding.etgrade.getText().toString());
+                                    editor1.putString("gradeforsubjectpreference", gradeid);
+                                    editor1.putString("gradeforsubjectpreferencefinalprofile", gradeid);
+                                    editor1.putString("gradeforsubjectpreferencefinalprofile", binding.etgrade.getText().toString());
+                                    editor1.putString("gradeforsubjectpreferencewithoutpin", "true");
+                                    editor1.apply();
+                                    PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+                                    prefModel.setUserclass(ConversionUtil.INSTANCE.convertStringToInteger(gradeid));
+
+                                    AuroAppPref.INSTANCE.setPref(prefModel);
+
+
+                                        AuroScholar.opendashboard();
+                                   // openGenricSDK();
+                                }
+                            }
+                            else {
+
+                                Log.d(TAG, "onImageerrorResponse: " + response.errorBody().toString());
+
+                                Toast.makeText(CompleteStudentProfileWithoutPin.this, response.message(), Toast.LENGTH_SHORT).show();
+
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(CompleteStudentProfileWithoutPin.this, details.getInternetCheck(), Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    }
+
+                    @Override
+                    public void onFailure(Call<StudentResponselDataModel> call, Throwable t)
+                    {
+                        Log.d(TAG, "onImgFailure: "+t.getMessage());
+                    }
+                });
 
 
 
     }
+
+    public void openGenricSDK() {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        int userclass = prefModel.getUserclass();
+        AuroScholarInputModel inputModel = new AuroScholarInputModel();
+        inputModel.setMobileNumber(prefModel.getUserMobile());
+        inputModel.setStudentClass(String.valueOf(userclass));
+        inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
+        inputModel.setPartnerSource(prefModel.getPartnersource());
+        inputModel.setPartner_api_key(prefModel.getApikey());
+        inputModel.setActivity((Activity) this);
+        AuroScholar.opendashboard();
+       // AuroScholar.startAuroSDK(inputModel);
+
+    }
+    private ArrayAdapter<String> getEmailAddressAdapter(Context context) {
+        for (int i = 0; i < genderListString.size(); i++) {
+            genderListString.set(i, genderListString.get(i));
+        }
+        String newschool = binding.autoCompleteTextView1.getText().toString();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.select_dialog_item,genderListString);
+        return adapter;
+    }
+    private void getAddedChild()
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String languageid = prefModel.getUserLanguageId();
+        String username = AuroAppPref.INSTANCE.getModelInstance().getCheckUserResModel().getUserDetails().get(0).getUserName();
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("user_name",username);
+        map_data.put("user_type", String.valueOf(0));
+        map_data.put("user_prefered_language_id",languageid);
+        RemoteApi.Companion.invoke().getUserCheck(map_data)
+                .enqueue(new Callback<CheckUserResModel>()
+                {
+                    @Override
+                    public void onResponse(Call<CheckUserResModel> call, Response<CheckUserResModel> response)
+                    {
+                        try {
+
+
+                            if (response.isSuccessful()) {
+
+                                if (!(response.body().getUserDetails() == null) || !(response.body().getUserDetails().isEmpty())) {
+
+
+                                    listchilds = response.body().getUserDetails();
+                                    for (int i = 0; i < listchilds.size(); i++) {
+                                        if (listchilds.get(i).getIsMaster().equals("0") || listchilds.get(i).getIsMaster().equals(0)) {
+                                            list.add(listchilds.get(i));
+
+                                        }
+                                        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+                                        checkUserResModel = listchilds.get(i);
+                                        prefModel.setUserDetailResModel(checkUserResModel);
+                                        AuroAppPref.INSTANCE.setPref(prefModel);
+                                        checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getUserDetailResModel();
+                                    }
+
+//
+
+                                }
+
+                            }
+                            else {
+                                Toast.makeText(getApplicationContext(), response.message(), Toast.LENGTH_SHORT).show();
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(CompleteStudentProfileWithoutPin.this, e.getMessage().toString(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<CheckUserResModel> call, Throwable t)
+                    {
+                        Toast.makeText(getApplicationContext(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+
+
     private void getSchool(String state_id, String district_id, String search)
     {
         Details details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
 
-        ProgressDialog progress = new ProgressDialog(CompleteStudentProfileWithoutPin.this);
-        progress.setTitle(details.getProcessing());
-        progress.setMessage(details.getProcessing());
-        progress.setCancelable(true); // disable dismiss by tapping outside of the dialog
-        progress.show();
-        List<SchoolData> districtList = new ArrayList<>();
+
+
         districtList.clear();
         HashMap<String,String> map_data = new HashMap<>();
 
@@ -813,6 +1025,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                     {
                         if (response.isSuccessful())
                         {
+                            genderListString.clear();
                             Log.d(TAG, "onDistrictResponse: "+response.message());
                             for ( int i=0 ;i < response.body().getSchools().size();i++)
                             {
@@ -822,10 +1035,10 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                                 Log.d(TAG, "onDistrictResponse: "+school_name);
                                 SchoolData districtData = new  SchoolData(school_name,school_id);
                                 districtList.add(districtData);
+                                genderListString.add(school_name);
 
                             }
-                            addDropDownSchool(districtList);
-                            progress.dismiss();
+
                         }
                         else
                         {
@@ -836,6 +1049,90 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                     @Override
                     public void onFailure(Call<com.auro.application.home.data.model.SchoolDataModel> call, Throwable t)
                     {
+                        Log.d(TAG, "onDistrictFailure: "+t.getMessage());
+                    }
+                });
+    }
+
+    private void getSchoolsearch(String state_id, String district_id, String search)
+    {
+        Details details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
+
+        ProgressDialog progress = new ProgressDialog(CompleteStudentProfileWithoutPin.this);
+        progress.setTitle(details.getProcessing());
+        progress.setMessage(details.getProcessing());
+        progress.setCancelable(true); // disable dismiss by tapping outside of the dialog
+        progress.show();
+
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("state_id",state_id);
+        map_data.put("district_id",district_id);
+        map_data.put("search",search);
+
+
+        RemoteApi.Companion.invoke().getSchool(map_data)
+                .enqueue(new Callback<com.auro.application.home.data.model.SchoolDataModel>() {
+                    @Override
+                    public void onResponse(Call<com.auro.application.home.data.model.SchoolDataModel> call, Response<com.auro.application.home.data.model.SchoolDataModel> response)
+                    {
+                        if (response.isSuccessful())
+                        {
+                            districtList.clear();
+                            progress.dismiss();
+                            Log.d(TAG, "onDistrictResponse: "+response.message());
+                            if (response.body().getSchools()!=null||!response.body().getSchools().isEmpty()) {
+                                for (int i = 0; i < response.body().getSchools().size(); i++) {
+                                    int school_id = response.body().getSchools().get(i).getID();
+                                    String school_name = response.body().getSchools().get(i).getSCHOOL_NAME();
+
+                                    Log.d(TAG, "onDistrictResponse: " + school_name);
+                                    SchoolData districtData = new SchoolData(school_name, school_id);
+                                    districtList.add(districtData);
+
+
+                                }
+                                if (districtList != null || !districtList.isEmpty()) {
+                                    progress.dismiss();
+                                    if (districtList != null && districtList.size()!=0) {
+                                        binding.etschool.showDropDown();
+                                        addDropDownSchool(districtList);
+                                    } else {
+                                        progress.dismiss();
+                                        String schoolsearch = binding.editsearch.getText().toString();
+                                        binding.etschool.setText(schoolsearch);
+                                        Toast.makeText(CompleteStudentProfileWithoutPin.this, details.getNo_data_found(), Toast.LENGTH_SHORT).show();                                    }
+
+                                }
+                                else {
+                                    progress.dismiss();
+                                    Toast.makeText(CompleteStudentProfileWithoutPin.this, details.getNo_data_found(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                            else{
+                                progress.dismiss();
+                                String searchname = binding.editsearch.getText().toString();
+                                binding.etschool.setText(searchname);
+                                Toast.makeText(CompleteStudentProfileWithoutPin.this, details.getNo_data_found(), Toast.LENGTH_SHORT).show();
+                            }
+
+
+                        }
+                        else {
+                            if (districtList == null || districtList.isEmpty()) {
+                                progress.dismiss();
+                                String schoolsearch = binding.editsearch.getText().toString();
+                                binding.etschool.setText(schoolsearch);
+                                Toast.makeText(CompleteStudentProfileWithoutPin.this, details.getNo_data_found(), Toast.LENGTH_SHORT).show();
+
+
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<com.auro.application.home.data.model.SchoolDataModel> call, Throwable t)
+                    {
+                        progress.dismiss();
                         Log.d(TAG, "onDistrictFailure: "+t.getMessage());
                     }
                 });
@@ -950,7 +1247,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                                 districtList.add(districtData);
 
                             }
-                          //  getSchool(stateCode,districtCode,Schoolsearch);
+
                             addDropDownDistrict(districtList);
                             progress.dismiss();
                         }
@@ -974,7 +1271,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         String langiduser = prefModel.getUserLanguageId();
         langlist.clear();
         HashMap<String,String> map_data = new HashMap<>();
-        map_data.put("language_id", langid);
+        map_data.put("language_id", langiduser);
         RemoteApi.Companion.invoke().getSchoolmedium(map_data)
                 .enqueue(new Callback<com.auro.application.home.data.model.SchoolMediumLangDataModel>() {
                     @Override
@@ -1066,7 +1363,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                             for ( int i=0 ;i < response.body().getResult().size();i++)
                             {
                                 int gender_id = response.body().getResult().get(i).getID();
-                               String gender_name = response.body().getResult().get(i).getName();
+                                String gender_name = response.body().getResult().get(i).getName();
                                 String translated_name = response.body().getResult().get(i).getTranslatedName();
 
                                 TutionData districtData = new  TutionData(gender_id,translated_name,gender_name);
@@ -1241,7 +1538,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     }
     private void addDropDownTutionType()
     {
-         TutionTypeSpinnerAdapter adapter= new TutionTypeSpinnerAdapter(this, android.R.layout.simple_dropdown_item_1line, tutiontypeList, this);
+        TutionTypeSpinnerAdapter adapter= new TutionTypeSpinnerAdapter(this, android.R.layout.simple_dropdown_item_1line, tutiontypeList, this);
         binding.ettutiontype.setAdapter(adapter);//setting the adapter data into the AutoCompleteTextView
         binding.ettutiontype.setThreshold(1);
         binding.ettutiontype.setTextColor(Color.BLACK);//will start working from first character
@@ -1283,30 +1580,27 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     }
     private void askPermission() {
 
-                ImagePicker.with(CompleteStudentProfileWithoutPin.this)
-                        .crop()                    //Crop image(Optional), Check Customization for more option
-                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
-                        .start();
+        ImagePicker.with(CompleteStudentProfileWithoutPin.this)
+                .crop()
+                .compress(1024)
+                .maxResultSize(1080, 1080)
+                .start();
 
     }
-
-
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         AppLogger.e("StudentProfile", "fragment requestCode=" + requestCode);
 
         if (requestCode == 2404) {
-            // CropImages.ActivityResult result = CropImages.getActivityResult(data);
+
             if (resultCode == RESULT_OK) {
                 try {
-
-
                     Uri uri = data.getData();
                     AppLogger.e("StudentProfile", "image path=" + uri.getPath());
                     image_path = uri.getPath();
+
+                    Log.d(TAG, "imagepathon: "+image_path);
                     Bitmap picBitmap = BitmapFactory.decodeFile(uri.getPath());
                     byte[] bytes = AppUtil.encodeToBase64(picBitmap, 100);
                     long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
@@ -1326,9 +1620,9 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                 }
 
             } else if (resultCode == ImagePicker.RESULT_ERROR) {
-                showSnackbarError(ImagePicker.getError(data));
+
             } else {
-                // Toast.makeText(getActivity(), "Task Cancelled", Toast.LENGTH_SHORT).show();
+
             }
         }
         else if (requestCode == CAMERA_REQUEST ) {
@@ -1340,7 +1634,6 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                 byte[] bytes = AppUtil.encodeToBase64(photo, 100);
                 long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
                 int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
-                //   Toast.makeText(ParentProfileActivity.this, image_path.toString(), Toast.LENGTH_SHORT).show();
 
                 if (file_size >= 500) {
                     studentProfileModel.setImageBytes(AppUtil.encodeToBase64(photo, 50));
@@ -1356,8 +1649,6 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     }
     @Override
     public void commonEventListner(CommonDataModel commonDataModel) {
-
-
         if (commonDataModel.getClickType()==STATE)
         {
             StateData stateDataModel = (StateData) commonDataModel.getObject();
@@ -1438,7 +1729,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
             GradeData gData = (GradeData) commonDataModel.getObject();
             binding.etgrade.setText(gData.getGrade_id());
             gradeid = gData.getGrade_id();
-
+            openErrorDialog();
 
         }
 
@@ -1454,7 +1745,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
             else if (v.getId() == R.id.etstate) {
                 binding.etstate.showDropDown();
             }
-           else if (v.getId() == R.id.etdistrict) {
+            else if (v.getId() == R.id.etdistrict) {
                 binding.etdistrict.showDropDown();
             }
             else if (v.getId() == R.id.ettution) {
@@ -1474,7 +1765,10 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
             }
 
             else if (v.getId() == R.id.etgrade) {
-                if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)||ExistGrade.isEmpty()){
+                if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
+                    binding.etgrade.showDropDown();
+                }
+                else if (ConversionUtil.INSTANCE.convertStringToInteger(ExistGradenew) > 0){
                     binding.etgrade.showDropDown();
                 }
                 else{
@@ -1515,6 +1809,9 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
             if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
                 binding.etgrade.showDropDown();
             }
+            else if (ConversionUtil.INSTANCE.convertStringToInteger(ExistGradenew) > 0){
+                binding.etgrade.showDropDown();
+            }
             else{
                 openErrorDialog();
             }
@@ -1525,15 +1822,16 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
 
     @Override
     public void onBackPressed() {
+        Details details1 = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Are you sure you want to exit?")
+        builder.setMessage(details1.getQuizExitTxt())
                 .setCancelable(false)
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                .setPositiveButton(details1.getYes(), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         CompleteStudentProfileWithoutPin.this.finish();
                     }
                 })
-                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                .setNegativeButton(details1.getNo(), new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
                     }
@@ -1544,49 +1842,54 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     }
     private void openErrorDialog() {
         String grade = binding.etgrade.getText().toString();
-
-
         if (kycgrade.equals("Pending")||kycgrade == "Pending"){
-            String message = prefModel.getLanguageMasterDynamic().getDetails().getYou_have_changed_you_grade()+"" + ExistGrade + "th - " + gradeid + "th."+prefModel.getLanguageMasterDynamic().getDetails().getYou_will_loose_your_current();
-            CustomDialogModel customDialogModel = new CustomDialogModel();
-            customDialogModel.setContext(CompleteStudentProfileWithoutPin.this);
-            customDialogModel.setTitle(prefModel.getLanguageMasterDynamic().getDetails().getInformation() != null ? prefModel.getLanguageMasterDynamic().getDetails().getInformation() : AuroApp.getAppContext().getResources().getString(R.string.information));
-            customDialogModel.setContent(message);
-            customDialogModel.setTwoButtonRequired(true);
-            customDialog = new CustomDialog(CompleteStudentProfileWithoutPin.this, customDialogModel);
-            customDialog.setSecondBtnTxt(prefModel.getLanguageMasterDynamic().getDetails().getYes()+"");//Yes
-            customDialog.setFirstBtnTxt(prefModel.getLanguageMasterDynamic().getDetails().getNo()+"");//No
-            customDialog.setFirstCallcack(new CustomDialog.FirstCallcack() {
-                @Override
-                public void clickNoCallback() {
-                    customDialog.dismiss();
-                    customDialog.setCancelable(true);
-                   // binding.etgrade.setEnabled(false);
+            if (gradeid == null || gradeid.equals("null") || gradeid.equals("")||gradeid.isEmpty()||gradeid.equals(0)||gradeid.equals("0")){
+                gradeid = "0";
+            }
 
-                }
-            });
+          if (ExistGrade == null || ExistGrade.equals("null") || ExistGrade.equals("")||ExistGrade.isEmpty()||ExistGrade.equals(0)||ExistGrade.equals("0")){
 
-            customDialog.setSecondCallcack(new CustomDialog.SecondCallcack() {
-                @Override
-                public void clickYesCallback() {
-                    customDialog.dismiss();
-                    binding.etgrade.showDropDown();
-                    customDialog.setCancelable(true);
-                  //  binding.etgrade.setEnabled(true);
+          }
+          else {
+              String message = prefModel.getLanguageMasterDynamic().getDetails().getYou_have_changed_you_grade() + " " + ExistGrade + "th - " + gradeid + "th. " + prefModel.getLanguageMasterDynamic().getDetails().getYou_will_loose_your_current();
+              CustomDialogModel customDialogModel = new CustomDialogModel();
+              customDialogModel.setContext(CompleteStudentProfileWithoutPin.this);
+              customDialogModel.setTitle(prefModel.getLanguageMasterDynamic().getDetails().getInformation() != null ? prefModel.getLanguageMasterDynamic().getDetails().getInformation() : AuroApp.getAppContext().getResources().getString(R.string.information));
+              customDialogModel.setContent(message);
+              customDialogModel.setTwoButtonRequired(true);
+              customDialog = new CustomDialog(CompleteStudentProfileWithoutPin.this, customDialogModel);
+              customDialog.setSecondBtnTxt(prefModel.getLanguageMasterDynamic().getDetails().getYes() + "");//Yes
+              customDialog.setFirstBtnTxt(prefModel.getLanguageMasterDynamic().getDetails().getNo() + "");//No
 
-                }
-            });
+              customDialog.setFirstCallcack(new CustomDialog.FirstCallcack() {
+                  @Override
+                  public void clickNoCallback() {
+                      binding.etgrade.setText(ExistGrade);
+                      customDialog.dismiss();
+                  }
+              });
 
-            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-            lp.copyFrom(customDialog.getWindow().getAttributes());
-            lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
-            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-            customDialog.getWindow().setAttributes(lp);
-            Objects.requireNonNull(customDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            customDialog.setCancelable(true);
-            customDialog.show();
+              customDialog.setSecondCallcack(new CustomDialog.SecondCallcack() {
+                  @Override
+                  public void clickYesCallback() {
+                      binding.etgrade.setText(gradeid);
+                      customDialog.dismiss();
+
+                  }
+              });
+
+              WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+              lp.copyFrom(customDialog.getWindow().getAttributes());
+              lp.width = WindowManager.LayoutParams.MATCH_PARENT;
+              lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+              customDialog.getWindow().setAttributes(lp);
+              Objects.requireNonNull(customDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+              customDialog.setCancelable(false);
+              customDialog.show();
+          }
+
         }
-        else{
+        else  if (kycgrade.equals("Approve")||kycgrade == "Approve"||kycgrade.equals("Approved")||kycgrade == "Approved"){
             binding.etgrade.setEnabled(false);
         }
 

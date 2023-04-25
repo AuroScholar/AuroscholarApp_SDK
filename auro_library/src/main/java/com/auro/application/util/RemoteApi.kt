@@ -48,14 +48,29 @@ interface RemoteApi
     public fun getQuizMonthSubject(@Body params:HashMap<String,String>):Call<PassportQuizMonthModel>
 
 
+    @Multipart
+    @POST("update_student_photo")
+    public fun update_student_photo(
+        @Part("user_id") userId:RequestBody ,
+        @Part("user_prefered_language_id") userpreferlanguageid:RequestBody ,
+        @Part image:MultipartBody.Part
+    ):Call<StudentResponselDataModel>
+
     @POST("get_user_details")
     public fun getStudentData(@Body params:HashMap<String,String>):Call<GetStudentUpdateProfile>
 
     @POST("check_kyc_status")
     public fun getCheckKYC(@Body params:HashMap<String,String>):Call<GetStudentUpdateProfile>
 
+    @POST("add_new_school")
+    public fun addNewSchool(@Body params:HashMap<String,String>):Call<AddNewSchoolResModel>
+
     @POST("student_full_details")
     public fun getStatusForInsta(@Body params:HashMap<String,String>):Call<DashboardResponselDataModel>
+
+    @POST("compare_documents")
+    public fun setComparedoc(@Body params:HashMap<String,String>):Call<UpdateParentProfileResModel>
+
 
     @POST("show_pending_refferals")
     public fun getPendingRefferal(@Body params:HashMap<String,String>):Call<ReferralPopUpDataModel>

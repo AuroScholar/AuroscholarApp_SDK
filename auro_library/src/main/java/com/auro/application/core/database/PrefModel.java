@@ -43,7 +43,7 @@ public class PrefModel implements Serializable {
 
     private String emailId;
 
-    private String deviceToken;
+    private String deviceToken="Test@123";
 
 
     private String updateMobileNum;
@@ -68,7 +68,7 @@ public class PrefModel implements Serializable {
     private String userLanguageCode;
     private String userLanguageId;
     private  String userLanguageShortCode;
-    private  String userclass;
+    private  int userclass;
     private  String userprofilepic;
 
     private DashboardResModel dashboardResModel;
@@ -230,11 +230,11 @@ public class PrefModel implements Serializable {
         this.kycstatus = kycstatus;
     }
 
-    public String getUserclass() {
+    public int getUserclass() {
         return userclass;
     }
 
-    public void setUserclass(String userclass) {
+    public void setUserclass(int userclass) {
         this.userclass = userclass;
     }
 

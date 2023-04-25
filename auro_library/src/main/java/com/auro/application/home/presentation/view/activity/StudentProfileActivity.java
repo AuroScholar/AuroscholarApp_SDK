@@ -125,7 +125,7 @@ public class StudentProfileActivity extends BaseActivity implements View.OnFocus
     String GenderName = "";
     String Schoolsearch = "";
     PrefModel prefModel;
-    String fbnewToken="";
+    String fbnewToken="Test123";
     List<StateData> state_list = new ArrayList<>();
     List<GenderData> genderList = new ArrayList<>();
     String image_path;
@@ -147,10 +147,10 @@ public class StudentProfileActivity extends BaseActivity implements View.OnFocus
         binding.setLifecycleOwner(this);
         AppUtil.loadAppLogo(binding.auroScholarLogo, this);
         prefModel =  AuroAppPref.INSTANCE.getModelInstance();
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            fbnewToken = instanceIdResult.getToken();
-            Log.e("newTokens", fbnewToken);
-        });
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+//            fbnewToken = instanceIdResult.getToken();
+//            Log.e("newTokens", fbnewToken);
+//        });
 
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         prefModel.setLogin(true);
@@ -560,6 +560,7 @@ public class StudentProfileActivity extends BaseActivity implements View.OnFocus
         }
 
 else {
+            PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
     String schoolnamechild = binding.etSchoolname.getText().toString();
             String buildversion = AppUtil.getAppVersionName();
             RequestBody useridp = RequestBody.create(MediaType.parse("text/plain"), userid);
@@ -569,7 +570,7 @@ else {
             RequestBody stateid = RequestBody.create(MediaType.parse("text/plain"), stateCode);
             RequestBody devicetoken = RequestBody.create(MediaType.parse("text/plain"), fbnewToken);
             RequestBody districtid = RequestBody.create(MediaType.parse("text/plain"), districtCode);
-            RequestBody prtnersource = RequestBody.create(MediaType.parse("text/plain"), "AURO3VE4j7");
+            RequestBody prtnersource = RequestBody.create(MediaType.parse("text/plain"), prefModel.getPartnersource());
             RequestBody schoolname = RequestBody.create(MediaType.parse("text/plain"), schoolnamechild);
             RequestBody gendertype = RequestBody.create(MediaType.parse("text/plain"), gender);
             RequestBody emailid = RequestBody.create(MediaType.parse("text/plain"), email);
@@ -674,10 +675,10 @@ else {
         studentProfileModel.setStateId(stateCode);
         studentProfileModel.setDistrictId(districtCode);
         /*Device Detail*/
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-            fbnewToken = instanceIdResult.getToken();
-            Log.e("newToken", fbnewToken);
-        });
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
+//            fbnewToken = instanceIdResult.getToken();
+//            Log.e("newToken", fbnewToken);
+//        });
         studentProfileModel.setDeviceToken(fbnewToken);
         studentProfileModel.setMobileVersion(DeviceUtil.getVersionName());
         studentProfileModel.setMobileManufacturer(DeviceUtil.getManufacturer(this));

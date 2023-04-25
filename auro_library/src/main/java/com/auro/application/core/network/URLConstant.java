@@ -3,9 +3,9 @@ package com.auro.application.core.network;
 import com.auro.application.BuildConfig;
 
 public interface URLConstant {
-    //  String BASE_URL = BuildConfig.BASE_URL; // live
+     String BASE_URL = BuildConfig.BASE_URL; // live
    // String BASE_URL = "https://app.auroscholar.org/api/";
-   String BASE_URL = "https://staging.auroscholar.com/api/";
+   //String BASE_URL = "https://staging.auroscholar.com/api/";
    // String BASE_URL = "192.168.0.2/auroscholar-product/api/"
     String OTP_SEND_API = BASE_URL + "send_otp";
     String OTP_VERIFY = BASE_URL + "verify_otp_new";
@@ -17,7 +17,7 @@ public interface URLConstant {
     String AZURE_API
 
             = BASE_URL + "save_pre_quiz_image_l";
-    String UPLOAD_IMAGE_URL = BASE_URL + "upload_kyc_documents_l";
+    String UPLOAD_IMAGE_URL = BASE_URL + "upload_kyc_documents_ocr";
     String GET_ASSIGNMENT_ID = BASE_URL + "start_quiz";
     String GET_STATE = BASE_URL + "states";
     String GET_DISTRICT = BASE_URL + "districts";
@@ -124,7 +124,6 @@ public interface URLConstant {
     //String FINISH_QUIZ_DATA  = BASE_URL + "submit_final_quiz_test.php";
 
     String FINISH_QUIZ_DATA = BASE_URL + "submit_final_quiz";//  //submit_final_quiz_test
-
 
     String REGISTER_USER_API = BASE_URL + "register_user";
 

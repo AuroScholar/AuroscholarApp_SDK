@@ -246,7 +246,7 @@
     <string name="update_auroscholar">अपडेट करें ऑरोस्चोलर?</string>
     <string name="updateMessage">हमने ऐप को बेहतर बनाने के लिए कड़ी मेहनत की है, कृपया अपडेट करने के लिए नीचे दिए गए बटन पर क्लिक करें।</string>
     <string name="update">अपडेट</string>
-    <string name="student_phone_number">अभिभावक फोन नंबर<font color='#FF0000'>*</font></string>
+    <string name="student_phone_number">फोन नंबर<font color='#FF0000'>*</font></string>
     <string name="grade_student">कक्षा :</string>
 
     <string name="save">सहेजें</string>
@@ -340,7 +340,7 @@
     <string name="start_now">अभी शुरू करो</string>
     <string name="scholarship_transfer">छात्रवृत्ति हस्तांतरण</string>
     <string name="subject_brief">कृपया अपनी पसंद के 5 विषय चुनें</string>
-    <string name="parent_phone_number">अभिभावक फोन नंबर</string>
+    <string name="parent_phone_number">फोन नंबर</string>
     <string name="student_gender">छात्र लिंग</string>
     <string name="check_discalimer_first_text">मैं/हम एतद्द्वारा अपने/हमारे बच्चे को क्विज़ लेने, सीखने और छात्रवृत्तियां जीतने के लिए ऑरो स्कॉलर एप्लिकेशन का उपयोग करने की अनुमति देते हैं। इसे ध्यान में रखते हुए, मैं अपने बच्चे को छात्रवृत्ति प्राप्त करने या प्रश्नोत्तरी लेने में मदद करने के लिए किसी भी अनुचित साधन की अनुमति, प्रचार या उपयोग नहीं करूंगा।</string>
     <string name="check_discalimer_second_text">मैं/हम घोषणा करते हैं कि मेरे/हमारे बच्चे द्वारा स्वेच्छा से दी गई सभी जनसांख्यिकीय और व्यक्तिगत जानकारी सत्य, सही और पूर्ण है और मेरी/हमारी देखरेख में है और मेरे/हमारे द्वारा प्रदान की गई किसी भी गलत जानकारी के लिए ऑरो स्कॉलर उत्तरदायी नहीं है।</string>

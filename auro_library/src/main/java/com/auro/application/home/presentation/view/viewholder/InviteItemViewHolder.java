@@ -36,7 +36,6 @@ public class InviteItemViewHolder extends RecyclerView.ViewHolder {
                 .apply(RequestOptions.bitmapTransform(new RoundedCorners(20))
                         .dontAnimate()
                         .priority(Priority.IMMEDIATE)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                 )
                 .into(binding.profileImage);
 

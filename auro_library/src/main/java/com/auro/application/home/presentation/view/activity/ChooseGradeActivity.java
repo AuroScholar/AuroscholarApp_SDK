@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -41,6 +42,7 @@ import com.auro.application.util.TextUtil;
 import com.auro.application.util.ViewUtil;
 import com.auro.application.util.strings.AppStringDynamic;
 import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.truecaller.android.sdk.ErrorResponse;
 
 import org.json.JSONException;
@@ -139,7 +141,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
             if (grade == 0) {
                 ViewUtil.showSnackBar(binding.getRoot(), prefModel.getLanguageMasterDynamic().getDetails().getPlease_select_the_grade());
             } else {
-                setSDKAPIGrade(String.valueOf(grade),"1");
+                setSDKAPIGrade(grade,"1");
                 //callChangeGradeApi();
 
             }
@@ -202,10 +204,14 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
             case MESSAGE_SELECT_CLICK:
                 SelectLanguageModel model = (SelectLanguageModel) commonDataModel.getObject();
                 grade = ConversionUtil.INSTANCE.convertStringToInteger(model.getStudentClassName());
+                SharedPreferences.Editor editor1 = getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
+                editor1.putString("gradeforsubjectpreference", String.valueOf(grade));
+                editor1.apply();
+
                 for (int i = 0; i < laugList.size(); i++) {
                     laugList.get(i).setCheck(i == commonDataModel.getSource());
                 }
-                setSDKAPI(String.valueOf(grade));
+                setSDKAPI(grade);
 
                 //    reqModel.setNotification_message(list.get(commonDataModel.getSource()).getMessage());
                 adapter.setData(laugList);
@@ -213,7 +219,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
                 break;
         }
     }
-    private void setSDKAPI(String gradeid)
+    private void setSDKAPI(int gradeid)
     {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         String mobile = prefModel.getUserMobile();
@@ -227,7 +233,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
             map_data.put("partner_source",source);
             map_data.put("partner_api_key",apikey);
             map_data.put("user_id",userid);
-            map_data.put("grade",gradeid);
+            map_data.put("grade", String.valueOf(gradeid));
 
             RemoteApi.Companion.invoke().getSDKDataerror(map_data)
                     .enqueue(new Callback<ErrorResponseModel>() {
@@ -279,7 +285,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
 
     }
 
-    private void setSDKAPIGrade(String gradeid, String gradestatus)
+    private void setSDKAPIGrade(int gradeid, String gradestatus)
     {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         String mobile = prefModel.getUserMobile();
@@ -293,7 +299,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
         map_data.put("partner_source",source);
         map_data.put("partner_api_key",apikey);
         map_data.put("user_id",userid);
-        map_data.put("grade",gradeid);
+        map_data.put("grade", String.valueOf(gradeid));
         map_data.put("update_grade",gradestatus);
 
         RemoteApi.Companion.invoke().getSDKDataerror(map_data)
@@ -341,7 +347,7 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
 
 
     }
-    public void buttonSelect(String userclass) {
+    public void buttonSelect(int userclass) {
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -390,8 +396,6 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
                         if (response.isSuccessful())
                         {
 
-
-
                              if (response.body().getStatename().equals("")||response.body().getStatename().equals("null")||response.body().getStatename().equals(null)||response.body().getDistrictname().equals("")||response.body().getDistrictname().equals("null")||response.body().getDistrictname().equals(null)||response.body().getStudentName().equals("")||response.body().getStudentName().equals("null")||response.body().getStudentName().equals(null)||
                                     response.body().getStudentclass().equals("")||response.body().getStudentclass().equals("null")||response.body().getStudentclass().equals(null)||response.body().getStudentclass().equals("0")||response.body().getStudentclass().equals(0)){
                                 Intent i = new Intent(mContext, CompleteStudentProfileWithoutPin.class);
@@ -399,8 +403,8 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
                                 mContext.startActivity(i);
                             }
                             else{
-
-                                openGenricSDK(mobileno,partnersource,parnteruniqueid);
+                                 AuroScholar.opendashboard();
+                              //  openGenricSDK(mobileno,partnersource,parnteruniqueid);
 
                             }
 
@@ -421,14 +425,14 @@ public class ChooseGradeActivity extends BaseActivity implements View.OnClickLis
     }
     public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource  ) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String userclass = prefModel.getUserclass();
+        int userclass = prefModel.getUserclass();
         AuroScholarInputModel inputModel = new AuroScholarInputModel();
 
         inputModel.setMobileNumber(mobileNumber);
-        inputModel.setStudentClass(userclass);
+        inputModel.setStudentClass(String.valueOf(userclass));
 
         inputModel.setPartner_unique_id(partneruniqueid);
-        inputModel.setPartnerSource(partnersource);
+        inputModel.setPartnerSource(prefModel.getPartnersource());
         inputModel.setPartner_api_key("");
         inputModel.setActivity((Activity) mContext);
 

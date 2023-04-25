@@ -38,6 +38,7 @@ import com.auro.application.home.data.model.Details;
 import com.auro.application.home.data.model.TutionData;
 import com.auro.application.home.data.model.response.APIcertificate;
 import com.auro.application.home.data.model.response.CertificateResModel;
+import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
 import com.auro.application.home.presentation.view.adapter.CertificateAdapter;
 import com.auro.application.home.presentation.viewmodel.TransactionsViewModel;
@@ -55,6 +56,10 @@ import com.auro.application.util.permission.PermissionHandler;
 import com.auro.application.util.permission.PermissionUtil;
 import com.auro.application.util.permission.Permissions;
 import com.auro.application.util.strings.AppStringDynamic;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,16 +141,58 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
             comingFrom = getArguments().getString(AppConstant.COMING_FROM);
 
         }
+
         ViewUtil.setLanguageonUi(getActivity());
         //callCertificateApi();
 
 
         setListener();
-        ViewUtil.setProfilePic(binding.imageView6);
+       // ViewUtil.setProfilePic(binding.imageView6);
+        getProfile();
         AppUtil.loadAppLogo(binding.auroScholarLogo,getActivity());
         details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
         AppStringDynamic.setCertificatesPageStrings(binding);
 
+    }
+    private void getProfile()
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String userid = prefModel.getUserId();
+
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("user_id",userid);
+
+        RemoteApi.Companion.invoke().getStudentData(map_data)
+                .enqueue(new Callback<GetStudentUpdateProfile>()
+                {
+                    @Override
+                    public void onResponse(Call<GetStudentUpdateProfile> call, Response<GetStudentUpdateProfile> response)
+                    {
+                        if (response.isSuccessful())
+                        {
+                            String profilepicurl = response.body().getProfilePic();
+                            Glide.with(getActivity()).load(profilepicurl)
+                                    .apply(RequestOptions.placeholderOf(R.drawable.imageplaceholder_ico)
+                                            .error(R.drawable.imageplaceholder_ico)
+                                            .dontAnimate()
+                                            .priority(Priority.IMMEDIATE)
+                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                            .skipMemoryCache(true)
+                                    ).into(binding.imageView6);
+                        }
+                        else
+                        {
+                            Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetStudentUpdateProfile> call, Throwable t)
+                    {
+                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     @Override
@@ -184,6 +231,7 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
         } else if (id == R.id.language_layout) {
             ((DashBoardMainActivity) getActivity()).openChangeLanguageDialog();
         } else if (id == R.id.cardView2) {
+
             ((DashBoardMainActivity) getActivity()).openProfileFragment();
         }
     }
@@ -196,7 +244,7 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
                     downloadFile(map.getValue());
                 }
             } else {
-                ViewUtil.showSnackBar(binding.getRoot(),details.getPlease_select_certificate()!= null ? details.getPlease_select_certificate() : AuroApp.getAppContext().getResources().getString(R.string.no_certificate_for_download));
+                ViewUtil.showSnackBar(binding.getRoot(),details.getPlease_select_certificate()!= null ? details.getPlease_select_certificate() : AuroApp.getAppContext().getString(R.string.no_certificate_for_download));
             }
         } else {
             ViewUtil.showSnackBar(binding.getRoot(), details.getNo_certificate_for_download()!= null ? details.getNo_certificate_for_download() : AuroApp.getAppContext().getResources().getString(R.string.please_select_certificate));
@@ -258,7 +306,7 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
                             }
                             else {
 
-                                Toast.makeText(getActivity(), "No Certificate Found", Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
                             }
                         } catch (Exception e) {
                             Toast.makeText(getActivity(), "Internet connection", Toast.LENGTH_SHORT).show();
@@ -482,8 +530,8 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
         customDialogModel.setContext(getActivity());
 
 
-        customDialogModel.setTitle(details.getUpdate_auro()!= null?details.getUpdate_auro(): AuroApp.getAppContext().getResources().getString(R.string.update_auroscholar));
-        customDialogModel.setContent(details.getAuro_update_msg()!= null?details.getAuro_update_msg():AuroApp.getAppContext().getResources().getString(R.string.updateMessage));
+        customDialogModel.setTitle(details.getUpdate_auro()!= null?details.getUpdate_auro(): AuroApp.getAppContext().getString(R.string.update_auroscholar));
+        customDialogModel.setContent(details.getAuro_update_msg()!= null?details.getAuro_update_msg():AuroApp.getAppContext().getString(R.string.updateMessage));
         AskNameCustomDialog updateCustomDialog = new AskNameCustomDialog(getActivity(), customDialogModel, this);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(updateCustomDialog.getWindow().getAttributes());

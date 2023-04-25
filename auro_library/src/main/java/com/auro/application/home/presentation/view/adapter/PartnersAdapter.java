@@ -73,8 +73,7 @@ public class PartnersAdapter extends RecyclerView.Adapter<PartnersAdapter.Partne
                             .error(R.drawable.image_place_holder)
                             .centerCrop()
                             .dontAnimate()
-                            .priority(Priority.IMMEDIATE)
-                            .diskCacheStrategy(DiskCacheStrategy.ALL))
+                            .priority(Priority.IMMEDIATE))
                     .into(binding.itemImage);
 
         }

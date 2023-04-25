@@ -79,6 +79,7 @@ public class PrivacyPolicyFragment extends BaseFragment {
             binding.setLifecycleOwner(this);
         }
         setRetainInstance(true);
+        DaggerWrapper.getComponent(getActivity()).doInjection(this);
         ViewUtil.setLanguageonUi(getActivity());
 
         return binding.getRoot();
@@ -97,7 +98,7 @@ public class PrivacyPolicyFragment extends BaseFragment {
     @Override
     protected void init() {
         binding.toolbarLayout.backParentLayout.setVisibility(View.GONE);
-        DaggerWrapper.getComponent(getActivity()).doInjection(this);
+
         checkInternet();
         setListener();
     }

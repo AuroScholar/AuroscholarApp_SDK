@@ -1,6 +1,7 @@
 package com.auro.application.home.presentation.view.activity;
 
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -40,7 +41,7 @@ import androidx.lifecycle.ViewModelProviders;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseActivity;
-import com.auro.application.core.application.di.component.DaggerAppComponent;
+
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
@@ -122,12 +123,6 @@ import com.auro.application.util.alert_dialog.disclaimer.NoticeDialogBox;
 import com.auro.application.util.authenticate.GoogleSignInHelper;
 import com.auro.application.util.firebaseAnalytics.AnalyticsRegistry;
 import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.play.core.appupdate.AppUpdateInfo;
@@ -142,16 +137,6 @@ import com.google.android.play.core.tasks.Task;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.googlejavaformat.Indent;
 import com.google.gson.Gson;
-import com.instabug.apm.APM;
-import com.instabug.bug.BugReporting;
-import com.instabug.crash.CrashReporting;
-import com.instabug.library.Feature;
-import com.instabug.library.Instabug;
-import com.instabug.library.invocation.InstabugInvocationEvent;
-import com.instabug.library.ui.onboarding.WelcomeMessage;
-import com.instabug.library.visualusersteps.State;
-
-
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -231,20 +216,21 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        DaggerWrapper.getComponent(this).doInjection(this);
         ViewUtil.setLanguageonUi(this);
 
-        // for sdk
+
+        prefModel = AuroAppPref.INSTANCE.getModelInstance();
 //        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, instanceIdResult -> {
-//            deviceToken = instanceIdResult.getToken();
-//            Log.e("newToken", deviceToken);
-             prefModel = AuroAppPref.INSTANCE.getModelInstance();
-//            prefModel.setDeviceToken(deviceToken);
-//         getPreferences(Context.MODE_PRIVATE).edit().putString("fb_device_token", deviceToken).apply();
+//            String newToken = instanceIdResult.getToken();
+//            Log.e("newToken", newToken);
+//            PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+//            prefModel.setDeviceToken(newToken);
+//            getPreferences(Context.MODE_PRIVATE).edit().putString("fb_device_token", newToken).apply();
 //        });
-        // getInstabug();
-       // getBranch();
-      //  PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();  // for sdk
-      //  checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        prefModel.setDeviceToken("Test123");
+
         String mobilenumber = AuroAppPref.INSTANCE.getModelInstance().getUserMobile();
         SharedPreferences.Editor editor = getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
         editor.putString("statusparentprofile", "false");
@@ -257,15 +243,15 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         editor.apply();
         init();
         setListener();
-        appUpdateManager = AppUpdateManagerFactory.create(AuroApp.getAppContext());
+        appUpdateManager = AppUpdateManagerFactory.create(getApplicationContext());  //AuroApp.getAppContext()
         AppLogger.e("DashbaordMain", "oncreate step 1");
 
     }
 
     public void callFetchUserPreference() {
         SharedPreferences prefs = getSharedPreferences("My_Pref", MODE_PRIVATE);
-      //  checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
-        int gradeid = Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserclass());
+        //  checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
+        int gradeid = AuroAppPref.INSTANCE.getModelInstance().getUserclass();
         String gradeforsubjectpreference = String.valueOf(gradeid);
         AppLogger.e("DashbaordMain", "oncreate step 2");
         if (gradeforsubjectpreference.equals("11")||gradeforsubjectpreference.equals("12")||gradeforsubjectpreference.equals(11)||gradeforsubjectpreference.equals(12)) {
@@ -279,18 +265,18 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     protected void init() {
 
         binding = DataBindingUtil.setContentView(this, getLayout());
-       // ((AuroApp) this.getApplication()).getAppComponent().doInjection(this);
-        DaggerWrapper.getComponent(this).doInjection(this);
+        // ((AuroApp) this.getApplication()).getAppComponent().doInjection(this);
+
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(AuroScholarDashBoardViewModel.class);
         binding.setLifecycleOwner(this);
         mContext = DashBoardMainActivity.this;
         setProgressVal();
-        funnelStudentDashBoard();
-      //  checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
+     funnelStudentDashBoard();
+        //  checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
         setListener();
 
         callDashboardApi();
-       // checkRefferedData();
+        // checkRefferedData();
 
         if (viewModel != null && viewModel.serviceLiveData().hasObservers()) {
             viewModel.serviceLiveData().removeObservers(this);
@@ -299,17 +285,17 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             SharedPreferences prefs = getSharedPreferences("My_Pref", MODE_PRIVATE);
             String gradeforsubjectpreference = String.valueOf(AuroAppPref.INSTANCE.getModelInstance().getUserclass());
 
-                                 if (gradeforsubjectpreference.equals("11")||gradeforsubjectpreference.equals("12")||gradeforsubjectpreference.equals(11)||gradeforsubjectpreference.equals(12)){
-                        SharedPreferences.Editor editor1 = getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
-                        editor1.putString("gradeforsubjectpreferencewithoutpin", "false");
-                        editor1.apply();
-                                     SharedPreferences preferences = getSharedPreferences("My_Pref", Context.MODE_PRIVATE);
-                                     SharedPreferences.Editor editor = preferences.edit();
-                        editor.remove("gradeforsubjectpreference");
-                        editor.apply();
-                    }
+            if (gradeforsubjectpreference.equals("11")||gradeforsubjectpreference.equals("12")||gradeforsubjectpreference.equals(11)||gradeforsubjectpreference.equals(12)){
+                SharedPreferences.Editor editor1 = getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
+                editor1.putString("gradeforsubjectpreferencewithoutpin", "false");
+                editor1.apply();
+                SharedPreferences preferences = getSharedPreferences("My_Pref", Context.MODE_PRIVATE);
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.remove("gradeforsubjectpreference");
+                editor.apply();
+            }
 
-                                     observeServiceResponse();
+            observeServiceResponse();
 
             getDashboardMenu();
 
@@ -320,7 +306,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         prefModel.setLogin(true);
         AuroAppPref.INSTANCE.setPref(prefModel);
         callGetInstructionsApi(AppConstant.InstructionsType.AFTER_LOGIN);
-       // getRefferalPopUp();
+        // getRefferalPopUp();
         checkForGradeScreen();
 //        DisplayMetrics displayMetrics = new DisplayMetrics();
 //        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -348,7 +334,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     }
 
     public void auroStudentscholarSdk(int status) {
-       // checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
+        // checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
         inputModel = new AuroScholarInputModel();
         inputModel.setMobileNumber(AuroAppPref.INSTANCE.getModelInstance().getUserMobile());
         String newdeviceToken = deviceToken;
@@ -357,13 +343,16 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             AppLogger.v("sdkDeviceToken", newdeviceToken);
         }
         //Mandatory
+        inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
+        inputModel.setPartner_api_key(prefModel.getApikey());
         inputModel.setStudentClass(String.valueOf(AuroAppPref.INSTANCE.getModelInstance().getUserclass()));
         inputModel.setRegitrationSource(prefModel.getPartnersource());
+        inputModel.setMobileNumber(prefModel.getUserMobile());
         inputModel.setActivity(this); //Mandatory
         inputModel.setFragmentContainerUiId(R.id.home_container);
         //Mandatory
         inputModel.setReferralLink("");
-        inputModel.setPartnerSource(AppConstant.AURO_ID); //this id is provided by auroscholar for valid partner
+        inputModel.setPartnerSource(prefModel.getPartnersource()); //this id is provided by auroscholar for valid partner
         inputModel.setSdkcallback(new SdkCallBack() {
             @Override
             public void callBack(String message) {
@@ -390,11 +379,11 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                 editor1.apply();
                 AuroAppPref.INSTANCE.clearPref();
 
-               funnelStudentLogOut();
-
-                Intent intent = new Intent(DashBoardMainActivity.this, SDKActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                startActivity(intent);
+                funnelStudentLogOut();
+                       finishAffinity();
+//                Intent intent = new Intent(DashBoardMainActivity.this, SDKActivity.class);
+//                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//                startActivity(intent);
             }
 
             @Override
@@ -432,15 +421,15 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                     if (approvedMoney > 0) {
                         openSendMoneyFragment();
                     } else {
-                       // openFragment(AuroScholar.startAuroSDK(inputModel));
+                        // openFragment(AuroScholar.startAuroSDK(inputModel));
                     }
                 } else {
-                   // openFragment(AuroScholar.startAuroSDK(inputModel));
+                    // openFragment(AuroScholar.startAuroSDK(inputModel));
                 }
 
 
             } else {
-               // openFragment(AuroScholar.startAuroSDK(inputModel));
+                // openFragment(AuroScholar.startAuroSDK(inputModel));
             }
         } else {
             AppLogger.e("notification ", "step 10 ");
@@ -465,16 +454,16 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                     if (approvedMoney > 0) {
                         openSendMoneyFragment();
                     } else {
-                       // openFragment(AuroScholar.startAuroSDK(inputModel));
+                        // openFragment(AuroScholar.startAuroSDK(inputModel));
                     }
                 } else {
-                   // openFragment(AuroScholar.startAuroSDK(inputModel));
+                    // openFragment(AuroScholar.startAuroSDK(inputModel));
                 }
             } else if (notificationDataModel.getNavigateto().equalsIgnoreCase(AppConstant.NavigateToScreen.FRIENDS_LEADERBOARD)) {
                 openLeaderBoardFragment(new FriendsLeaderBoardListFragment());
 
             } else {
-               // openFragment(AuroScholar.startAuroSDK(inputModel));
+                // openFragment(AuroScholar.startAuroSDK(inputModel));
             }
             prefModel.setNotificationDataModel(null);
             AuroAppPref.INSTANCE.setPref(prefModel);
@@ -493,6 +482,26 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
 
     public void callDashboardApi() {
+        inputModel = new AuroScholarInputModel();
+        inputModel.setMobileNumber(AuroAppPref.INSTANCE.getModelInstance().getUserMobile());
+        String newdeviceToken = deviceToken;
+        if (!TextUtil.isEmpty(newdeviceToken)) {
+            inputModel.setDeviceToken(newdeviceToken);
+            AppLogger.v("sdkDeviceToken", newdeviceToken);
+        }
+        //Mandatory
+        inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
+        inputModel.setPartner_api_key(prefModel.getApikey());
+        inputModel.setStudentClass(String.valueOf(AuroAppPref.INSTANCE.getModelInstance().getUserclass()));
+        inputModel.setRegitrationSource(prefModel.getPartnersource());
+        inputModel.setMobileNumber(prefModel.getUserMobile());
+        inputModel.setActivity(this); //Mandatory
+        inputModel.setFragmentContainerUiId(R.id.home_container);
+        inputModel.setUserid(prefModel.getUserId());
+        inputModel.setDeviceToken(prefModel.getDeviceToken());
+        //Mandatory
+        inputModel.setReferralLink("");
+        inputModel.setPartnerSource(prefModel.getPartnersource());
         viewModel.checkInternet(DASHBOARD_API, inputModel);
     }
 
@@ -568,8 +577,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     private void openUpdateDialog() {
         CustomDialogModel customDialogModel = new CustomDialogModel();
         customDialogModel.setContext(this);
-        customDialogModel.setTitle(AuroApp.getAppContext().getResources().getString(R.string.update_auroscholar));
-        customDialogModel.setContent(AuroApp.getAppContext().getResources().getString(R.string.updateMessage));
+        customDialogModel.setTitle(getApplicationContext().getResources().getString(R.string.update_auroscholar));
+        customDialogModel.setContent(getApplicationContext().getResources().getString(R.string.updateMessage));
         updateCustomDialog = new UpdateCustomDialog(this, customDialogModel);
         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
         lp.copyFrom(updateCustomDialog.getWindow().getAttributes());
@@ -713,8 +722,9 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         int itemId = menuItem.getItemId();
         if (itemId == R.id.item_home) {
             selectNavigationMenu(0);
-
-            auroStudentscholarSdk(0);
+            //openGenricSDK();
+            AuroScholar.opendashboard();
+         //   auroStudentscholarSdk(0);
         } else if (itemId == R.id.item_passport) {
             funnelPassportScreen();
             selectNavigationMenu(3);
@@ -729,7 +739,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             closeItemMore();
             if (!isBackNormal) {
                 selectNavigationMenu(0);
-                auroStudentscholarSdk(0);
+               // openGenricSDK();
+                AuroScholar.opendashboard();
                 isBackNormal = true;
             }
         } else if (itemId == R.id.item_partner) {
@@ -764,7 +775,18 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             openSwipeRightSelectionLayout(binding.naviagtionContent.bottomSecondnavigation, binding.naviagtionContent.bottomNavigation);
         }
     }
-
+    public void openGenricSDK() {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        int userclass = prefModel.getUserclass();
+        AuroScholarInputModel inputModel = new AuroScholarInputModel();
+        inputModel.setMobileNumber(prefModel.getUserMobile());
+        inputModel.setStudentClass(String.valueOf(userclass));
+        inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
+        inputModel.setPartnerSource(prefModel.getPartnersource());
+        inputModel.setPartner_api_key(prefModel.getApikey());
+        inputModel.setActivity((Activity) mContext);
+        AuroScholar.startAuroSDK(inputModel);
+    }
 
     public void closeItemMore() {
         selectMoreNavigationMenu(4);
@@ -960,9 +982,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                     }
                     else if (responseApi.apiTypeStatus == Status.GET_MESSAGE_POP_UP){
                         ShowDialogModel showDialogModel = (ShowDialogModel) responseApi.data;
-                        AppLogger.v("Dialog_pradeep"," NOTICE_INSTRUCTION  last  "+showDialogModel.getShowDailogue());
                         openGradeDialog(showDialogModel);
-                        AppLogger.v("Dialog_pradeep"," NOTICE_INSTRUCTION  last"+showDialogModel.getShowDailogue());
                     }
                     else if (responseApi.apiTypeStatus == Status.PENDING_KYC_DOCS){
                         ErrorResponseModel noticeInstruction = (ErrorResponseModel) responseApi.data;
@@ -977,7 +997,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                         OtpOverCallResModel otpOverCallResModel = (OtpOverCallResModel) responseApi.data;
                         if (!otpOverCallResModel.getError()) {
                             AppLogger.v("Otp_pradeep", "Step 6");
-                                checkOtpDialog();
+                            checkOtpDialog();
                         } else {
                             ViewUtil.showSnackBar(binding.getRoot(), otpOverCallResModel.getMessage());
                             AppLogger.e(TAG, "Step 7");
@@ -987,7 +1007,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                         AppLogger.e("GET_SLABS_API", "step 1");
                         SlabsResModel slabsResModel=new SlabsResModel();
                         try {
-                             slabsResModel = (SlabsResModel) responseApi.data;
+                            slabsResModel = (SlabsResModel) responseApi.data;
                             AppLogger.e("GET_SLABS_API", "step 1.1");
                         }catch (Exception e)
                         {
@@ -1149,11 +1169,18 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     private void setRequiredData() {
         AuroScholarDataModel auroScholarDataModel = new AuroScholarDataModel();
         auroScholarDataModel.setMobileNumber(prefModel.getUserMobile());
-        auroScholarDataModel.setStudentClass(prefModel.getUserclass());
+        auroScholarDataModel.setStudentClass(String.valueOf(prefModel.getUserclass()));
         auroScholarDataModel.setRegitrationSource(auroScholarDataModel.getRegitrationSource());
-        auroScholarDataModel.setActivity(auroScholarDataModel.getActivity());
+        auroScholarDataModel.setActivity((Activity) DashBoardMainActivity.this);
         auroScholarDataModel.setFragmentContainerUiId(auroScholarDataModel.getFragmentContainerUiId());
         auroScholarDataModel.setReferralLink(auroScholarDataModel.getReferralLink());
+
+        if (prefModel.getDeviceToken() != null && !TextUtil.isEmpty(prefModel.getDeviceToken())) {
+            auroScholarDataModel.setDevicetoken(prefModel.getDeviceToken());
+        } else {
+            auroScholarDataModel.setDevicetoken("Test@123");
+        }
+
         if (TextUtil.isEmpty(auroScholarDataModel.getPartnerSource())) {
             auroScholarDataModel.setPartnerSource("");
         } else {
@@ -1314,8 +1341,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.apply();
-
-        finishAffinity();
+        finish();
+      //  finishAffinity();
     }
 
 
@@ -1388,7 +1415,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             AppLogger.v("Notice", "checkDisclaimer else ");
 
             if(AppConstant.InstructionsType.SCHOLARSHIP_TRANSFER != typeGradeChange) {
-                viewModel.checkInternet(Status.NOTICE_INSTRUCTION, null);
+               viewModel.checkInternet(Status.NOTICE_INSTRUCTION, null);
             }
 
         }
@@ -1470,7 +1497,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     }
 
     public void setupNavigation() {
-        int studentClass = Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserclass());
+        int studentClass = AuroAppPref.INSTANCE.getModelInstance().getUserclass();
         if (studentClass < 10) {
             Menu menuDashboard = binding.naviagtionContent.bottomNavigation.getMenu();
             menuDashboard.findItem(R.id.item_partner).setTitle(R.string.certificatesmenuauro);
@@ -1488,7 +1515,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     private void handlePrivacyPolicytabClick() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        int studentClass = Integer.parseInt(prefModel.getUserclass());
+        int studentClass = prefModel.getUserclass();
         if (studentClass < 10) {
             openFragment(new PrivacyPolicyFragment());
         } else {
@@ -1499,7 +1526,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     private void handlePartnertabClick() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        int studentClass = Integer.parseInt(prefModel.getUserclass());
+        int studentClass = prefModel.getUserclass();
         if (studentClass < 10) {
             openCertificate();
         } else {
@@ -1548,8 +1575,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     public void callGetInstructionsApi(String type) {
         typeGradeChange = type;
-      String userlangid = AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId();
-      int langid = Integer.parseInt(userlangid);
+        String userlangid = AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId();
+        int langid = Integer.parseInt(userlangid);
         InstructionModel instructionModel = new InstructionModel();
         instructionModel.setLanguageId(langid);
         instructionModel.setInstructionCode(type);
@@ -1620,7 +1647,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                                 genderList.add(districtData);
                             }
                             PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-                            int studentClass = Integer.parseInt(prefModel.getUserclass());
+                            int studentClass = prefModel.getUserclass();
                             if (studentClass < 10) {
                                 Menu menuDashboard = binding.naviagtionContent.bottomNavigation.getMenu();
 
@@ -1645,7 +1672,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                             menuDashboard.findItem(R.id.item_more).setTitle(genderList.get(4).getTranslatedName());
 
                             Menu backMenuDashboard = binding.naviagtionContent.bottomSecondnavigation.getMenu();
-                            backMenuDashboard.findItem(R.id.item_logout).setTitle(genderList.get(5).getTranslatedName());
+                            backMenuDashboard.findItem(R.id.item_logout).setTitle("Logout");
                             backMenuDashboard.findItem(R.id.item_aurofriend).setTitle(genderList.get(6).getTranslatedName());
                             backMenuDashboard.findItem(R.id.item_kyc).setTitle(genderList.get(7).getTranslatedName());
                             backMenuDashboard.findItem(R.id.item_back).setTitle(genderList.get(9).getTranslatedName());

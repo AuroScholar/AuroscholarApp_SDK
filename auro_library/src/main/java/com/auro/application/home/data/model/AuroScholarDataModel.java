@@ -33,8 +33,17 @@ public class AuroScholarDataModel implements Parcelable {
     String gender="";
     String email="";
     String partnerName="";
-    String devicetoken="";
+    String devicetoken="Test@123";
     String UserId;
+    String apikey;
+
+    public String getApikey() {
+        return apikey;
+    }
+
+    public void setApikey(String apikey) {
+        this.apikey = apikey;
+    }
 
     public String getUserId() {
         return UserId;
@@ -45,6 +54,7 @@ public class AuroScholarDataModel implements Parcelable {
     }
 
     protected AuroScholarDataModel(Parcel in) {
+        apikey = in.readString();
         mobileNumber = in.readString();
         fragmentContainerUiId = in.readInt();
         scholrId = in.readString();
@@ -74,6 +84,7 @@ public class AuroScholarDataModel implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mobileNumber);
+        dest.writeString(apikey);
         dest.writeInt(fragmentContainerUiId);
         dest.writeString(scholrId);
         dest.writeString(studentClass);

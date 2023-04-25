@@ -22,6 +22,7 @@ import androidx.databinding.DataBindingUtil;
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;
@@ -85,6 +86,7 @@ public class CameraFragment extends BaseFragment implements CommonCallBackListne
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
         binding.setLifecycleOwner(this);
+
         // HomeActivity.setListingActiveFragment(HomeActivity.DEMOGRAPHIC_FRAGMENT);
         if (hasFrontCamera()) {
             cameraID = Camera.CameraInfo.CAMERA_FACING_FRONT;
@@ -96,6 +98,7 @@ public class CameraFragment extends BaseFragment implements CommonCallBackListne
 
 
         binding.textCamra.setText(AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails().getPut_your_face());
+
         ViewUtil.setLanguageonUi(getActivity());
         return binding.getRoot();
     }

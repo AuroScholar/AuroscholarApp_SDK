@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.Status;
 import com.auro.application.databinding.SubjectsPrefItemLayoutBinding;

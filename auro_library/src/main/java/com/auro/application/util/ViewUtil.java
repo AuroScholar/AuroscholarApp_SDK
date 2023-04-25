@@ -37,11 +37,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.Status;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
+import com.auro.application.core.util.AuroScholar;
 import com.auro.application.home.data.model.Details;
 import com.auro.application.home.data.model.response.LanguageResModel;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
@@ -447,9 +449,9 @@ public class ViewUtil {
                 AuroApp.getAppContext().getBaseContext().getResources().getDisplayMetrics());
         config.setLocale(locale);*/
         activity.finish();
-
-        Intent refresh = new Intent(activity, DashBoardMainActivity.class);
-        activity.startActivity(refresh);
+        AuroScholar.opendashboard();
+//        Intent refresh = new Intent(activity, DashBoardMainActivity.class);
+//        activity.startActivity(refresh);
 
     }
 
@@ -483,7 +485,7 @@ public class ViewUtil {
 
     public static void setProfilePic(ImageView imageView) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        if (prefModel != null && prefModel.getUserprofilepic() != null && !TextUtil.isEmpty(prefModel.getUserprofilepic())) {
+        //if (prefModel != null && prefModel.getUserprofilepic() != null && !TextUtil.isEmpty(prefModel.getUserprofilepic())) {
 
             Glide.with(imageView.getContext()).load(prefModel.getUserprofilepic())
                     .apply(RequestOptions.placeholderOf(R.drawable.imageplaceholder_ico)
@@ -494,7 +496,7 @@ public class ViewUtil {
                             .skipMemoryCache(true)
                     ).into(imageView);
 
-        }
+      //  }
     }
     public static float getScreenRatio(Context c) {
         DisplayMetrics metrics = c.getResources().getDisplayMetrics();

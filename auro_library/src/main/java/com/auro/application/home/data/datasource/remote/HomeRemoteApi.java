@@ -95,6 +95,8 @@ public interface HomeRemoteApi {
                                              @Part(AppConstant.DashBoardParams.USER_ID) RequestBody user_id,
                                              @Part(AppConstant.DashBoardParams.LANGUAGE_VERSION) RequestBody langVersion,
                                              @Part(AppConstant.DashBoardParams.API_VERSION) RequestBody apiVersion,
+                                             @Part(AppConstant.Language.USER_PREFERED_LANGUAGE) RequestBody userpreferedlangid,
+
                                              @Part MultipartBody.Part id_front,
                                              @Part MultipartBody.Part id_back,
                                              @Part MultipartBody.Part student_id,

@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:padding="16dp">
+<ImageView
+    android:id="@+id/imgcancel"
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:visibility="visible"
+    android:layout_gravity="right"
+    android:src="@drawable/ic_cancel_icon"></ImageView>
+        <TextView
+            android:id="@+id/txtconfirm"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Confirm KYC Details"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
+        <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_gravity="center"
+           android:gravity="center"
+           android:layout_margin="5dp"
+           android:padding="10dp"
+           android:orientation="vertical">
+
+
+           <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:theme="@style/Theme.MaterialComponents.DayNight.DarkActionBar"
+
+               android:orientation="vertical">
+               <com.google.android.material.textfield.TextInputLayout
+                   android:id="@+id/tiDOB"
+                   style="@style/TextInputLayoutStyle"
+                   android:hint="DOB (YYYY-MM-DD)"
+
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+
+                   <com.google.android.material.textfield.TextInputEditText
+                       android:id="@+id/etDOB"
+                       android:enabled="true"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:focusable="true"
+                       android:maxEms="10"
+                       android:maxLength="10"
+                       android:inputType="none"
+                       android:longClickable="false"
+                       android:drawableRight="@android:drawable/ic_menu_my_calendar"
+                       android:gravity="left"
+                       android:editable="false"
+                       android:maxLines="1"
+                       android:paddingEnd="@dimen/_20sdp"
+                       android:textColor="@color/black" />
+               </com.google.android.material.textfield.TextInputLayout>
+               <com.google.android.material.textfield.TextInputLayout
+                   android:id="@+id/tiAdhar"
+                   android:padding="5dp"
+                   android:hint="Adhaar no"
+                   style="@style/TextInputLayoutStyle"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+
+                   <com.google.android.material.textfield.TextInputEditText
+                       android:id="@+id/etAdhar"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                      android:digits="0123456789"
+                       android:enabled="true"
+                       android:longClickable="false"
+                       android:gravity="left"
+                       android:maxLength="12"
+                       android:maxEms="12"
+                       android:inputType="number"
+                       android:maxLines="1"
+                       android:paddingEnd="@dimen/_20sdp"
+                       android:textColor="@color/black" />
+               </com.google.android.material.textfield.TextInputLayout>
+               <com.google.android.material.textfield.TextInputLayout
+                   android:id="@+id/tiAddress"
+                   android:padding="5dp"
+                   android:hint="Address"
+                   android:visibility="gone"
+                   style="@style/TextInputLayoutStyle"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+
+                   <com.google.android.material.textfield.TextInputEditText
+                       android:id="@+id/etAddress"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:enabled="true"
+                       android:longClickable="false"
+                       android:gravity="left"
+                       android:inputType="textPersonName"
+                       android:maxLines="1"
+                       android:paddingEnd="@dimen/_20sdp"
+                       android:textColor="@color/black" />
+               </com.google.android.material.textfield.TextInputLayout>
+
+               <com.google.android.material.textfield.TextInputLayout
+                   android:id="@+id/tiGender"
+                   android:padding="5dp"
+                   android:hint="Gender"
+                   style="@style/TextInputLayoutStyle"
+                   android:layout_width="match_parent"
+                   android:longClickable="false"
+                   android:editable="false"
+                   android:textColorHint="@color/auro_border_blue"
+                   android:layout_height="wrap_content">
+
+
+
+                   <AutoCompleteTextView
+                       android:id="@+id/etGender"
+                       android:layout_width="match_parent"
+                       android:layout_height="@dimen/_34sdp"
+                       android:digits="0123456789"
+                       android:focusable="false"
+                       android:longClickable="false"
+                       android:gravity="left"
+                      android:paddingTop="@dimen/_10sdp"
+                       android:paddingLeft="@dimen/_10sdp"
+                       android:inputType="number"
+                       android:maxLines="1"
+                       android:paddingEnd="@dimen/_20sdp"
+                       android:textColor="@color/black" />
+
+
+               </com.google.android.material.textfield.TextInputLayout>
+               <com.google.android.material.textfield.TextInputLayout
+                   android:id="@+id/tiAdharName"
+                   android:padding="5dp"
+                   android:hint="Name"
+                   style="@style/TextInputLayoutStyle"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+
+                   <com.google.android.material.textfield.TextInputEditText
+                       android:id="@+id/etAdharName"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:longClickable="false"
+                       android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
+                       android:gravity="left"
+                       android:inputType="textPersonName"
+                       android:maxLines="1"
+                       android:paddingEnd="@dimen/_20sdp"
+                       android:textColor="@color/black" />
+               </com.google.android.material.textfield.TextInputLayout>
+               <com.google.android.material.textfield.TextInputLayout
+                   android:id="@+id/tiPincode"
+                   android:padding="5dp"
+                   android:hint="Pincode"
+                   style="@style/TextInputLayoutStyle"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+
+                   <com.google.android.material.textfield.TextInputEditText
+                       android:id="@+id/etPincode"
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:enabled="true"
+                       android:gravity="left"
+                       android:inputType="number"
+                       android:digits="0123456789"
+                       android:longClickable="false"
+                       android:maxEms="6"
+                       android:maxLength="6"
+                       android:maxLines="1"
+                       android:paddingEnd="@dimen/_20sdp"
+                       android:textColor="@color/black" />
+               </com.google.android.material.textfield.TextInputLayout>
+           </LinearLayout>
+           <Button
+               android:id="@+id/buttonOk"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center"
+               android:layout_margin="5dp"
+               android:padding="8dp"
+               android:visibility="gone"
+               android:textAllCaps="false"
+               android:background="@color/auro_green_color"
+               android:text="Do you want to change details"
+               android:textColor="#FFF" />
+           <Button
+               android:id="@+id/buttonsave"
+               android:layout_width="180dp"
+               android:visibility="visible"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center"
+               android:padding="5dp"
+               android:layout_marginTop="10dp"
+               android:textAllCaps="false"
+               android:background="@color/color_red"
+               android:text="Save"
+               android:textColor="#FFF" />
+       </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

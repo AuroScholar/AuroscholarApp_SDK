@@ -1746,6 +1746,128 @@ public class Details {
     @Expose
     private String select_all;
 
+    @SerializedName("pending_kycstatus")
+    @Expose
+    private String pending_kycstatus;
+    @SerializedName("disapprove_kycstatus")
+    @Expose
+    private String disapprove_kycstatus;
+    @SerializedName("underverify_kycstatus")
+    @Expose
+    private String underverify_kycstatus;
+    @SerializedName("reject_kycstatus")
+    @Expose
+    private String reject_kycstatus;
+    @SerializedName("search_school")
+    @Expose
+    private String search_school;
+    @SerializedName("add_school")
+    @Expose
+    private String add_school;
+    @SerializedName("see_more")
+    @Expose
+    private String see_more;
+    @SerializedName("see_less")
+    @Expose
+    private String see_less;
+    @SerializedName("id_proof_success")
+    @Expose
+    private String id_proof_success;
+    @SerializedName("start")
+    @Expose
+    private String start;
+    @SerializedName("mismatch_dob")
+    @Expose
+    private String mismatch_dob;
+
+    public String getPending_kycstatus() {
+        return pending_kycstatus;
+    }
+
+    public void setPending_kycstatus(String pending_kycstatus) {
+        this.pending_kycstatus = pending_kycstatus;
+    }
+
+    public String getDisapprove_kycstatus() {
+        return disapprove_kycstatus;
+    }
+
+    public void setDisapprove_kycstatus(String disapprove_kycstatus) {
+        this.disapprove_kycstatus = disapprove_kycstatus;
+    }
+
+    public String getUnderverify_kycstatus() {
+        return underverify_kycstatus;
+    }
+
+    public void setUnderverify_kycstatus(String underverify_kycstatus) {
+        this.underverify_kycstatus = underverify_kycstatus;
+    }
+
+    public String getReject_kycstatus() {
+        return reject_kycstatus;
+    }
+
+    public void setReject_kycstatus(String reject_kycstatus) {
+        this.reject_kycstatus = reject_kycstatus;
+    }
+
+    public String getSearch_school() {
+        return search_school;
+    }
+
+    public void setSearch_school(String search_school) {
+        this.search_school = search_school;
+    }
+
+    public String getAdd_school() {
+        return add_school;
+    }
+
+    public void setAdd_school(String add_school) {
+        this.add_school = add_school;
+    }
+
+    public String getSee_more() {
+        return see_more;
+    }
+
+    public void setSee_more(String see_more) {
+        this.see_more = see_more;
+    }
+
+    public String getSee_less() {
+        return see_less;
+    }
+
+    public void setSee_less(String see_less) {
+        this.see_less = see_less;
+    }
+
+    public String getId_proof_success() {
+        return id_proof_success;
+    }
+
+    public void setId_proof_success(String id_proof_success) {
+        this.id_proof_success = id_proof_success;
+    }
+
+    public String getStart() {
+        return start;
+    }
+
+    public void setStart(String start) {
+        this.start = start;
+    }
+
+    public String getMismatch_dob() {
+        return mismatch_dob;
+    }
+
+    public void setMismatch_dob(String mismatch_dob) {
+        this.mismatch_dob = mismatch_dob;
+    }
+
     public String getSelect_all() {
         return select_all;
     }

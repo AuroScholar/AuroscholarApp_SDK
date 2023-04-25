@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.MessgeNotifyStatus;
 import com.auro.application.core.common.ResponseApi;
 import com.auro.application.core.common.Status;
@@ -203,7 +204,7 @@ public class SendMoneyViewModel extends ViewModel {
     }
 
     private void defaultError() {
-        serviceLiveData.setValue(new ResponseApi(Status.FAIL, AuroApp.getAppContext().getResources().getString(R.string.default_error), null));
+        serviceLiveData.setValue(new ResponseApi(Status.FAIL, AuroApp.getAppContext().getString(R.string.default_error), null));
     }
 
     public LiveData<ResponseApi> serviceLiveData() {

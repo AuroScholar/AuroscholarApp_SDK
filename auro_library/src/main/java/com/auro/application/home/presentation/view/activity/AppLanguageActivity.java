@@ -50,6 +50,7 @@ import com.auro.application.util.ViewUtil;
 import com.auro.application.util.firebaseAnalytics.AnalyticsRegistry;
 import com.auro.application.util.strings.AppStringDynamic;
 import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 
 import org.json.JSONException;
@@ -321,7 +322,7 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
     }
 
     void callLanguageMasterApi() {
-        progressChanges(0, details.getFetch_data() !=null ?details.getFetch_data() : AuroApp.getAppContext().getResources().getString(R.string.fetch_data));
+        progressChanges(0, details.getFetch_data() !=null ?details.getFetch_data() : AuroApp.getAppContext().getString(R.string.fetch_data));
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         LanguageMasterReqModel languageMasterReqModel = new LanguageMasterReqModel();
         languageMasterReqModel.setLanguageId(prefModel.getUserLanguageId());
@@ -346,6 +347,7 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
         map_data.put("partner_api_key",apikey);
         map_data.put("user_id",userid);
         map_data.put("user_prefered_language_id",langid);
+
 
         RemoteApi.Companion.invoke().getSDKData(map_data)
                 .enqueue(new Callback<SDKDataModel>() {
@@ -448,14 +450,14 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
         String source = prefModel.getPartnersource();
         String apikey = prefModel.getApikey();
         String userid = prefModel.getUserId();
-        String gradeid = prefModel.getUserclass();
+        int gradeid = prefModel.getUserclass();
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("mobile_no",mobile);
         map_data.put("partner_unique_id",uniqueid); //456456
         map_data.put("partner_source",source);
         map_data.put("partner_api_key",apikey);
         map_data.put("user_id",userid);
-        map_data.put("grade",gradeid);
+        map_data.put("grade", String.valueOf(gradeid));
 
         RemoteApi.Companion.invoke().getSDKDataerror(map_data)
                 .enqueue(new Callback<ErrorResponseModel>() {
@@ -510,7 +512,7 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
         String partnersource = prefModel.getPartnersource();
         String parnteruniqueid = prefModel.getPartneruniqueid();
         String mobileno = prefModel.getUserMobile();
-        int userclass = Integer.parseInt(prefModel.getUserclass());
+        //int userclass = Integer.parseInt(prefModel.getUserclass());
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("user_id",userid);
 
@@ -536,8 +538,8 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
                                 mContext.startActivity(i);
                             }
                             else{
-
-                                openGenricSDK(mobileno,partnersource,parnteruniqueid);
+                                 AuroScholar.opendashboard();
+                               // openGenricSDK(mobileno,partnersource,parnteruniqueid);
 
                             }
 
@@ -557,16 +559,17 @@ public class AppLanguageActivity extends BaseActivity implements View.OnClickLis
                 });
     }
 
-    public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource  ) {
+    public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource) {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String userclass = prefModel.getUserclass();
+        int userclass = prefModel.getUserclass();
         AuroScholarInputModel inputModel = new AuroScholarInputModel();
-        inputModel.setMobileNumber(mobileNumber);
-        inputModel.setStudentClass(userclass);
-        inputModel.setPartner_unique_id(partneruniqueid);
-        inputModel.setPartnerSource(partnersource);
-        inputModel.setPartner_api_key("");
+        inputModel.setMobileNumber(prefModel.getUserMobile());
+        inputModel.setStudentClass(String.valueOf(userclass));
+        inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
+        inputModel.setPartnerSource(prefModel.getPartnersource());
+        inputModel.setPartner_api_key(prefModel.getApikey());
         inputModel.setActivity((Activity) mContext);
+
         AuroScholar.startAuroSDK(inputModel);
     }
     private void observeServiceResponse() {

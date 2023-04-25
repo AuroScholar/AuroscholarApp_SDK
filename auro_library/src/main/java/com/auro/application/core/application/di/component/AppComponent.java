@@ -1,10 +1,13 @@
 package com.auro.application.core.application.di.component;
 
+import android.app.Activity;
+
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.di.module.KycModule;
 import com.auro.application.core.application.di.module.PaymentModule;
 import com.auro.application.core.application.di.module.QuizModule;
 import com.auro.application.core.application.di.module.TeacherModule;
+import com.auro.application.core.util.AuroScholar;
 import com.auro.application.home.presentation.view.activity.AppLanguageActivity;
 
 import com.auro.application.home.presentation.view.activity.ChooseGradeActivity;
@@ -24,6 +27,7 @@ import com.auro.application.home.presentation.view.activity.LoginActivity;
 import com.auro.application.home.presentation.view.activity.OtpActivity;
 import com.auro.application.home.presentation.view.activity.RegisterActivity;
 import com.auro.application.home.presentation.view.activity.ResetPasswordActivity;
+import com.auro.application.home.presentation.view.activity.SDKActivity;
 import com.auro.application.home.presentation.view.activity.SetPinActivity;
 import com.auro.application.home.presentation.view.activity.SplashScreenAnimationActivity;
 import com.auro.application.home.presentation.view.activity.StudentMainDashboardActivity;
@@ -268,8 +272,8 @@ public interface AppComponent {
 
     void doInjection(UploadDocumentFragment fragment);
     void doInjection(UpComingTimeSlotDialog fragment);
-
-
+    void doInjection(SDKActivity sdkActivity);
+    void doInjection(Activity sdkActivity);
 
 
 }

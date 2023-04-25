@@ -16,16 +16,6 @@ import com.auro.application.core.util.AuroScholar;
 import com.auro.application.home.data.model.AuroScholarInputModel;
 
 import com.auro.application.home.presentation.view.activity.SDKActivity;
-import com.auro.application.home.presentation.view.fragment.BottomSheetUsersDialog;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 
 public class MainActivity extends AppCompatActivity {
     @Override

@@ -45,6 +45,7 @@ import com.auro.application.home.data.model.passportmodels.PassportReqModel;
 import com.auro.application.home.data.model.passportmodels.PassportSubjectModel;
 import com.auro.application.home.data.model.passportmodels.PassportSubjectQuizMonthModel;
 
+import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
 
 import com.auro.application.home.presentation.view.adapter.MontlyWiseAdapter;
@@ -61,6 +62,10 @@ import com.auro.application.util.RemoteApi;
 import com.auro.application.util.TextUtil;
 import com.auro.application.util.ViewUtil;
 import com.auro.application.util.strings.AppStringDynamic;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 
 
 import java.util.ArrayList;
@@ -125,6 +130,7 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(TransactionsViewModel.class);
         binding.setLifecycleOwner(this);
         setRetainInstance(true);
+
         ViewUtil.setLanguageonUi(getActivity());
         details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
         return binding.getRoot();
@@ -186,11 +192,51 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
 
         selectCurrentMonthInSpinner();
         //checkCallApiStatus();
-        ViewUtil.setProfilePic(binding.imageView6);
+       // ViewUtil.setProfilePic(binding.imageView6);
+        getProfile();
         AppUtil.loadAppLogo(binding.auroScholarLogo,getActivity());
         AppStringDynamic.setPassportStrings(binding);
     }
+    private void getProfile()
+    {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String userid = prefModel.getUserId();
 
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("user_id",userid);
+
+        RemoteApi.Companion.invoke().getStudentData(map_data)
+                .enqueue(new Callback<GetStudentUpdateProfile>()
+                {
+                    @Override
+                    public void onResponse(Call<GetStudentUpdateProfile> call, Response<GetStudentUpdateProfile> response)
+                    {
+                        if (response.isSuccessful())
+                        {
+                            String profilepicurl = response.body().getProfilePic();
+                            Glide.with(getActivity()).load(profilepicurl)
+                                    .apply(RequestOptions.placeholderOf(R.drawable.imageplaceholder_ico)
+                                            .error(R.drawable.imageplaceholder_ico)
+                                            .dontAnimate()
+                                            .priority(Priority.IMMEDIATE)
+                                            .diskCacheStrategy(DiskCacheStrategy.NONE)
+                                            .skipMemoryCache(true)
+                                    ).into(binding.imageView6);
+                        }
+                        else
+                        {
+                            Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<GetStudentUpdateProfile> call, Throwable t)
+                    {
+                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
     private void selectCurrentMonthInSpinner() {
         AppLogger.e(TAG, "selectCurrentMonthInSpinner step 1");
         if (!TextUtil.checkListIsEmpty(monthDataModelList)) {
@@ -474,7 +520,7 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
        // passportReqModel.setSubject(spinnerSubject.getMonth());
 
         passportReqModel.setIsAll(isall);
-        passportReqModel.setUserPreferedLanguageId(Integer.parseInt(prefModel.getChildData().getUser_details().get(0).getUser_prefered_language_id()));
+        passportReqModel.setUserPreferedLanguageId(Integer.parseInt(prefModel.getUserLanguageId()));
         // passportReqModel.setIsAll();
         viewModel.getPassportInternetCheck(passportReqModel);
         progress.cancel();

@@ -54,11 +54,14 @@ import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;
+import com.auro.application.core.common.FragmentUtil;
 import com.auro.application.core.common.Status;
 import com.auro.application.core.common.ValidationModel;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
+import com.auro.application.core.util.AuroScholar;
 import com.auro.application.databinding.FragmentStudentProfile2Binding;
+import com.auro.application.home.data.model.AddNewSchoolResModel;
 import com.auro.application.home.data.model.AuroScholarInputModel;
 import com.auro.application.home.data.model.BoardData;
 import com.auro.application.home.data.model.CheckUserApiReqModel;
@@ -209,7 +212,8 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
     String stateCode = "";
     String districtCode = "";
     String Schoolsearch = "";
-    String fullname,studentemail,filename,image_path,SchoolName,gradeid,fbnewToken,state_Code,district_code;
+    String fbnewToken = "Test123";
+    String fullname,studentemail,filename,image_path,SchoolName,gradeid,state_Code,district_code;
     String gender_pass,tutiontype_pass,tution_pass,schoolmedium_pass,board_pass, final_state_id,final_district_id,f_state,f_district;
     RequestBody lRequestBody;
     String schooltype_pass = "";
@@ -255,14 +259,14 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(StudentProfileViewModel.class);
         binding.setLifecycleOwner(this);
         setRetainInstance(true);
-        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( getActivity(),  new OnSuccessListener<InstanceIdResult>() {
-            @Override
-            public void onSuccess(InstanceIdResult instanceIdResult) {
-                fbnewToken = instanceIdResult.getToken();
-                Log.v("fbtoken", fbnewToken);
-
-            }
-        });
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener( getActivity(),  new OnSuccessListener<InstanceIdResult>() {
+//            @Override
+//            public void onSuccess(InstanceIdResult instanceIdResult) {
+//                fbnewToken = instanceIdResult.getToken();
+//                Log.v("fbtoken", fbnewToken);
+//
+//            }
+//        });
         details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
 
         init();
@@ -272,7 +276,10 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
 
 
-
+        binding.autoCompleteTextView1.setAdapter(getEmailAddressAdapter(getActivity()));
+        binding.autoCompleteTextView1.setThreshold(1);
+        binding.autoCompleteTextView1.setTextColor(Color.BLACK);
+        binding.autoCompleteTextView1.setDropDownBackgroundResource(R.color.white);
 
         return binding.getRoot();
 
@@ -285,7 +292,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         firstTimeCome = true;
         DashBoardMainActivity.setListingActiveFragment(DashBoardMainActivity.STUDENT_PROFILE_FRAGMENT);
         AppLogger.e("setDashboardResModelToPref--5", "step 1");
-        GetStudentUpdateProfile studentProfileModel = new GetStudentUpdateProfile();
+
 
         if (getArguments() != null) {
             dashboardResModel = getArguments().getParcelable(AppConstant.DASHBOARD_RES_MODEL);
@@ -298,6 +305,8 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         } else {
             observeServiceResponse();
         }
+        //callSubjectListPreference();
+       // observeServiceResponse();
 
 
 
@@ -402,14 +411,6 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                 observeServiceResponse();
             }
         });
-        Details details1 = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
-
-
-
-
-
-
-
 
     }
 
@@ -464,6 +465,8 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
     @Override
     protected void setListener() {
+        Details details1 = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
+
         DashBoardMainActivity.setListingActiveFragment(DashBoardMainActivity.STUDENT_PROFILE_FRAGMENT);
         binding.languageLayout.setOnClickListener(this);
         binding.profileImage.setOnClickListener(this);
@@ -575,6 +578,23 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                 changeTheEditText();
             }
         });
+        binding.addnewschool.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if (binding.autoCompleteTextView1.getText().toString().isEmpty()){
+                    Toast.makeText(getActivity(), "Please enter school name", Toast.LENGTH_SHORT).show();
+                }
+                else if (binding.autoCompleteTextView1.getText().toString().startsWith(" ")){
+                    Toast.makeText(getActivity(), details1.getEnter_space_schoolname(), Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    String search = binding.autoCompleteTextView1.getText().toString();
+                    binding.etSchoolname.setText(search);
+                    addNewSchool(f_state,f_district,search);
+                }
+            }
+        });
 
         binding.spinnerPrivateTution.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -636,7 +656,63 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
        /* init();
         setListener();*/
     }
+    private void addNewSchool(String state_id, String district_id, String search)
+    {
+        Details details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
 
+        ProgressDialog progress = new ProgressDialog(getActivity());
+        progress.setTitle(details.getProcessing());
+        progress.setMessage(details.getProcessing());
+        progress.setCancelable(true); // disable dismiss by tapping outside of the dialog
+        progress.show();
+
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("school_name", search);
+        map_data.put("state_id",state_id);
+        map_data.put("district_id",district_id);
+
+        RemoteApi.Companion.invoke().addNewSchool(map_data)
+                .enqueue(new Callback<AddNewSchoolResModel>() {
+                    @Override
+                    public void onResponse(Call<AddNewSchoolResModel> call, Response<AddNewSchoolResModel> response) {
+                        if (response.code()==400){
+                            progress.dismiss();
+                            JSONObject jsonObject = null;
+                            try {
+                                jsonObject = new JSONObject(response.errorBody().string());
+                                String message = jsonObject.getString("message");
+                                Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+
+                            } catch (JSONException | IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+
+                        else if (response.isSuccessful()) {
+
+                            progress.dismiss();
+                            getschool_id = String.valueOf(response.body().getSchoolID());
+
+                            Toast.makeText(getActivity(), response.body().getMessage(), Toast.LENGTH_SHORT).show();
+
+
+
+                        }
+                        else{
+                            progress.dismiss();
+                            Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<AddNewSchoolResModel> call, Throwable t)
+                    {
+                        progress.dismiss();
+                        Log.d(TAG, "onDistrictFailure: "+t.getMessage());
+                    }
+                });
+    }
     @Override
     public void onStart() {
         super.onStart();
@@ -695,7 +771,6 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
             binding.subjectsRecyclerview.setVisibility(View.GONE);
         }
     }
-
 
     void callFetchUserPreference() {
         handleProgress(0, "");
@@ -855,8 +930,8 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
     }
     private void getKYCStatus()
     {
-
-        String suserid =  AuroAppPref.INSTANCE.getModelInstance().getUserId();
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+        String suserid =  prefModel.getUserId();
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("user_id",suserid);
 
@@ -871,11 +946,11 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                             getkycstatus = response.body().getKycStatus();
                             String uploadedornot = response.body().getIsKycUploaded();
                             if (uploadedornot.equals("NO")||uploadedornot=="NO"){
-                                ViewUtil.showSnackBar(binding.getRoot(),"Please upload your KYC");
+                                ViewUtil.showSnackBar(binding.getRoot(),"Please upload your complete KYC");
                             }
                             else if (uploadedornot.equals("YES")||uploadedornot=="YES"){
                                 if (getkycstatus.equals("APPROVE")){
-                                    openFragment(new WalletInfoDetailFragment());
+                                    openFragment2(new WalletInfoDetailFragment());
                                 }
                                 else if (getkycstatus.equals("PENDING")){
                                     ViewUtil.showSnackBar(binding.getRoot(),"Your KYC verification is pending, wait till it gets verified");
@@ -941,7 +1016,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         bundle.putString(AppConstant.COMING_FROM, source);
         GradeChangeFragment gradeChangeFragment = new GradeChangeFragment(this);
         gradeChangeFragment.setArguments(bundle);
-        openFragment(gradeChangeFragment);
+        openFragment2(gradeChangeFragment);
     }
 
 
@@ -957,7 +1032,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                 RoundedBitmapDrawableFactory.create(binding.profileimage.getContext().getResources(), picBitmap);
         circularBitmapDrawable.setCircular(true);
         binding.profileimage.setImageDrawable(circularBitmapDrawable);
-
+        updateProfilePicChild();
     }
 
 
@@ -985,6 +1060,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                             SubjectPreferenceResModel subjectPreferenceResModel = (SubjectPreferenceResModel) responseApi.data;
                             if (!TextUtil.checkListIsEmpty(subjectPreferenceResModel.getSubjects())) {
                                 setSubjectListVisibility(true);
+                                //Toast.makeText(getActivity(), "SUBJECT_PREFRENCE_LIST_API", Toast.LENGTH_SHORT).show();
                                 setSubjectAdapter(subjectPreferenceResModel);
                                 binding.swipeRefreshLayout.setRefreshing(false);
                             } else {
@@ -1009,7 +1085,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                                 PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
                                 prefModel.setCheckUserResModel(checkUserResModel);
                                 AuroAppPref.INSTANCE.setPref(prefModel);
-                                checkForAddStudentVisibility();
+                            //    checkForAddStudentVisibility();
                             }
 
                         } else if (responseApi.apiTypeStatus == Status.STUDENT_KYC_STATUS_API) {
@@ -1035,6 +1111,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
                 default:
                     if (isVisible()) {
+
                         AppLogger.v("apiData", responseApi.data + "   pradeep");
                         handleProgress(2, (String) responseApi.data);
                         showSnackbarError(prefModel.getLanguageMasterDynamic().getDetails().getDefaultError() != null ? prefModel.getLanguageMasterDynamic().getDetails().getDefaultError() : getActivity().getString(R.string.default_error));
@@ -1127,6 +1204,14 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
             district_code = getStudentUpdateProfile.getDistrictId();
             getSchool(state_Code,district_code,Schoolsearch);
             binding.classStudent.setText(getStudentUpdateProfile.getStudentclass() + "");
+            if (Integer.parseInt(getStudentUpdateProfile.getStudentclass()) > 10){
+                binding.subjectsRecyclerview.setVisibility(View.VISIBLE);
+                binding.yourSubjectsLayout.setVisibility(View.VISIBLE);
+            }
+            else{
+                binding.subjectsRecyclerview.setVisibility(View.GONE);
+                binding.yourSubjectsLayout.setVisibility(View.GONE);
+            }
             if (dashboardResModel != null && !dashboardResModel.getWalletbalance().isEmpty()) {
                 binding.walletBalText.setText(dashboardResModel.getWalletbalance());
             } else {
@@ -1159,6 +1244,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
             if (!TextUtil.isEmpty(getStudentUpdateProfile.getProfilePic())) {
                 ImageUtil.loadCircleImage(binding.profileimage, getStudentUpdateProfile.getProfilePic());
+                prefModel.setUserprofilepic(getStudentUpdateProfile.getProfilePic());
             }
             if (!getStudentUpdateProfile.getGender().isEmpty()){
                 binding.etStudentGender.setText(getStudentUpdateProfile.getTranslated_gender());
@@ -1213,9 +1299,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
             }
 
 
-//            if (!getStudentUpdateProfile.getStatename().isEmpty()){
 
-            //}
 
 
         }
@@ -1224,6 +1308,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
     }
 
     private void updateChild() {
+        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         fullname = binding.editProfile.getText().toString();
         studentemail = binding.editemail.getText().toString();
         String mobileversion = DeviceUtil.getVersionName();
@@ -1234,6 +1319,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         String username = prefModel.getUserName();
         String languageid = prefModel.getUserLanguageId();
         String childid = prefModel.getUserId();
+
 
 
         schoolnameprofile = binding.etSchoolname.getText().toString();
@@ -1293,7 +1379,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         RequestBody student_name = RequestBody.create(MediaType.parse("text/plain"), String.valueOf(fullname));
         RequestBody emptyfield = RequestBody.create(MediaType.parse("text/plain"), "NULL");
         RequestBody name_c = RequestBody.create(MediaType.parse("text/plain"), username);
-        RequestBody prtnersource = RequestBody.create(MediaType.parse("text/plain"), "AURO3VE4j7");
+        RequestBody prtnersource = RequestBody.create(MediaType.parse("text/plain"), prefModel.getPartnersource());
         RequestBody regsource = RequestBody.create(okhttp3.MultipartBody.FORM, "AuroScholr");//model.getPartnerSource()
         RequestBody sharetype = RequestBody.create(okhttp3.MultipartBody.FORM, "telecaller");//model.getPartnerSource()
         RequestBody devicetoken = RequestBody.create(MediaType.parse("text/plain"), fbnewToken);
@@ -1358,6 +1444,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                                     Intent i = new Intent(getActivity(), DashBoardMainActivity.class);
                                     i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                     startActivity(i);
+                                  //  openGenricSDK();
                                 }
                             }
                             else {
@@ -1381,49 +1468,66 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
 
 
+    private void updateProfilePicChild() {
+        Details details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
+        String childid = prefModel.getUserId();
+        String langid = prefModel.getUserLanguageId();
+        RequestBody userid_c = RequestBody.create(MediaType.parse("text/plain"), childid);
+        RequestBody languageid = RequestBody.create(MediaType.parse("text/plain"), langid);
 
-
-
-    public void sendProfileScreenApi() {
-        firstTimeCome = false;
-        AppLogger.v("callApi", firstTimeCome + "");
-        String username = binding.UserName.getText().toString();
-        String emailId = binding.editemail.getText().toString();
-        String userid = binding.editUserid.getText().toString();
-        studentProfileModel.setStudentName(username);
-        studentProfileModel.setEmailId(emailId);
-        studentProfileModel.setPhonenumber(dashboardResModel.getPhonenumber());
-        ValidationModel validation = viewModel.homeUseCase.validateStudentProfile(studentProfileModel);
-        /*Device Detail*/
-        studentProfileModel.setDeviceToken(AuroAppPref.INSTANCE.getModelInstance().getDeviceToken());
-        Log.d(TAG, "sendProfileScreenApitoken: "+AuroAppPref.INSTANCE.getModelInstance().getDeviceToken());
-        studentProfileModel.setMobileVersion(DeviceUtil.getVersionName());
-        studentProfileModel.setMobileManufacturer(DeviceUtil.getManufacturer(getActivity()));
-        studentProfileModel.setMobileModel(DeviceUtil.getModelName(getActivity()));
-        studentProfileModel.setBuildVersion(AppUtil.getAppVersionName());
-        studentProfileModel.setIpAddress(AppUtil.getIpAdress());
-        studentProfileModel.setLanguage(ViewUtil.getLanguageId());
-        studentProfileModel.setGender(GenderName);
-        studentProfileModel.setSchoolName(SchoolName);
-        studentProfileModel.setSchoolType(schooltype);
-        studentProfileModel.setBoardType(boardtype);
-        studentProfileModel.setPrivateTutionType(Tutiontype);
-        studentProfileModel.setIsPrivateTution(Tution);
-        studentProfileModel.setStateId(stateCode);
-        studentProfileModel.setDistrictId(districtCode);
-        studentProfileModel.setStudentName(districtCode);
-        studentProfileModel.setDeviceToken(prefModel.getDeviceToken());
-
-        studentProfileModel.setUserId(AuroAppPref.INSTANCE.getModelInstance().getStudentData().getUserId());
-        /*End of Device Detail*/
-        if (validation.isStatus()) {
-            AppLogger.e("sendProfilepradeepApi", "step -1- " + validation.isStatus());
-            viewModel.sendStudentProfileInternet(studentProfileModel);
-            handleSubmitProgress(0, "");
-        } else {
-            AppLogger.e("sendProfilepradeepApi", "step -2- " + validation.isStatus());
-            showSnackbarError(validation.getMessage());
+        if (image_path == null || image_path.equals("null") || image_path.equals("") || image_path.isEmpty()) {
+            lRequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), "");
+            filename = "";
         }
+        else {
+            lRequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), studentProfileModel.getImageBytes());
+            filename = image_path.substring(image_path.lastIndexOf("/") + 1);
+        }
+        MultipartBody.Part lFile = MultipartBody.Part.createFormData("user_profile_image", filename, lRequestBody);
+        RemoteApi.Companion.invoke()
+                .update_student_photo(userid_c,languageid,lFile)
+                .enqueue(new Callback<StudentResponselDataModel>() {
+                    @Override
+                    public void onResponse(Call<StudentResponselDataModel> call, Response<StudentResponselDataModel> response) {
+                        try {
+
+                            if (response.code()==400){
+                                JSONObject jsonObject = null;
+                                try {
+                                    jsonObject = new JSONObject(response.errorBody().string());
+                                    String message = jsonObject.getString("message");
+                                    Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
+
+                                } catch (JSONException | IOException e) {
+                                    e.printStackTrace();
+                                }
+
+
+
+                            }
+                            else if (response.isSuccessful()) {
+                                Log.d(TAG, "onImageResponse: ");
+                                String status = response.body().getStatus().toString();
+                                String msg = response.body().getMessage();
+                                if (status.equalsIgnoreCase("success")) {
+                                    Toast.makeText(getActivity(), msg.toString(), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+
+                            else {
+                                Toast.makeText(getActivity(), response.errorBody().toString(), Toast.LENGTH_SHORT).show();
+
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), details.getInternetCheck(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<StudentResponselDataModel> call, Throwable t) {
+                        Toast.makeText(getActivity(), t.getMessage().toString(), Toast.LENGTH_SHORT).show();
+
+                    }
+                });
     }
 
 
@@ -1455,7 +1559,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         if (dashboardResModel != null) {
             PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
             int studentClass = 0;
-            studentClass = ConversionUtil.INSTANCE.convertStringToInteger(prefModel.getUserclass());
+            studentClass = prefModel.getUserclass();
             SharedPreferences prefs = getActivity().getSharedPreferences("My_Pref", MODE_PRIVATE);
             String gradeforsubjectpreferencefinalprofile = prefs.getString("gradeforsubjectpreferencefinalprofile", "");
             if (studentClass > 10 || gradeforsubjectpreferencefinalprofile.equals("11")||gradeforsubjectpreferencefinalprofile.equals("12")||gradeforsubjectpreferencefinalprofile.equals(11)||gradeforsubjectpreferencefinalprofile.equals(12)) {
@@ -1469,6 +1573,8 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                 setSubjectListVisibility(false);
             }
             handleProgress(0, "");
+         /*   StudentProfileModel studentProfileModel = new StudentProfileModel();
+            studentProfileModel.setPhonenumber(dashboardResModel.getPhonenumber());*/
 
             viewModel.getUserProfileApi(AuroAppPref.INSTANCE.getModelInstance().getUserId());
 
@@ -1763,6 +1869,10 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                 .addToBackStack(null)
                 .commitAllowingStateLoss();
     }
+    public void openFragment2(Fragment fragment) {
+        FragmentUtil.replaceFragment(getActivity(), fragment, R.id.home_container, false, AppConstant.NEITHER_LEFT_NOR_RIGHT);
+    }
+
 
     @Override
     public void onClickListener() {
@@ -1869,10 +1979,11 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
     void callCheckUserApi() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+
         CheckUserApiReqModel checkUserApiReqModel = new CheckUserApiReqModel();
         checkUserApiReqModel.setEmailId("");
         checkUserApiReqModel.setMobileNo("");
-        checkUserApiReqModel.setUserType("0");
+        checkUserApiReqModel.setUserType(String.valueOf(0));
         checkUserApiReqModel.setUserName(prefModel.getUserMobile());
         viewModel.checkInternetForApi(Status.CHECKVALIDUSER, checkUserApiReqModel);
     }
@@ -2387,6 +2498,13 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         binding.etstate.setThreshold(1);//will start working from first character
         binding.etstate.setTextColor(Color.BLACK);
     }
-
+    private ArrayAdapter<String> getEmailAddressAdapter(Context context) {
+        for (int i = 0; i < genderListString.size(); i++) {
+            genderListString.set(i, genderListString.get(i));
+        }
+        String newschool = binding.autoCompleteTextView1.getText().toString();
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(context,android.R.layout.select_dialog_item,genderListString);
+        return adapter;
+    }
 
 }

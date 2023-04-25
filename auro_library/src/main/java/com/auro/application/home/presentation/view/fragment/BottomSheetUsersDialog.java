@@ -1,6 +1,7 @@
 package com.auro.application.home.presentation.view.fragment;
 
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -47,7 +48,9 @@ import retrofit2.Response;
 public class BottomSheetUsersDialog extends BottomSheetDialogFragment implements CommonCallBackListner {
     BottomStudentListBinding binding;
     SDKDataModel checkUserResModel;
+
     String auto_userid;
+    static List<SDKChildModel> userDetails = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable
@@ -102,21 +105,46 @@ public class BottomSheetUsersDialog extends BottomSheetDialogFragment implements
 
                             }
                             else if (response.code() == 200) {
-
-
+                                userDetails.clear();
+                                userDetails = response.body().getUser_details();
+                                checkUserResModel = (SDKDataModel) response.body();
                                 for (int i = 0; i<response.body().getUser_details().size(); i++){
                                     auto_userid = response.body().getUser_details().get(0).getUser_id();
 
                                 }
-                                PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+                                String userid_child =  userDetails.get(0).getUser_id();
+                                String user_mobile =  userDetails.get(0).getMobile_no();
+                                String student_name =  userDetails.get(0).getStudent_name();
+                                String user_language =  userDetails.get(0).getUser_prefered_language_id();
+                                int user_grade =  userDetails.get(0).getGrade();
+                                String user_kyc =  userDetails.get(0).getKyc_status();
+                                String user_name = userDetails.get(0).getUser_name();
+                                String partner_logo =  userDetails.get(0).getPartner_logo();
+                                String profile_pic = userDetails.get(0).getProfile_pic();
+                                PrefModel prefModel2 = AuroAppPref.INSTANCE.getModelInstance();
 
-                                prefModel.setUserId(auto_userid);
-                                AuroAppPref.INSTANCE.setPref(prefModel);
+                                prefModel2.setChildData(checkUserResModel);
+                                prefModel2.setPartnersource(partnersource);
+                                prefModel2.setUserMobile(mobileno);
+                                prefModel2.setPartneruniqueid(partneruniqueid);
+                                prefModel2.setApikey(apikey);
+
+
+                                prefModel2.setUserId(auto_userid);
+                                prefModel2.setUserMobile(user_mobile);
+                                prefModel2.setUserLanguageId(user_language);
+                                prefModel2.setStudentName(student_name);
+                                prefModel2.setUserclass(user_grade);
+                                prefModel2.setKycstatus(user_kyc);
+                                prefModel2.setUserprofilepic(profile_pic);
+                                prefModel2.setUserName(user_name);
+                                prefModel2.setPartner_logo(partner_logo);
+                                AuroAppPref.INSTANCE.setPref(prefModel2);
+
+
                                 Intent i1 = new Intent(getActivity(), AppLanguageActivity.class);
                                 i1.putExtra("auto_userid",auto_userid);
                                 startActivity(i1);
-
-
 
 
                             }
@@ -181,8 +209,7 @@ public class BottomSheetUsersDialog extends BottomSheetDialogFragment implements
     }
 
 
-
-
-
+    public void show(FragmentManager fragmentManager, String modalBottomSheet) {
+    }
 }
 
