@@ -479,7 +479,7 @@ public class HomeRemoteUseCase extends NetworkUseCase {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
 
         if (prefModel.getDeviceToken() != null && !TextUtil.isEmpty(prefModel.getDeviceToken())) {
-            model.setDevicetoken(prefModel.getDeviceToken());
+            model.setDevicetoken("Test@123");
         } else {
             model.setDevicetoken("Test@123");
         }

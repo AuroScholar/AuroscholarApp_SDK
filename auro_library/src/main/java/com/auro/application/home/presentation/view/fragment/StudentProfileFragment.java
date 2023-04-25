@@ -1998,7 +1998,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         checkUserApiReqModel.setMobileNo("");
         checkUserApiReqModel.setUserType("0");
         checkUserApiReqModel.setUserName(prefModel.getUserMobile());
-       // viewModel.checkInternetForApi(Status.CHECKVALIDUSER, checkUserApiReqModel);
+        viewModel.checkInternetForApi(Status.CHECKVALIDUSER, checkUserApiReqModel);
     }
 
     private void getSchool(String state_id, String district_id, String search)

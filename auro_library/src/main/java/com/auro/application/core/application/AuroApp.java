@@ -16,6 +16,7 @@ import com.auro.application.home.data.model.AuroScholarDataModel;
 import java.io.IOException;
 import java.net.SocketException;
 
+import io.reactivex.android.plugins.RxAndroidPlugins;
 import io.reactivex.exceptions.UndeliverableException;
 import io.reactivex.plugins.RxJavaPlugins;
 
