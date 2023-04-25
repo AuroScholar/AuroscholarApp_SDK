@@ -130,18 +130,13 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     @Inject
     @Named("CompleteStudentProfileWithoutPin")
     ViewModelFactory viewModelFactory;
-
-
     String getschool_id;
     List<String> genderListString = new ArrayList<>();
     List<UserDetailResModel> listchilds = new ArrayList<>();
     List<UserDetailResModel> list = new ArrayList<>();
     private static final int CAMERA_REQUEST = 1888;
-
     UserDetailResModel checkUserResModel;
-
     FragmentStudentUpdateProfileBinding binding;
-
     GetStudentUpdateProfile studentProfileModel = new GetStudentUpdateProfile();
 
     boolean firstTimeCome;
@@ -162,6 +157,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     String boardtype = "";
     String schooltype = "";
     String ExistGrade;
+    int ExistGradenew;
     String kycgrade;
     CustomDialog customDialog;
     List<SchoolData> districtList = new ArrayList<>();
@@ -270,6 +266,9 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                 if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
                     binding.etgrade.showDropDown();
                 }
+                else if (ExistGradenew > 0){
+                    binding.etgrade.showDropDown();
+                }
                 else{
                     openErrorDialog();
                 }
@@ -283,6 +282,10 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                 if (hasFocus)
                 {
                     if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
+                        binding.etgrade.showDropDown();
+                    }
+
+                    else if (ExistGradenew > 0){
                         binding.etgrade.showDropDown();
                     }
                     else{
@@ -641,6 +644,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                             String district = response.body().getDistrictname();
                             String email = response.body().getEmailId();
                             ExistGrade = response.body().getStudentclass();
+                            ExistGradenew = Integer.parseInt(response.body().getStudentclass());
                             String name = response.body().getStudentName();
                             String schooltype = response.body().getSchoolType();
                             String board = response.body().getBoardType();
@@ -795,6 +799,9 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         }
 
         if (gradeid == null || gradeid.equals("null") || gradeid.equals("")||gradeid.isEmpty()){
+            gradeid = binding.etgrade.getText().toString();
+        }
+        else{
             gradeid = binding.etgrade.getText().toString();
         }
 
@@ -1722,7 +1729,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
             GradeData gData = (GradeData) commonDataModel.getObject();
             binding.etgrade.setText(gData.getGrade_id());
             gradeid = gData.getGrade_id();
-
+            openErrorDialog();
 
         }
 
@@ -1759,6 +1766,9 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
 
             else if (v.getId() == R.id.etgrade) {
                 if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
+                    binding.etgrade.showDropDown();
+                }
+                else if (ExistGradenew > 0){
                     binding.etgrade.showDropDown();
                 }
                 else{
@@ -1799,6 +1809,9 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
             if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
                 binding.etgrade.showDropDown();
             }
+            else if (ExistGradenew > 0){
+                binding.etgrade.showDropDown();
+            }
             else{
                 openErrorDialog();
             }
@@ -1829,10 +1842,11 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     }
     private void openErrorDialog() {
         String grade = binding.etgrade.getText().toString();
-
-
         if (kycgrade.equals("Pending")||kycgrade == "Pending"){
-            String message = prefModel.getLanguageMasterDynamic().getDetails().getYou_have_changed_you_grade()+"" + ExistGrade + "th - " + gradeid + "th."+prefModel.getLanguageMasterDynamic().getDetails().getYou_will_loose_your_current();
+            if (gradeid == null || gradeid.equals("null") || gradeid.equals("")||gradeid.isEmpty()||gradeid.equals(0)||gradeid.equals("0")){
+                gradeid = "0";
+            }
+            String message = prefModel.getLanguageMasterDynamic().getDetails().getYou_have_changed_you_grade()+" " + ExistGrade + "th - " + gradeid + "th. "+prefModel.getLanguageMasterDynamic().getDetails().getYou_will_loose_your_current();
             CustomDialogModel customDialogModel = new CustomDialogModel();
             customDialogModel.setContext(CompleteStudentProfileWithoutPin.this);
             customDialogModel.setTitle(prefModel.getLanguageMasterDynamic().getDetails().getInformation() != null ? prefModel.getLanguageMasterDynamic().getDetails().getInformation() : AuroApp.getAppContext().getResources().getString(R.string.information));
@@ -1841,37 +1855,35 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
             customDialog = new CustomDialog(CompleteStudentProfileWithoutPin.this, customDialogModel);
             customDialog.setSecondBtnTxt(prefModel.getLanguageMasterDynamic().getDetails().getYes()+"");//Yes
             customDialog.setFirstBtnTxt(prefModel.getLanguageMasterDynamic().getDetails().getNo()+"");//No
+
             customDialog.setFirstCallcack(new CustomDialog.FirstCallcack() {
                 @Override
                 public void clickNoCallback() {
+                    binding.etgrade.setText(ExistGrade);
                     customDialog.dismiss();
-                    customDialog.setCancelable(true);
-
-
                 }
             });
 
             customDialog.setSecondCallcack(new CustomDialog.SecondCallcack() {
                 @Override
                 public void clickYesCallback() {
+                    binding.etgrade.setText(gradeid);
                     customDialog.dismiss();
-                    binding.etgrade.showDropDown();
-                    customDialog.setCancelable(true);
-
 
                 }
             });
 
             WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
             lp.copyFrom(customDialog.getWindow().getAttributes());
-            lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+            lp.width = WindowManager.LayoutParams.MATCH_PARENT;
             lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
             customDialog.getWindow().setAttributes(lp);
             Objects.requireNonNull(customDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-            customDialog.setCancelable(true);
+            customDialog.setCancelable(false);
             customDialog.show();
+
         }
-        else{
+        else  if (kycgrade.equals("Approve")||kycgrade == "Approve"||kycgrade.equals("Approved")||kycgrade == "Approved"){
             binding.etgrade.setEnabled(false);
         }
 
