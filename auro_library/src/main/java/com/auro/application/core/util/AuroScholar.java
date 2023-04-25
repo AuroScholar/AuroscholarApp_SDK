@@ -196,7 +196,7 @@ public class AuroScholar {
     }
 
     public static void opendashboard(){
-        auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), DashBoardMainActivity.class));
+        auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), DashBoardMainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
     }
 
@@ -234,14 +234,14 @@ public class AuroScholar {
 //                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                                startActivity(i);
                                 progress.dismiss();
-                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), AppLanguageActivity.class));
+                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), AppLanguageActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                             }
                             else if (errormismatch.equals("Error! Grade Mismatched")){
 //                                Intent i = new Intent(SDKActivity.this, ChooseGradeActivity.class);
 //                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                                startActivity(i);
                                progress.dismiss();
-                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), ChooseGradeActivity.class));
+                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), ChooseGradeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
                             }
 
@@ -251,7 +251,7 @@ public class AuroScholar {
 //                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                                startActivity(i);
                                progress.dismiss();
-                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), CompleteStudentProfileWithoutPin.class));
+                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), CompleteStudentProfileWithoutPin.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
                             }
                             else{
@@ -264,7 +264,7 @@ public class AuroScholar {
                                 inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
                                 inputModel.setPartnerSource(prefModel.getPartnersource());
                                 inputModel.setPartner_api_key(prefModel.getApikey());
-                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), DashBoardMainActivity.class));
+                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), DashBoardMainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
                             }
 
