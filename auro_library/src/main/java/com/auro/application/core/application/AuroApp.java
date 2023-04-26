@@ -63,10 +63,10 @@ public class AuroApp extends Application {
             }
 
         });
-       //context = this;
+     //  context = this;
 
 
-      AuroApp.context = this;
+     AuroApp.context = this;
         appComponent = DaggerAppComponent
                 .builder()
                 .appModule(new AppModule(this))

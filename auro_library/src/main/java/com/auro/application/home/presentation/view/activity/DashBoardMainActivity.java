@@ -1333,16 +1333,12 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
 
     private void logout() {
-
-
-        AppLogger.e("Chhonker", "Logout");
         AuroAppPref.INSTANCE.clearPref();
         SharedPreferences preferences =getSharedPreferences("My_Pref",Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = preferences.edit();
         editor.clear();
         editor.apply();
-        finish();
-      //  finishAffinity();
+       finish();
     }
 
 
