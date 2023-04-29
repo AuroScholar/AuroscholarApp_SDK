@@ -31,6 +31,7 @@ public class AuroApp extends Application {
     public static Application mcontext;
     public static AuroScholarDataModel auroScholarDataModel;
     public static int fragmentContainerUiId = 0;
+    private AuroSdkCallback mCallback;
 
     @Override
     public void onCreate() {
@@ -83,6 +84,19 @@ public class AuroApp extends Application {
     }
     public static void initializeWithDefaults(Application mApplication){
         mcontext = mApplication;
+    }
+
+    public void registerCallback(AuroSdkCallback callback) {
+        mCallback = callback;
+    }
+
+    private void closeLibrary() {
+        // Code to close your library interface
+
+        // Call the onLibraryClosed() method on the callback instance
+        if (mCallback != null) {
+            mCallback.onLibraryClosed();
+        }
     }
 
 //    public static AuroApp getAppContext() {
