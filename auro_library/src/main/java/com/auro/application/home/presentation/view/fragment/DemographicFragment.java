@@ -25,8 +25,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.auro.application.R;
-import com.auro.application.core.application.AuroApp;
-import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.home.data.base_component.BaseFragment;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
@@ -42,7 +41,6 @@ import com.auro.application.home.data.model.SchoolLangData;
 import com.auro.application.home.data.model.SchoolMediumLangDataModel;
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
-import com.auro.application.home.presentation.view.adapter.SchoolMediumSpinnerAdapter;
 import com.auro.application.home.presentation.viewmodel.DemographicViewModel;
 import com.auro.application.util.AppLogger;
 import com.auro.application.util.DeviceUtil;

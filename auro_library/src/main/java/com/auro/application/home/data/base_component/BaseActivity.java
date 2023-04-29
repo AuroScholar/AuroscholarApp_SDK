@@ -1,4 +1,4 @@
-package com.auro.application.core.application.base_component;
+package com.auro.application.home.data.base_component;
 
 import android.content.Context;
 import android.os.Bundle;

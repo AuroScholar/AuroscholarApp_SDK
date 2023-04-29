@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.PagerSnapHelper;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.core.application.base_component.BaseDialog;
+import com.auro.application.home.data.base_component.BaseDialog;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;

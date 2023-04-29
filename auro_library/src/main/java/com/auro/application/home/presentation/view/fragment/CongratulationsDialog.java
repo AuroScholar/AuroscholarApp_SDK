@@ -1,6 +1,5 @@
 package com.auro.application.home.presentation.view.fragment;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,7 +13,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.core.application.base_component.BaseDialog;
+import com.auro.application.home.data.base_component.BaseDialog;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -29,7 +28,6 @@ import com.auro.application.home.data.model.SubjectResModel;
 import com.auro.application.home.presentation.viewmodel.CongratulationsDialogViewModel;
 import com.auro.application.util.AppLogger;
 import com.auro.application.util.AppUtil;
-import com.auro.application.util.ConversionUtil;
 import com.auro.application.util.TextUtil;
 import com.auro.application.util.strings.AppStringDynamic;
 import com.bumptech.glide.Glide;
@@ -37,8 +35,6 @@ import com.robinhood.ticker.TickerUtils;
 import com.robinhood.ticker.TickerView;
 
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 import javax.inject.Inject;

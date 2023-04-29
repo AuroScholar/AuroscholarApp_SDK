@@ -24,8 +24,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.auro.application.R;
-import com.auro.application.core.application.AuroApp;
-import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.home.data.base_component.BaseFragment;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -45,7 +44,6 @@ import com.auro.application.util.permission.LocationUtil;
 import com.auro.application.util.permission.PermissionHandler;
 import com.auro.application.util.permission.PermissionUtil;
 import com.auro.application.util.permission.Permissions;
-import com.auro.application.util.strings.AppStringDynamic;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;

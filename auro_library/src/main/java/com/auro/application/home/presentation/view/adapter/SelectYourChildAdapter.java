@@ -1,6 +1,7 @@
 package com.auro.application.home.presentation.view.adapter;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.content.Intent.FLAG_ACTIVITY_NO_HISTORY;
 
 import static com.auro.application.core.application.AuroApp.auroScholarDataModel;
 import static com.auro.application.core.application.AuroApp.context;
@@ -291,7 +292,7 @@ public class SelectYourChildAdapter extends RecyclerView.Adapter<SelectYourChild
                             }
                             else{
 
-                                auroScholarDataModel.getActivity().startActivity(new Intent(AuroApp.getAppContext(), DashBoardMainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                                auroScholarDataModel.getActivity().startActivity(new Intent(AuroApp.getAppContext(), DashBoardMainActivity.class)); //
 
                                 // openGenricSDK(mobileno,partnersource,parnteruniqueid, apikey);
 

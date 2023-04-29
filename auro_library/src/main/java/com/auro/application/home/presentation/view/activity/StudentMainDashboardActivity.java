@@ -36,7 +36,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.core.application.base_component.BaseActivity;
+import com.auro.application.home.data.base_component.BaseActivity;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -55,11 +55,9 @@ import com.auro.application.home.data.datasource.remote.HomeRemoteApi;
 import com.auro.application.home.data.model.AuroScholarDataModel;
 import com.auro.application.home.data.model.DashboardResModel;
 import com.auro.application.home.data.model.FetchStudentPrefReqModel;
-import com.auro.application.home.data.model.FetchStudentPrefReqModel;
 import com.auro.application.home.data.model.NavItemModel;
 import com.auro.application.home.data.model.SendOtpReqModel;
 import com.auro.application.home.data.model.VerifyOtpReqModel;
-import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
 import com.auro.application.home.presentation.view.fragment.KYCFragment;
 import com.auro.application.home.presentation.view.fragment.KYCViewFragment;
 import com.auro.application.home.presentation.view.fragment.StudentProfileFragment;
@@ -76,7 +74,6 @@ import com.auro.application.util.alert_dialog.disclaimer.CustomOtpDialog;
 import com.auro.application.util.alert_dialog.disclaimer.LoginDisclaimerDialog;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
 import java.security.MessageDigest;

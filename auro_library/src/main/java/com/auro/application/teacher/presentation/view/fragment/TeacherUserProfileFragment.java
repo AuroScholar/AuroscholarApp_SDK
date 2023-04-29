@@ -32,7 +32,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.home.data.base_component.BaseFragment;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;
@@ -45,7 +45,6 @@ import com.auro.application.home.data.model.LanguageMasterDynamic;
 import com.auro.application.home.data.model.StateDataModelNew;
 import com.auro.application.home.presentation.view.activity.SplashScreenAnimationActivity;
 import com.auro.application.home.presentation.view.adapter.DistrictSpinnerUserAdapter;
-import com.auro.application.home.presentation.view.adapter.StateSpinnerAdapter;
 import com.auro.application.teacher.data.model.common.DistrictDataModel;
 import com.auro.application.teacher.data.model.request.TeacherReqModel;
 import com.auro.application.teacher.data.model.response.MyProfileResModel;

@@ -4,44 +4,36 @@ import static com.auro.application.core.common.Status.DISTRICT;
 import static com.auro.application.core.common.Status.GENDER;
 import static com.auro.application.core.common.Status.SCHOOL;
 import static com.auro.application.core.common.Status.STATE;
-import static com.auro.application.core.common.Status.UPDATE_STUDENT;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PatternMatcher;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.databinding.DataBindingUtil;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.auro.application.R;
-import com.auro.application.core.application.AuroApp;
-import com.auro.application.core.application.base_component.BaseActivity;
+import com.auro.application.home.data.base_component.BaseActivity;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -61,14 +53,11 @@ import com.auro.application.home.data.model.StateDataModelNew;
 import com.auro.application.home.data.model.StudentResponselDataModel;
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.presentation.view.adapter.DistrictSpinnerAdapter;
-import com.auro.application.home.presentation.view.adapter.DistrictSpinnerUserAdapter;
 import com.auro.application.home.presentation.view.adapter.GenderSpinnerAdapter;
 import com.auro.application.home.presentation.view.adapter.SchoolSpinnerAdapter;
 import com.auro.application.home.presentation.view.adapter.StateSpinnerAdapter;
-import com.auro.application.home.presentation.view.adapter.StateSpinnerUserAdapter;
 import com.auro.application.home.presentation.view.fragment.BottomSheetAddUserDialog;
 import com.auro.application.home.presentation.viewmodel.ParentProfileViewModel;
-import com.auro.application.home.presentation.viewmodel.StudentProfileViewModel;
 import com.auro.application.teacher.data.model.common.DistrictDataModel;
 
 import com.auro.application.util.AppLogger;
@@ -77,28 +66,16 @@ import com.auro.application.util.DeviceUtil;
 import com.auro.application.util.RemoteApi;
 import com.auro.application.util.TextUtil;
 import com.auro.application.util.ViewUtil;
-import com.auro.application.util.cropper.CropImages;
-import com.auro.application.util.permission.PermissionHandler;
-import com.auro.application.util.permission.PermissionUtil;
-import com.auro.application.util.permission.Permissions;
 import com.auro.application.util.strings.AppStringDynamic;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.request.target.Target;
 import com.github.dhaval2404.imagepicker.ImagePicker;
-import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.iid.FirebaseInstanceId;
 
-import org.openjdk.tools.javah.Gen;
-
-import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -109,8 +86,6 @@ import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class ParentProfileActivity extends BaseActivity implements View.OnFocusChangeListener, View.OnTouchListener, View.OnClickListener, CommonCallBackListner {

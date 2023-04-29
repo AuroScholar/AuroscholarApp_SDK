@@ -47,7 +47,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.auro.application.R;
 import com.auro.application.RealTimeFaceDetection.MLKitFacesAnalyzer;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.home.data.base_component.BaseFragment;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
@@ -95,15 +95,10 @@ import com.auro.application.util.AppLogger;
 import com.auro.application.util.ViewUtil;
 
 import com.auro.application.util.alert_dialog.ExitDialog;
-import com.auro.application.util.alert_dialog.InstructionDialog;
 import com.auro.application.util.alert_dialog.NativeQuizImageDialog;
 import com.auro.application.util.broadcastreceiver.NetworkChangeReceiver;
 
-import com.auro.application.util.permission.PermissionHandler;
-import com.auro.application.util.permission.PermissionUtil;
-import com.auro.application.util.permission.Permissions;
 import com.auro.application.util.strings.AppStringDynamic;
-import com.auro.application.util.timer.Hourglass;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
