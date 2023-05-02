@@ -331,7 +331,7 @@ public class HomeRemoteDataSourceImp implements DashboardRemoteData {
     public Single<Response<JsonObject>> checkUserValidApi(CheckUserApiReqModel reqModel) {
         reqModel.setApiVersion(AppConstant.ParamsValue.API_VERSION_VAL);
         reqModel.setLangVersion(AppConstant.ParamsValue.LANGUAGE_VERSION_VAL);
-        reqModel.setUserPreferedLanguageId(Integer.parseInt(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId()));
+        reqModel.setUserPreferedLanguageId(AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId());
         return homeRemoteApi.checkUserApi(reqModel);
     }
 

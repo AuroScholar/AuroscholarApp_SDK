@@ -27,14 +27,14 @@ public class CheckUserApiReqModel {
     String apiVersion;
 
     @SerializedName("user_prefered_language_id")
-    Integer userPreferedLanguageId;
+    String userPreferedLanguageId;
 
 
-    public Integer getUserPreferedLanguageId() {
+    public String getUserPreferedLanguageId() {
         return userPreferedLanguageId;
     }
 
-    public void setUserPreferedLanguageId(Integer userPreferedLanguageId) {
+    public void setUserPreferedLanguageId(String userPreferedLanguageId) {
         this.userPreferedLanguageId = userPreferedLanguageId;
     }
 
