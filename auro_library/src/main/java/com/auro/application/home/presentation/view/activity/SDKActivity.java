@@ -1,7 +1,9 @@
 package com.auro.application.home.presentation.view.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -15,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.auro.application.R;
 import com.auro.application.core.application.di.component.DaggerWrapper;
+import com.auro.application.core.common.SdkCallBack;
 import com.auro.application.core.common.Status;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
@@ -71,24 +74,8 @@ public class SDKActivity  extends AppCompatActivity {
         partner_source.setText("VidyaSaarthi_ANDROID");
         partner_api_key.setText("88c79e7ba48457f1557600c6084ef25c5052ede9a5e989fbf4fb1a87c7ede19e");
         DaggerWrapper.getComponent(this).doInjection(this);
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        if (prefModel.isLogin()){
-            getMultiLanguage();
-            getLanguage(prefModel.getUserLanguageId());
-            int userclass = prefModel.getUserclass();
-            AuroScholarInputModel inputModel = new AuroScholarInputModel();
-            inputModel.setMobileNumber(prefModel.getUserMobile());
-            inputModel.setStudentClass(String.valueOf(userclass));
-            inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
-            inputModel.setPartnerSource(prefModel.getPartnersource());
-            inputModel.setPartner_api_key(prefModel.getApikey());
-            inputModel.setActivity((Activity) SDKActivity.this);
-            AuroScholar.startAuroSDK(inputModel);
-        }
-       else{
-            getMultiLanguage();
-            getLanguage("1");
-        }
+
+
 
 
         bt_sdk.setOnClickListener(new View.OnClickListener() {
@@ -108,201 +95,13 @@ public class SDKActivity  extends AppCompatActivity {
                     inputModel.setPartner_api_key(apikey);
                     inputModel.setActivity((Activity) SDKActivity.this);
 
-
                     AuroScholar.startAuroSDK(inputModel);
 
             }
         });
     }
-    public void openGenricSDK(String mobileNumber,String partneruniqueid,String partnersource, String partnerapi, String grade ) {
-        AuroScholarInputModel inputModel = new AuroScholarInputModel();
-        inputModel.setMobileNumber(mobileNumber);
-        inputModel.setStudentClass(grade);
-        inputModel.setPartner_unique_id(partneruniqueid);
-        inputModel.setPartnerSource(partnersource);
-        inputModel.setPartner_api_key(partnerapi);
-        inputModel.setActivity(this);
-        setSDKAPI(mobileNumber,partneruniqueid,partnersource,partnerapi,"");
-    }
-
-    private void setSDKAPI(String mobno, String partneruniqueid, String partnersource, String apikey, String grade)
-    {
-
-        if (mobno.isEmpty()){
-            Toast.makeText(this, "Please enter mobile number", Toast.LENGTH_SHORT).show();
-        }
-
-        else if (partnersource.isEmpty()){
-            Toast.makeText(this, "Please enter partner source", Toast.LENGTH_SHORT).show();
-
-        }
-        else if (partneruniqueid.isEmpty()){
-            Toast.makeText(this, "Please enter partner unique id", Toast.LENGTH_SHORT).show();
-
-        }
-        else if (apikey.isEmpty()){
-            Toast.makeText(this, "Please enter partner api key", Toast.LENGTH_SHORT).show();
-
-        }
-        else{
-            HashMap<String,String> map_data = new HashMap<>();
-            map_data.put("mobile_no",mobno);
-            map_data.put("partner_unique_id",partneruniqueid); //456456
-            map_data.put("partner_source",partnersource);
-            map_data.put("partner_api_key",apikey);
-            //map_data.put("grade",grade);
-
-            RemoteApi.Companion.invoke().getSDKData(map_data)
-                    .enqueue(new Callback<SDKDataModel>() {
-                        @Override
-                        public void onResponse(Call<SDKDataModel> call, Response<SDKDataModel> response)
-                        {
-                            try {
-                                if (response.code() == 400) {
-                                    JSONObject jsonObject = null;
-                                    try {
-                                        jsonObject = new JSONObject(response.errorBody().string());
-                                        String message = jsonObject.getString("message");
-                                        Toast.makeText(SDKActivity.this,message, Toast.LENGTH_SHORT).show();
-
-                                    } catch (JSONException | IOException e) {
-                                        e.printStackTrace();
-                                    }
 
 
-                                }
-                                else if (response.code() == 200) {
-                                    userDetails.clear();
-                                        userDetailsNew.clear();
-                                        userDetails = response.body().getUser_details();
-                                        checkUserResModel = (SDKDataModel) response.body();
-                                        for (int i = 0; i<userDetails.size(); i++){
-                                            userDetailsNew.add(userDetails.get(i));
-
-                                        }
-                                    PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-                                    prefModel.setChildData(checkUserResModel);
-                                    prefModel.setPartnersource(partnersource);
-                                    prefModel.setUserMobile(mobno);
-                                    prefModel.setPartneruniqueid(partneruniqueid);
-                                    prefModel.setApikey(apikey);
-                                    AuroAppPref.INSTANCE.setPref(prefModel);
-
-
-
-
-                                        if (userDetails.size() ==1 && (userDetails.get(0).is_mapped() == 1||userDetails.get(0).is_mapped().equals(1)||userDetails.get(0).is_mapped().equals("1"))){
-
-                                            String userid_child =  userDetails.get(0).getUser_id();
-                                            String user_mobile =  userDetails.get(0).getMobile_no();
-                                            String student_name =  userDetails.get(0).getStudent_name();
-                                            String user_language =  userDetails.get(0).getUser_prefered_language_id();
-                                            int user_grade =  userDetails.get(0).getGrade();
-                                            String user_kyc =  userDetails.get(0).getKyc_status();
-                                            String user_name = userDetails.get(0).getUser_name();
-                                            String partner_logo =  userDetails.get(0).getPartner_logo();
-                                            String profile_pic = userDetails.get(0).getProfile_pic();
-                                            PrefModel prefModel2 = AuroAppPref.INSTANCE.getModelInstance();
-                                            prefModel2.setUserId(userid_child);
-                                            prefModel2.setUserMobile(user_mobile);
-                                            prefModel2.setUserLanguageId(user_language);
-                                            prefModel2.setStudentName(student_name);
-                                            prefModel2.setUserclass(user_grade);
-                                            prefModel2.setKycstatus(user_kyc);
-                                            prefModel2.setUserprofilepic(profile_pic);
-                                            prefModel2.setUserName(user_name);
-                                            prefModel2.setPartner_logo(partner_logo);
-                                            AuroAppPref.INSTANCE.setPref(prefModel2);
-                                            getProfile(userid_child,user_language);
-                                        }
-                                        else{
-                                            openBottomSheetDialog();
-                                        }
-
-
-
-
-
-
-                                }
-                                else {
-                                    Toast.makeText(SDKActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                            catch (Exception e) {
-                                Toast.makeText(SDKActivity.this, "Internet connection", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<SDKDataModel> call, Throwable t) {
-                            Toast.makeText(SDKActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-
-                    });
-        }
-
-    }
-    private void getProfile(String userid, String lang_id)
-    {
-
-        HashMap<String,String> map_data = new HashMap<>();
-        map_data.put("user_id",userid);
-
-        RemoteApi.Companion.invoke().getStudentData(map_data)
-                .enqueue(new Callback<GetStudentUpdateProfile>()
-                {
-                    @Override
-                    public void onResponse(Call<GetStudentUpdateProfile> call, Response<GetStudentUpdateProfile> response)
-                    {
-                        if (response.isSuccessful())
-                        {
-                            if (lang_id==null||lang_id.equals("null")||lang_id.equals(null)||lang_id.equals("0")||lang_id=="0"||lang_id.equals("")||lang_id.isEmpty()){
-                                Intent i = new Intent(SDKActivity.this, AppLanguageActivity.class);
-                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(i);
-                            }
-                            else if (errormismatch.equals("Error! Grade Mismatched")){
-                                Intent i = new Intent(SDKActivity.this, ChooseGradeActivity.class);
-                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                               startActivity(i);
-                            }
-
-                            else if (response.body().getStatename().equals("")||response.body().getStatename().equals("null")||response.body().getStatename().equals(null)||response.body().getDistrictname().equals("")||response.body().getDistrictname().equals("null")||response.body().getDistrictname().equals(null)||response.body().getStudentName().equals("")||response.body().getStudentName().equals("null")||response.body().getStudentName().equals(null)||
-                                    response.body().getStudentclass().equals("")||response.body().getStudentclass().equals("null")||response.body().getStudentclass().equals(null)||response.body().getStudentclass().equals("0")||response.body().getStudentclass().equals(0)){
-                                Intent i = new Intent(SDKActivity.this, CompleteStudentProfileWithoutPin.class);
-                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                               startActivity(i);
-                            }
-                            else{
-                                    PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-                                    int userclass = prefModel.getUserclass();
-                                    AuroScholarInputModel inputModel = new AuroScholarInputModel();
-                                    inputModel.setMobileNumber(prefModel.getUserMobile());
-                                    inputModel.setStudentClass(String.valueOf(userclass));
-                                    inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
-                                    inputModel.setPartnerSource(prefModel.getPartnersource());
-                                    inputModel.setPartner_api_key(prefModel.getApikey());
-                                    inputModel.setActivity((Activity) SDKActivity.this);
-                                    AuroScholar.startAuroSDK(inputModel);
-
-                            }
-
-                        }
-                        else
-                        {
-                            Toast.makeText(SDKActivity.this, response.message(), Toast.LENGTH_SHORT).show();
-
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<GetStudentUpdateProfile> call, Throwable t)
-                    {
-                        Toast.makeText(SDKActivity.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
     public void getLanguage(String langid)
     {
         HashMap<String,String> map_data = new HashMap<>();
@@ -401,10 +200,6 @@ public class SDKActivity  extends AppCompatActivity {
 
                 });
     }
-    public void openBottomSheetDialog() {
-        BottomSheetUsersDialog bottomSheet = new BottomSheetUsersDialog();
-        bottomSheet.show(this.getSupportFragmentManager(),
-                "ModalBottomSheet");
-    }
+
 
 }

@@ -13,7 +13,6 @@ import android.graphics.Matrix;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.Camera;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -27,21 +26,16 @@ import androidx.databinding.DataBindingUtil;
 import androidx.exifinterface.media.ExifInterface;
 
 import com.auro.application.R;
-import com.auro.application.core.application.base_component.BaseActivity;
-import com.auro.application.core.application.di.component.DaggerWrapper;
+import com.auro.application.home.data.base_component.BaseActivity;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.databinding.CameraFragmentLayoutBinding;
 import com.auro.application.util.AppLogger;
-import com.auro.application.util.AppUtil;
 import com.auro.application.util.ViewUtil;
 import com.auro.application.util.camera.CameraOverlay;
 import com.auro.application.util.camera.FaceOverlayGraphics;
-import com.auro.application.util.permission.PermissionHandler;
-import com.auro.application.util.permission.PermissionUtil;
 import com.auro.application.util.alert_dialog.CustomDialogModel;
 import com.auro.application.util.alert_dialog.CustomProgressDialog;
 
-import com.auro.application.util.permission.Permissions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.vision.CameraSource;
@@ -57,7 +51,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
 

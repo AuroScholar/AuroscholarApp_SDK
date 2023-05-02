@@ -2,8 +2,6 @@ package com.auro.application.kyc.presentation.view.fragment;
 
 import static android.app.Activity.RESULT_OK;
 
-import android.animation.ObjectAnimator;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,7 +11,6 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 
 import android.view.LayoutInflater;
@@ -22,9 +19,8 @@ import android.view.ViewGroup;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.core.application.base_component.BaseDialog;
+import com.auro.application.home.data.base_component.BaseDialog;
 
-import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 
 import com.auro.application.core.common.AppConstant;
@@ -36,24 +32,15 @@ import com.auro.application.home.data.model.Details;
 import com.auro.application.home.data.model.KYCDocumentDatamodel;
 import com.auro.application.home.data.model.KYCResListModel;
 import com.auro.application.home.presentation.view.activity.HomeActivity;
-import com.auro.application.home.presentation.viewmodel.KYCViewModel;
 
-import com.auro.application.teacher.data.model.response.MyClassRoomResModel;
 import com.auro.application.teacher.data.model.response.TeacherKycStatusResModel;
 import com.auro.application.teacher.presentation.viewmodel.TeacherKycViewModel;
 import com.auro.application.util.AppLogger;
 import com.auro.application.util.AppUtil;
-import com.auro.application.util.TextUtil;
 import com.auro.application.util.ViewUtil;
 import com.auro.application.util.network.ProgressRequestBody;
-import com.auro.application.util.permission.PermissionHandler;
-import com.auro.application.util.permission.PermissionUtil;
-import com.auro.application.util.permission.Permissions;
 //import com.facebook.appevents.codeless.internal.EventBinding;
 import com.github.dhaval2404.imagepicker.ImagePicker;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.InputStream;

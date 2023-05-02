@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
@@ -84,8 +85,6 @@ public class AuroScholar {
        getMultiLanguage();
         getLanguage("1");
         setSDKAPI(inputModel.getMobileNumber(),inputModel.getPartner_unique_id(),inputModel.getPartnerSource(),inputModel.getPartner_api_key(),inputModel.getStudentClass());
-
-
 
         return null;
     }
@@ -196,20 +195,11 @@ public class AuroScholar {
     }
 
     public static void opendashboard(){
-        auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), DashBoardMainActivity.class));
+        auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), DashBoardMainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
     }
 
-    public static void openGenricSDK(String mobileNumber, String partneruniqueid, String partnersource, String partnerapi, String grade) {
-        AuroScholarInputModel inputModel = new AuroScholarInputModel();
-        inputModel.setMobileNumber(mobileNumber);
-        inputModel.setStudentClass(grade);
-        inputModel.setPartner_unique_id(partneruniqueid);
-        inputModel.setPartnerSource(partnersource);
-        inputModel.setPartner_api_key(partnerapi);
-        inputModel.setActivity(auroScholarDataModel.getActivity());
-        setSDKAPI(mobileNumber,partneruniqueid,partnersource,partnerapi,"");
-    }
+
     public static void openBottomSheetDialog() {
         BottomSheetUsersDialog bottomSheet = new BottomSheetUsersDialog();
         bottomSheet.show(((FragmentActivity)auroScholarDataModel.getActivity()).getSupportFragmentManager(),
@@ -234,14 +224,14 @@ public class AuroScholar {
 //                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                                startActivity(i);
                                 progress.dismiss();
-                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), AppLanguageActivity.class));
+                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), AppLanguageActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
                             }
                             else if (errormismatch.equals("Error! Grade Mismatched")){
 //                                Intent i = new Intent(SDKActivity.this, ChooseGradeActivity.class);
 //                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                                startActivity(i);
                                progress.dismiss();
-                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), ChooseGradeActivity.class));
+                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), ChooseGradeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
                             }
 
@@ -251,7 +241,7 @@ public class AuroScholar {
 //                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                                startActivity(i);
                                progress.dismiss();
-                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), CompleteStudentProfileWithoutPin.class));
+                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), CompleteStudentProfileWithoutPin.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
                             }
                             else{
@@ -264,7 +254,7 @@ public class AuroScholar {
                                 inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
                                 inputModel.setPartnerSource(prefModel.getPartnersource());
                                 inputModel.setPartner_api_key(prefModel.getApikey());
-                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), DashBoardMainActivity.class));
+                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), DashBoardMainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
 
                             }
 

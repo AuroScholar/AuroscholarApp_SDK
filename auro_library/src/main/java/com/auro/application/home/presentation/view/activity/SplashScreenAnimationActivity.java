@@ -8,7 +8,6 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,28 +19,21 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.auro.application.R;
-import com.auro.application.core.application.AuroApp;
-import com.auro.application.core.application.base_component.BaseActivity;
+import com.auro.application.home.data.base_component.BaseActivity;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
-import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.NotificationDataModel;
 import com.auro.application.core.common.SdkCallBack;
 import com.auro.application.core.common.Status;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
-import com.auro.application.core.util.AuroScholar;
 import com.auro.application.databinding.ActivitySplashScreenAnimationBinding;
 import com.auro.application.home.data.model.AuroScholarDataModel;
 import com.auro.application.home.data.model.CheckUserResModel;
-import com.auro.application.home.data.model.DashboardResModel;
 import com.auro.application.home.data.model.Details;
 import com.auro.application.home.data.model.LanguageMasterDynamic;
 import com.auro.application.home.data.model.LanguageMasterReqModel;
-import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.data.model.response.LanguageListResModel;
-import com.auro.application.home.presentation.view.fragment.StudentProfileFragment;
-import com.auro.application.home.presentation.view.fragment.SubjectPreferencesActivity;
 import com.auro.application.home.presentation.viewmodel.SplashScreenViewModel;
 import com.auro.application.teacher.presentation.view.activity.TeacherProfileActivity;
 import com.auro.application.util.AppLogger;
@@ -54,7 +46,6 @@ import com.auro.application.util.alert_dialog.CustomDialog;
 import com.auro.application.util.alert_dialog.CustomDialogModel;
 import com.auro.application.util.alert_dialog.CustomMemoryStatusDialog;
 import com.auro.application.util.firebase.FirebaseDynamicLink;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -97,11 +88,11 @@ public class SplashScreenAnimationActivity extends BaseActivity {
 //            prefModel.setDeviceToken(newToken);
 //            getPreferences(Context.MODE_PRIVATE).edit().putString("fb_device_token", newToken).apply();
 //        });
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        prefModel.setDeviceToken("Test123");
+//        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+//        prefModel.setDeviceToken("Test123");
 
         init();
-        setListener();
+      //  setListener();
 
     }
 
@@ -115,16 +106,16 @@ public class SplashScreenAnimationActivity extends BaseActivity {
         binding.setLifecycleOwner(this);
         mContext = SplashScreenAnimationActivity.this;
         // AppUtil.loadAppLogo(binding.auroScholarLogo);
-        checkForVersionCode();
+       // checkForVersionCode();
         startAnimation();
-       initiateData();
-        checkDeepLink();
-        if (viewModel != null && viewModel.serviceLiveData().hasObservers()) {
-            viewModel.serviceLiveData().removeObservers(this);
-        } else {
-            observeServiceResponse();
-        }
-        AuroAppPref.INSTANCE.getModelInstance().setAssignmentReqModel(null);
+    //   initiateData();
+     //   checkDeepLink();
+//        if (viewModel != null && viewModel.serviceLiveData().hasObservers()) {
+//            viewModel.serviceLiveData().removeObservers(this);
+//        } else {
+//            observeServiceResponse();
+//        }
+//        AuroAppPref.INSTANCE.getModelInstance().setAssignmentReqModel(null);
     }
 
 
@@ -185,6 +176,21 @@ public class SplashScreenAnimationActivity extends BaseActivity {
             @Override
             public void onAnimationEnd(Animation animation) {
                 fadeInAnimation(8);
+                SharedPreferences prefs = getSharedPreferences("My_Pref", MODE_PRIVATE);
+                String statustoclose = prefs.getString("statustoclose","");
+                if (statustoclose.equals("true")||statustoclose== "true"){
+
+                    PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+                    prefModel.setLogin(false);
+                      AuroAppPref.INSTANCE.clearPref();
+                    SharedPreferences preferences =getSharedPreferences("My_Pref", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.clear();
+                    editor.apply();
+
+                }
+              //  finish();
+
             }
 
             @Override
@@ -220,7 +226,7 @@ public class SplashScreenAnimationActivity extends BaseActivity {
                                 @Override
                                 public void run() {
                                     // This method will be executed once the timer is over
-                                    callLanguageList();
+                                 //   callLanguageList();
                                     //memoryCheck();
                                     // whichScreenOpen();
                                 }
@@ -244,7 +250,7 @@ public class SplashScreenAnimationActivity extends BaseActivity {
 
       //  Details details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
 
-        progressChanges(0, "Fetching data....");
+     //   progressChanges(0, "Fetching data....");
 
         viewModel.checkInternet(Status.LANGUAGE_LIST, "");
 
@@ -558,24 +564,12 @@ public class SplashScreenAnimationActivity extends BaseActivity {
         finish();
     }
 
-    void openEnterNumberActivity() {
-        Intent intent = new Intent(this, EnterNumberActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
 
-    private void openUserProfileActivity() {
-        Intent newIntent = new Intent(SplashScreenAnimationActivity.this, SubjectPreferencesActivity.class);
-        startActivity(newIntent);
-        finish();
-    }
 
-    private void openChooseGradeActivity() {
-        Intent tescherIntent = new Intent(this, ChooseGradeActivity.class);
-        startActivity(tescherIntent);
-        finish();
-    }
+
+
+
 
     private void openTeacherActivity() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
@@ -740,7 +734,7 @@ public class SplashScreenAnimationActivity extends BaseActivity {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
 //        LanguageMasterDynamic model = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic();
 //        Details details = model.getDetails();
-        progressChanges(0, "Fetching data....");
+      //  progressChanges(0, "Fetching data....");
         LanguageMasterReqModel languageMasterReqModel = new LanguageMasterReqModel();
         if (prefModel.getUserLanguageId()!=null && !prefModel.getUserLanguageId().isEmpty()) {
             languageMasterReqModel.setLanguageId(prefModel.getUserLanguageId());

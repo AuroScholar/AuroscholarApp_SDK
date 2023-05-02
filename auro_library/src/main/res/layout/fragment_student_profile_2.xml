@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/tools">
     <data>
-
         <variable
             name="quizViewModel"
             type="com.auro.application.home.presentation.viewmodel.QuizViewModel" />

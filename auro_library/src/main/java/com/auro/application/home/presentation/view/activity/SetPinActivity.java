@@ -10,7 +10,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.core.application.base_component.BaseActivity;
+import com.auro.application.home.data.base_component.BaseActivity;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.Status;
@@ -20,7 +20,6 @@ import com.auro.application.databinding.ActivitySetPinBinding;
 import com.auro.application.home.data.model.CheckUserApiReqModel;
 import com.auro.application.home.data.model.CheckUserResModel;
 import com.auro.application.home.data.model.Details;
-import com.auro.application.home.data.model.LanguageMasterDynamic;
 import com.auro.application.home.data.model.response.UserDetailResModel;
 import com.auro.application.home.data.model.signupmodel.request.RegisterApiReqModel;
 import com.auro.application.home.data.model.signupmodel.request.SetUsernamePinReqModel;

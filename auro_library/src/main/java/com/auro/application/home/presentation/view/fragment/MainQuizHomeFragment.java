@@ -1,16 +1,17 @@
 package com.auro.application.home.presentation.view.fragment;
 
 import android.app.Activity;
-import android.app.Application;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -25,44 +26,36 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.auro.application.ChatActivity;
 import com.auro.application.R;
-import com.auro.application.RealTimeFaceDetection.CameraxActivity;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.home.data.base_component.BaseFragment;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;
-import com.auro.application.core.common.ResponseApi;
 import com.auro.application.core.common.Status;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
 import com.auro.application.core.network.URLConstant;
-import com.auro.application.core.util.AuroScholar;
 import com.auro.application.databinding.FragmentMainQuizHomeBinding;
 import com.auro.application.home.data.model.AssignmentReqModel;
 import com.auro.application.home.data.model.AssignmentResModel;
-import com.auro.application.home.data.model.AuroScholarDataModel;
-import com.auro.application.home.data.model.AuroScholarInputModel;
 import com.auro.application.home.data.model.DashboardResModel;
-import com.auro.application.home.data.model.DashboardResponselDataModel;
 import com.auro.application.home.data.model.Details;
 import com.auro.application.home.data.model.QuizResModel;
 import com.auro.application.home.data.model.SelectChapterQuizModel;
 import com.auro.application.home.data.model.SubjectResModel;
-import com.auro.application.home.data.model.passportmodels.PassportQuizMonthModel;
 import com.auro.application.home.data.model.response.FetchStudentPrefResModel;
 
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
@@ -70,13 +63,7 @@ import com.auro.application.home.data.model.response.InstructionsResModel;
 import com.auro.application.home.data.model.response.SlabsResModel;
 import com.auro.application.home.data.model.response.StudentKycStatusResModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
-import com.auro.application.home.data.model.signupmodel.InstructionModel;
-import com.auro.application.home.presentation.view.activity.AppLanguageActivity;
 import com.auro.application.home.presentation.view.activity.CameraActivity;
-import com.auro.application.home.presentation.view.activity.ChooseGradeActivity;
-import com.auro.application.home.presentation.view.activity.CompleteStudentProfileWithoutPin;
-import com.auro.application.home.presentation.view.activity.SDKActivity;
-import com.auro.application.home.presentation.view.activity.StudentMainDashboardActivity;
 import com.auro.application.home.presentation.view.activity.WebActivity;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
 import com.auro.application.home.presentation.view.adapter.ChapterSelectAdapter;
@@ -88,25 +75,20 @@ import com.auro.application.util.AppLogger;
 import com.auro.application.util.AppUtil;
 import com.auro.application.util.ConversionUtil;
 import com.auro.application.util.DateUtil;
-import com.auro.application.util.ImageUtil;
 import com.auro.application.util.RemoteApi;
-import com.auro.application.util.SeekbarWithIntervals;
 import com.auro.application.util.TextUtil;
 import com.auro.application.util.ViewUtil;
 import com.auro.application.util.alert_dialog.InstructionDialog;
 import com.auro.application.util.alert_dialog.disclaimer.QuizDisclaimerDialog;
 import com.auro.application.util.firebaseAnalytics.AnalyticsRegistry;
-import com.auro.application.util.permission.PermissionHandler;
-import com.auro.application.util.permission.PermissionUtil;
-import com.auro.application.util.permission.Permissions;
 import com.auro.application.util.strings.AppStringDynamic;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -124,12 +106,9 @@ import static com.auro.application.core.common.Status.GET_SLABS_API;
 import static com.auro.application.core.common.Status.LISTNER_FAIL;
 import static com.auro.application.home.presentation.view.fragment.CongratulationsDialog.commonCallBackListner;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import okhttp3.MediaType;
-import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -281,11 +260,15 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     @Override
     public void onDestroy() {
         super.onDestroy();
 
     }
+
+
+
 
     @Override
     protected void setListener() {

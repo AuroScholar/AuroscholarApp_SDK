@@ -2,33 +2,20 @@ package com.auro.application.home.presentation.view.activity;
 
 import android.Manifest;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
-import com.auro.application.core.application.base_component.BaseActivity;
-import com.auro.application.core.application.di.component.DaggerWrapper;
+import com.auro.application.home.data.base_component.BaseActivity;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.databinding.ActivityWebBinding;
 import com.auro.application.core.common.NetworkUtil;
-import com.auro.application.core.network.URLConstant;
-import com.auro.application.databinding.QuizTestLayoutBinding;
-import com.auro.application.home.presentation.view.fragment.PrivacyPolicyFragment;
 import com.auro.application.util.AppLogger;
 import com.auro.application.util.ViewUtil;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.webkit.PermissionRequest;
 import android.webkit.ValueCallback;
@@ -38,10 +25,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.auro.application.R;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 
 import io.reactivex.disposables.Disposable;
 

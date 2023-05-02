@@ -26,7 +26,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.core.application.base_component.BaseFragment;
+import com.auro.application.home.data.base_component.BaseFragment;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
@@ -69,7 +69,6 @@ import com.bumptech.glide.request.RequestOptions;
 
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 

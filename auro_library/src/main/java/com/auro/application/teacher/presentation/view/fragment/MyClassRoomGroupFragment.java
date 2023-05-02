@@ -1,11 +1,8 @@
 package com.auro.application.teacher.presentation.view.fragment;
 
-import android.content.ComponentName;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -15,17 +12,13 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.core.application.base_component.BaseFragment;
-import com.auro.application.core.application.di.component.DaggerWrapper;
+import com.auro.application.home.data.base_component.BaseFragment;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -51,18 +44,12 @@ import com.auro.application.util.strings.AppStringTeacherDynamic;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-
-import me.toptas.fancyshowcase.FancyShowCaseQueue;
-import me.toptas.fancyshowcase.FancyShowCaseView;
-import me.toptas.fancyshowcase.FocusShape;
-import me.toptas.fancyshowcase.listener.OnViewInflateListener;
 
 public class MyClassRoomGroupFragment extends BaseFragment implements CommonCallBackListner, View.OnClickListener {
 
