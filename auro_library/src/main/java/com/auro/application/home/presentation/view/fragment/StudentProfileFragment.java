@@ -1015,10 +1015,9 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                             AppLogger.v("observeServiceResponse", "UPDATE_STUDENT");
                             handleSubmitProgress(1, "");
                             if (studentProfileModel.getError()) {
-                                AppLogger.v("sendProfilepradeepApi", "UPDATE_STUDENT"+studentProfileModel.getMessage());
                                 showSnackbarError(studentProfileModel.getMessage(), Color.RED);
                             } else {
-                                AppLogger.v("sendProfilepradeepApi", "UPDATE_STUDENT");
+
                                 showSnackbarError(prefModel.getLanguageMasterDynamic().getDetails().getSuccess_fully_save() != null ? prefModel.getLanguageMasterDynamic().getDetails().getSuccess_fully_save() : AuroApp.getAppContext().getResources().getString(R.string.success_fully_save), Color.GREEN);
                             }
                             funnelProfileSubmitScreen();
@@ -1053,13 +1052,13 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                                 PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
                                 prefModel.setCheckUserResModel(checkUserResModel);
                                 AuroAppPref.INSTANCE.setPref(prefModel);
-                            //    checkForAddStudentVisibility();
+                               checkForAddStudentVisibility();
                             }
 
                         } else if (responseApi.apiTypeStatus == Status.STUDENT_KYC_STATUS_API) {
                             studentKycStatusResModel = (StudentKycStatusResModel) responseApi.data;
                             if (!studentKycStatusResModel.getError()) {
-                                callCheckUserApi();
+                          //    callCheckUserApi();
                             }
                         }
                     }

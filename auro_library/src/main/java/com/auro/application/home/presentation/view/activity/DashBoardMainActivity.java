@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -682,12 +683,11 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         AppLogger.e(TAG, "unregisterInstallStateUpdListener method calling   2");
     }
 
-  //  @Override
-    //protected void onDestroy() {
-     //   super.onDestroy();
-      //  AppLogger.e(TAG, "onDestroy method calling ");
-      //  unregisterInstallStateUpdListener();
-  //  }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        finish();
+    }
 
 
     @Override
@@ -722,7 +722,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             handlePartnertabClick();
             funnelPartnerApp();
         } else if (itemId == R.id.item_logout) {
-          //  openLogoutDialog();
+            openLogoutDialog();
         } else if (itemId == R.id.item_aurofriend) {
             isBackNormal = false;
             funnelStudentleaderBoardScreen();
@@ -1308,24 +1308,21 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
 
     private void logout() {
+        finish();
         SharedPreferences.Editor editor1 = getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
         editor1.putString("statustoclose", "true");
         editor1.apply();
 
-      // finish();
-
-
-
-//        DashBoardMainActivity app = (DashBoardMainActivity) getApplicationContext();
-//      app.popBackStack();
-
-
-//        Intent i = new Intent(this, SplashScreenAnimationActivity.class);
+//        Intent i = new Intent(DashBoardMainActivity.this, SplashScreenAnimationActivity.class);
 //        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //        startActivity(i);
 
     }
-
+    private void startMainActivity(Context context) throws PackageManager.NameNotFoundException {
+        PackageManager pm = context.getPackageManager();
+        Intent intent = pm.getLaunchIntentForPackage(context.getPackageName());
+        context.startActivity(intent);
+    }
 
     private void openFriendLeaderBoardFragment() {
         FriendsLeaderBoardListFragment fragment = new FriendsLeaderBoardListFragment();
@@ -1602,12 +1599,9 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 //        AlertDialog alert = builder.create();
 //        alert.show();
 
-finish();
 
-BottomSheetUsersDialog bottomSheetUsersDialog = new BottomSheetUsersDialog();
-bottomSheetUsersDialog.dismiss();
-      // logout();
-      // Finish the activity
+       openLogoutDialog();
+
     }
     private void getDashboardMenu()
     {

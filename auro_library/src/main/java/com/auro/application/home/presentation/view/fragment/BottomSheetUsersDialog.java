@@ -59,36 +59,37 @@ public class BottomSheetUsersDialog extends BottomSheetDialogFragment implements
     public View onCreateView(LayoutInflater inflater, @Nullable
             ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.bottom_student_list, container, false);
+       binding.imgclose.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View v) {
+               dismiss();
+               PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+               prefModel.setLogin(false);
+                AuroAppPref.INSTANCE.clearPref();
+               SharedPreferences preferences =getActivity().getSharedPreferences("My_Pref", Context.MODE_PRIVATE);
+               SharedPreferences.Editor editor = preferences.edit();
+               editor.clear();
+               editor.apply();
+           }
+       });
         SharedPreferences prefs = getActivity().getSharedPreferences("My_Pref", MODE_PRIVATE);
         String statustoclose = prefs.getString("statustoclose","");
-        if (statustoclose.equals("true")||statustoclose== "true"){
-
-            SharedPreferences.Editor editor1 = getActivity().getSharedPreferences("My_Pref", Context.MODE_PRIVATE).edit();
-            editor1.putString("statustoclose", "false");
-            editor1.apply();
-            AuroAppPref.INSTANCE.clearPref();
-                    SharedPreferences preferences =getActivity().getSharedPreferences("My_Pref", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.clear();
-        editor.apply();
-        dismiss();
-        }
-        else{
+//        if (statustoclose.equals("true")||statustoclose== "true"){
+//
+//
+//        }
+//        else {
             checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
             setAdapterAllListStudent(checkUserResModel.getUser_details());
+     //   }
             binding.btnaddstudent.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-//                BottomSheetAddUserDialog bottomSheet = new BottomSheetAddUserDialog();
-//                bottomSheet.show(getActivity().getSupportFragmentManager(),
-//                        "ModalBottomSheet");
-//                Intent i1 = new Intent(getActivity(), CompleteStudentProfileWithoutPin.class);
-//                startActivity(i1);
                     setAutoRegister();
 
                 }
             });
-        }
+
 
         return binding.getRoot();
     }

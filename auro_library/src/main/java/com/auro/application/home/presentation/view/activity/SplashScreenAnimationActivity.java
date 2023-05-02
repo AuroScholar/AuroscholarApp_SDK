@@ -176,7 +176,19 @@ public class SplashScreenAnimationActivity extends BaseActivity {
             @Override
             public void onAnimationEnd(Animation animation) {
                 fadeInAnimation(8);
-                SplashScreenAnimationActivity.this.finish();
+                SharedPreferences prefs = getSharedPreferences("My_Pref", MODE_PRIVATE);
+                String statustoclose = prefs.getString("statustoclose","");
+                if (statustoclose.equals("true")||statustoclose== "true"){
+
+                    PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
+                    prefModel.setLogin(false);
+                      AuroAppPref.INSTANCE.clearPref();
+                    SharedPreferences preferences =getSharedPreferences("My_Pref", Context.MODE_PRIVATE);
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.clear();
+                    editor.apply();
+
+                }
               //  finish();
 
             }
@@ -214,7 +226,7 @@ public class SplashScreenAnimationActivity extends BaseActivity {
                                 @Override
                                 public void run() {
                                     // This method will be executed once the timer is over
-                                    callLanguageList();
+                                 //   callLanguageList();
                                     //memoryCheck();
                                     // whichScreenOpen();
                                 }
@@ -238,7 +250,7 @@ public class SplashScreenAnimationActivity extends BaseActivity {
 
       //  Details details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
 
-        progressChanges(0, "Fetching data....");
+     //   progressChanges(0, "Fetching data....");
 
         viewModel.checkInternet(Status.LANGUAGE_LIST, "");
 
@@ -722,7 +734,7 @@ public class SplashScreenAnimationActivity extends BaseActivity {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
 //        LanguageMasterDynamic model = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic();
 //        Details details = model.getDetails();
-        progressChanges(0, "Fetching data....");
+      //  progressChanges(0, "Fetching data....");
         LanguageMasterReqModel languageMasterReqModel = new LanguageMasterReqModel();
         if (prefModel.getUserLanguageId()!=null && !prefModel.getUserLanguageId().isEmpty()) {
             languageMasterReqModel.setLanguageId(prefModel.getUserLanguageId());

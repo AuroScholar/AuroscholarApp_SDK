@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.Toast;
@@ -84,8 +85,6 @@ public class AuroScholar {
        getMultiLanguage();
         getLanguage("1");
         setSDKAPI(inputModel.getMobileNumber(),inputModel.getPartner_unique_id(),inputModel.getPartnerSource(),inputModel.getPartner_api_key(),inputModel.getStudentClass());
-
-
 
         return null;
     }
@@ -200,16 +199,7 @@ public class AuroScholar {
 
     }
 
-    public static void openGenricSDK(String mobileNumber, String partneruniqueid, String partnersource, String partnerapi, String grade) {
-        AuroScholarInputModel inputModel = new AuroScholarInputModel();
-        inputModel.setMobileNumber(mobileNumber);
-        inputModel.setStudentClass(grade);
-        inputModel.setPartner_unique_id(partneruniqueid);
-        inputModel.setPartnerSource(partnersource);
-        inputModel.setPartner_api_key(partnerapi);
-        inputModel.setActivity(auroScholarDataModel.getActivity());
-        setSDKAPI(mobileNumber,partneruniqueid,partnersource,partnerapi,"");
-    }
+
     public static void openBottomSheetDialog() {
         BottomSheetUsersDialog bottomSheet = new BottomSheetUsersDialog();
         bottomSheet.show(((FragmentActivity)auroScholarDataModel.getActivity()).getSupportFragmentManager(),

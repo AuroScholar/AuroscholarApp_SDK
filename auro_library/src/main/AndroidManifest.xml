@@ -84,8 +84,6 @@
         <activity
             android:name=".home.presentation.view.activity.SplashScreenAnimationActivity"
             android:exported="true"
-            android:excludeFromRecents="false"
-            android:resizeableActivity="false"
             android:screenOrientation="portrait" />
 
         <activity
