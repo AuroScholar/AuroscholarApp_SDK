@@ -124,6 +124,8 @@ afterEvaluate {
     publishing {
         publications {
             release(MavenPublication) {
+
+
                 from components.release
                 groupId = 'com.github.AuroScholar'
                 artifactId = 'auroscholar-android-sdk'
