@@ -5,10 +5,10 @@ apply plugin: 'maven-publish'
 
 
 android {
-    compileSdkVersion 32
+    compileSdkVersion 31
     defaultConfig {
         minSdkVersion 16
-        targetSdkVersion 32
+        targetSdkVersion 31
         versionCode 1
         versionName "0.0.1"
         multiDexEnabled true
@@ -19,12 +19,10 @@ android {
 
     buildTypes {
         debug {
-
             buildConfigField "String", "BASE_URL", "\"https://auroscholar.com/api/\""
         }
 
         release {
-
             buildConfigField "String", "BASE_URL", "\"https://auroscholar.com/api/\""
         }
     }
@@ -119,6 +117,7 @@ apply plugin: 'com.google.gms.google-services'
 
 repositories {
     mavenCentral()
+
 }
 
 afterEvaluate {
@@ -128,7 +127,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.AuroScholar'
                 artifactId = 'auroscholar-android-sdk'
-                version = '2.4.3'
+                version = '2.4.4'
             }
         }
     }

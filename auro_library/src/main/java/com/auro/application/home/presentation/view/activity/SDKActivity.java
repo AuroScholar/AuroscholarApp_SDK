@@ -51,14 +51,10 @@ import retrofit2.Response;
 
 public class SDKActivity  extends AppCompatActivity {
     TextView bt_sdk;
-    SDKDataModel checkUserResModel;
     EditText mobile_number,partner_source,partner_unique_id,partner_api_key,gradeid;
-    List<SDKChildModel> userDetails = new ArrayList<>();
-    List<SDKChildModel> userDetailsNew = new ArrayList<>();
     LanguageMasterDynamic language;
     LanguageListResModel languageListResModel;
     Details languagedetail;
-    String errormismatch = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

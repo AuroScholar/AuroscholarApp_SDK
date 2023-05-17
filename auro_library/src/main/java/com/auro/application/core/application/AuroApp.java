@@ -2,21 +2,13 @@ package com.auro.application.core.application;
 
 import android.app.Application;
 import android.content.Context;
-
-import com.auro.application.BuildConfig;
 import com.auro.application.core.application.di.component.AppComponent;
-
-
 import com.auro.application.core.application.di.component.DaggerAppComponent;
 import com.auro.application.core.application.di.module.AppModule;
 import com.auro.application.core.application.di.module.UtilsModule;
 import com.auro.application.home.data.model.AuroScholarDataModel;
-
-
 import java.io.IOException;
 import java.net.SocketException;
-
-import io.reactivex.android.plugins.RxAndroidPlugins;
 import io.reactivex.exceptions.UndeliverableException;
 import io.reactivex.plugins.RxJavaPlugins;
 
@@ -63,10 +55,10 @@ public class AuroApp extends Application {
             }
 
         });
-      // context = this;
+       context = this;
 
 
-     AuroApp.context = this;
+    //AuroApp.context = this;
         appComponent = DaggerAppComponent
                 .builder()
                 .appModule(new AppModule(this))
@@ -85,13 +77,13 @@ public class AuroApp extends Application {
         mcontext = mApplication;
     }
 
-//    public static AuroApp getAppContext() {
-//        return context;
-//    }
-
-    public static Application getAppContext() {
-        return mcontext;
+    public static AuroApp getAppContext() {
+        return context;
     }
+
+    //public static Application getAppContext() {
+     //   return mcontext;
+  //  }
 
     @Override
     protected void attachBaseContext(Context context) {
