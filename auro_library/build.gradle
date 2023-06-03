@@ -9,8 +9,6 @@ android {
     defaultConfig {
         minSdkVersion 16
         targetSdkVersion 31
-        versionCode 1
-        versionName "0.0.1"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         buildConfigField 'int', 'DEFAULT_ANIMATION_DURATION', '750'
@@ -67,7 +65,6 @@ dependencies {
   //  implementation 'com.google.firebase:firebase-appindexing:19.0.0'
     implementation 'com.google.android.gms:play-services-ads-identifier:18.0.1'  //17.1.0+
     api 'androidx.browser:browser:1.0.0'
-
     implementation 'androidx.navigation:navigation-runtime:2.3.0'
     implementation 'androidx.navigation:navigation-ui:2.3.0'
     implementation 'androidx.navigation:navigation-fragment:2.3.0'
@@ -129,7 +126,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.AuroScholar'
                 artifactId = 'auroscholar-android-sdk'
-                version = '2.4.5'
+                version = '2.4.4'
             }
         }
     }

@@ -193,7 +193,6 @@
                                     app:layout_constraintEnd_toStartOf="@+id/wallet_bal_text"
                                     app:layout_constraintTop_toBottomOf="@id/get_scholarship_text" />
 
-
                                 <ImageView
                                     android:id="@+id/download_icon"
                                     android:layout_width="@dimen/_40sdp"
@@ -202,6 +201,7 @@
                                     android:background="@drawable/download_bg"
                                     android:gravity="center_vertical"
                                     android:padding="@dimen/_12sdp"
+                                    android:visibility="gone"
                                     android:src="@drawable/ic_download"
                                     android:textColor="@color/white"
                                     app:Font="Poppins-SemiBold.ttf"
@@ -216,15 +216,202 @@
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginLeft="@dimen/_5ssp"
+                        android:layout_marginRight="@dimen/_5ssp"
+                        android:orientation="horizontal">
+
+                        <RelativeLayout
+                            android:id="@+id/month_parent_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="2">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/button_bg_dark_blue">
+
+                                <com.auro.application.core.util.uiwidget.RPTextView
+                                    android:id="@+id/month_title"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/_8sdp"
+                                    android:text=""
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_10sdp"
+                                    app:Font="Poppins-Regular.ttf"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/_20sdp"
+                                    android:layout_height="@dimen/_20sdp"
+                                    android:layout_alignRight="@+id/month_title"
+                                    android:layout_centerVertical="true"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginStart="@dimen/_5sdp"
+                                    android:layout_marginEnd="@dimen/_10sdp"
+                                    android:src="@drawable/ic_expand_more" />
+
+                            </RelativeLayout>
+
+
+                            <androidx.appcompat.widget.AppCompatSpinner
+                                android:id="@+id/month_spinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_20sdp"
+                                android:layout_marginStart="@dimen/_5sdp"
+                                android:layout_marginTop="@dimen/_5sdp"
+                                android:layout_marginEnd="@dimen/_5sdp"
+                                android:background="@drawable/button_bg_dark_blue"
+                                android:outlineSpotShadowColor="@color/dark_blue"
+                                android:popupBackground="@color/dark_blue"
+                                android:visibility="invisible"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/subject_parent_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="2">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/button_bg_dark_blue">
+
+                                <com.auro.application.core.util.uiwidget.RPTextView
+                                    android:id="@+id/subject_title"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/_8sdp"
+                                    android:text=""
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_10sdp"
+                                    app:Font="Poppins-Regular.ttf"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/_20sdp"
+                                    android:layout_height="@dimen/_20sdp"
+                                    android:layout_alignRight="@+id/subject_title"
+                                    android:layout_centerVertical="true"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginEnd="@dimen/_10sdp"
+                                    android:src="@drawable/ic_expand_more"
+                                    app:layout_constraintStart_toEndOf="@+id/subject_title" />
+
+                            </RelativeLayout>
+
+
+                            <androidx.appcompat.widget.AppCompatSpinner
+                                android:id="@+id/subject_spinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_20sdp"
+                                android:layout_centerInParent="true"
+                                android:layout_marginStart="@dimen/_5sdp"
+
+                                android:layout_marginTop="@dimen/_5sdp"
+                                android:layout_marginEnd="@dimen/_5sdp"
+                                android:foregroundTint="@color/white"
+                                android:background="@drawable/button_bg_dark_blue"
+                                android:outlineSpotShadowColor="@color/dark_blue"
+                                android:visibility="visible"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/topic_parent_layout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/_5sdp"
+                            android:layout_weight="2">
+
+                            <RelativeLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/button_bg_dark_blue">
+
+                                <com.auro.application.core.util.uiwidget.RPTextView
+                                    android:id="@+id/topic_title"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:padding="@dimen/_8sdp"
+                                    android:text=""
+                                    android:lines="1"
+                                    android:singleLine="true"
+                                    android:textColor="@color/white"
+                                    android:textSize="@dimen/_10sdp"
+                                    app:Font="Poppins-Regular.ttf"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintTop_toTopOf="parent" />
+
+                                <ImageView
+                                    android:layout_width="@dimen/_20sdp"
+                                    android:layout_height="@dimen/_20sdp"
+                                    android:layout_alignRight="@+id/topic_title"
+                                    android:layout_centerVertical="true"
+                                    android:layout_gravity="center_vertical"
+                                    android:layout_marginEnd="@dimen/_10sdp"
+                                    android:src="@drawable/ic_expand_more"
+                                    app:layout_constraintStart_toEndOf="@+id/topic_title" />
+
+                            </RelativeLayout>
+
+
+                            <androidx.appcompat.widget.AppCompatSpinner
+                                android:id="@+id/topic_spinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="@dimen/_20sdp"
+                                android:layout_centerInParent="true"
+                                android:layout_marginStart="@dimen/_5sdp"
+
+                                android:layout_marginTop="@dimen/_5sdp"
+                                android:layout_marginEnd="@dimen/_5sdp"
+                                android:foregroundTint="@color/white"
+                                android:background="@drawable/button_bg_dark_blue"
+                                android:outlineSpotShadowColor="@color/dark_blue"
+                                android:visibility="visible"
+                                app:layout_constraintEnd_toEndOf="parent"
+                                app:layout_constraintStart_toStartOf="parent"
+                                app:layout_constraintTop_toTopOf="parent" />
+
+
+                        </RelativeLayout>
+
+
+                    </LinearLayout>
+
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/certificate_recyclerView"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/_10sdp"
-                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginStart="@dimen/_18sdp"
+                        android:layout_marginTop="@dimen/_14sdp"
                         android:layout_marginEnd="@dimen/_10sdp"
                         android:clipToPadding="false"
                         android:paddingBottom="@dimen/_15sdp"
+                        android:layout_gravity="center"
                         app:layout_constraintTop_toBottomOf="@+id/head_layout" />
 
                 </LinearLayout>
@@ -235,10 +422,9 @@
                     android:layout_height="match_parent"
                     android:background="@color/tranparentwhite"
                     android:visibility="gone"
-                    app:layout_constraintBottom_toBottomOf="@+id/nestedScrollView"
+
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/nestedScrollView">
+                    app:layout_constraintStart_toStartOf="parent">
 
                     <ProgressBar
                         android:id="@+id/progressBar_2"

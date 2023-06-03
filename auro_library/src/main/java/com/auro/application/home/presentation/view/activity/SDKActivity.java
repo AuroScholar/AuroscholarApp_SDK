@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
 import com.auro.application.R;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.SdkCallBack;
@@ -70,9 +71,6 @@ public class SDKActivity  extends AppCompatActivity {
         partner_source.setText("VidyaSaarthi_ANDROID");
         partner_api_key.setText("88c79e7ba48457f1557600c6084ef25c5052ede9a5e989fbf4fb1a87c7ede19e");
         DaggerWrapper.getComponent(this).doInjection(this);
-
-
-
 
         bt_sdk.setOnClickListener(new View.OnClickListener() {
             @Override

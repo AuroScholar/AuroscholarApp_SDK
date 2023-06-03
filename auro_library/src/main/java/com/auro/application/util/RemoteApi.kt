@@ -8,10 +8,12 @@ import com.auro.application.core.network.URLConstant
 import com.auro.application.home.data.model.*
 import com.auro.application.home.data.model.passportmodels.PassportMonthModel
 import com.auro.application.home.data.model.passportmodels.PassportQuizMonthModel
+import com.auro.application.home.data.model.passportmodels.PassportQuizTopicModel
 import com.auro.application.home.data.model.response.*
 import com.auro.application.home.data.model.signupmodel.request.SetUsernamePinReqModel
 import com.auro.application.home.data.model.signupmodel.response.RegisterApiResModel
 import com.auro.application.home.data.model.signupmodel.response.SetUsernamePinResModel
+import com.auro.application.teacher.data.model.response.TeacherStudentPassportDetailResModel
 import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -46,8 +48,10 @@ interface RemoteApi
 
     @POST("get_quiz_month_subjects")
     public fun getQuizMonthSubject(@Body params:HashMap<String,String>):Call<PassportQuizMonthModel>
-
-
+    @POST("get_topic_list")
+    public fun getQuizTopic(@Body params:HashMap<String,String>):Call<PassportQuizTopicModel>
+    @POST("get_quiz_months")
+    public fun getStudentPassportMonth(@Body params:HashMap<String,String>):Call<TeacherStudentPassportDetailResModel>
     @Multipart
     @POST("update_student_photo")
     public fun update_student_photo(
