@@ -5,8 +5,8 @@
     <item
         android:id="@+id/item_logout"
         android:enabled="true"
-        android:icon="@drawable/ic_logout"
-        android:title="@string/logout"
+        android:icon="@drawable/ic_faq_name"
+        android:title="FAQ"
         app:showAsAction="never" />
 
     <item

@@ -41,10 +41,12 @@ import com.auro.application.home.data.model.passportmodels.PassportQuizDetailMod
 import com.auro.application.home.data.model.passportmodels.PassportQuizGridModel;
 import com.auro.application.home.data.model.passportmodels.PassportQuizModel;
 import com.auro.application.home.data.model.passportmodels.PassportQuizMonthModel;
+import com.auro.application.home.data.model.passportmodels.PassportQuizTopicModel;
 import com.auro.application.home.data.model.passportmodels.PassportReqModel;
 import com.auro.application.home.data.model.passportmodels.PassportSubjectModel;
 import com.auro.application.home.data.model.passportmodels.PassportSubjectQuizMonthModel;
 
+import com.auro.application.home.data.model.passportmodels.PassportTopicQuizMonthModel;
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
 
@@ -103,6 +105,11 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
     List<PassportSubjectQuizMonthModel> list1= new ArrayList<>();
     List<String> demoList = new ArrayList<>();
 
+    List<PassportTopicQuizMonthModel> list2= new ArrayList<>();
+
+
+    List<String> demoList2 = new ArrayList<>();
+
     public TransactionsFragment() {
         // Required empty public constructor
     }
@@ -143,24 +150,24 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
         setToolbar();
         setListener();
 
-        binding.subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                AppLogger.e(TAG, "on subject selected");
-                if (userClick) {
-                    userClick = false;
-                    spinnerSubject2 = list1.get(position);
-                    AppLogger.e(TAG, "on subject selected" + spinnerSubject2.getSubject());
-                    binding.subjectTitle.setText(demoList.get(position));
-                    binding.subjectSpinner.setAdapter(subjectSpinner);
-                    checkCallApiStatus();
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+//        binding.subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                AppLogger.e(TAG, "on subject selected");
+//                if (userClick) {
+//                    userClick = false;
+//                    spinnerSubject2 = list1.get(position);
+//                    AppLogger.e(TAG, "on subject selected" + spinnerSubject2.getSubject());
+//                    binding.subjectTitle.setText(demoList.get(position));
+//                    binding.subjectSpinner.setAdapter(subjectSpinner);
+//                    checkCallApiStatus();
+//                }
+//            }
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
     }
 
@@ -435,7 +442,7 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
                         binding.monthTitle.setText(monthDataModelList.get(position).getMonth());
                        // checkCallApiStatus();
                         getPassport();
-                        checkCallApiStatus();
+                        checkCallApiStatus("");
 
                     }
                 }
@@ -481,13 +488,13 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
     }
 
 
-    private void checkCallApiStatus() {
-       // if (spinnerSubject != null && !TextUtil.isEmpty(spinnerSubject.getMonth()) && spinnerMonth != null && !TextUtil.isEmpty(spinnerMonth.getMonth())) {
-            callTransportApi();
-      //  }
+    private void checkCallApiStatus(String topicname) {
+        // if (spinnerSubject != null && !TextUtil.isEmpty(spinnerSubject.getMonth()) && spinnerMonth != null && !TextUtil.isEmpty(spinnerMonth.getMonth())) {
+        callTransportApi(topicname);
+        //  }
     }
 
-    private void callTransportApi() {
+    private void callTransportApi(String topicname) {
         details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
         ProgressDialog progress = new ProgressDialog(getActivity());
         progress.setTitle(details.getProcessing());
@@ -501,7 +508,7 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
         }
         String isall = "0";
         if (binding.subjectTitle.getText().toString().equals("All")){
-       // if (!TextUtil.isEmpty(spinnerSubject.getMonth()) & spinnerSubject.getMonth().equalsIgnoreCase("All")) {
+            // if (!TextUtil.isEmpty(spinnerSubject.getMonth()) & spinnerSubject.getMonth().equalsIgnoreCase("All")) {
             isall = "1";
         }
         else{
@@ -516,10 +523,18 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
         passportReqModel.setMonth(month);
         String subject = binding.subjectTitle.getText().toString();
         passportReqModel.setSubject(subject);    //spinnerSubject.getMonth()
-       // passportReqModel.setSubject(spinnerSubject.getMonth());
+        // passportReqModel.setSubject(spinnerSubject.getMonth());
 
         passportReqModel.setIsAll(isall);
         passportReqModel.setUserPreferedLanguageId(Integer.parseInt(prefModel.getUserLanguageId()));
+        //   String topicname = binding.topicTitle.getText().toString();
+        if (topicname.equals("All")){
+            passportReqModel.setTopic_name("");
+        }
+        else{
+            passportReqModel.setTopic_name(topicname);
+        }
+
         // passportReqModel.setIsAll();
         viewModel.getPassportInternetCheck(passportReqModel);
         progress.cancel();
@@ -597,7 +612,7 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
                 binding.errorLayout.btRetry.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        checkCallApiStatus();
+                        checkCallApiStatus("");
                     }
                 });
                 binding.errorLayout.errorIcon.setVisibility(View.GONE);
@@ -614,7 +629,6 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
         if (monthnum < 10) {
             monNum = "0" + monthnum;
         }
-
         String month = "" + spinnerMonth.getYear() + monNum;
         String suserid = AuroAppPref.INSTANCE.getModelInstance().getUserId();
         AppLogger.e("callTransportApi-", month);
@@ -630,8 +644,6 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
                     public void onResponse(Call<PassportQuizMonthModel> call, Response<PassportQuizMonthModel> response)
                     {
                         try {
-
-
                             if (response.isSuccessful()) {
                                 list1.clear();
                                 demoList.clear();
@@ -644,14 +656,11 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
 
                                 }
 
-
-                                Log.d(TAG, "onResponse: ListCount" + list1.size());
                                 //       SubjectQuizSpinnerAdapter adapter = new SubjectQuizSpinnerAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, list1);
 
                                 ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, demoList);
 
                                 binding.subjectSpinner.setAdapter(adapter);
-
 
                                 binding.subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                                     @Override
@@ -659,10 +668,20 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
                                         // binding.subjectSpinner.performClick();
                                         binding.subjectTitle.setText(demoList.get(position));
                                         binding.subjectTitle.setTextColor(Color.WHITE);
+                                        String subjectname = list1.get(position).getSubject();
                                         ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
 
                                         //   Toast.makeText(getActivity(), demoList.get(position), Toast.LENGTH_SHORT).show();
-                                        checkCallApiStatus();
+
+                                        if (subjectname.equals("All")){
+                                            checkCallApiStatus("");
+                                            getTopics();
+                                        }
+                                        else{
+                                            checkCallApiStatus("");
+                                            getTopics();
+                                        }
+
                                     }
 
                                     @Override
@@ -681,6 +700,91 @@ public class TransactionsFragment extends BaseFragment implements View.OnClickLi
 
                     @Override
                     public void onFailure(Call<PassportQuizMonthModel> call, Throwable t)
+                    {
+                        Log.d(TAG, "onFailure: "+t.getMessage());
+                    }
+                });
+    }
+
+    private void getTopics()
+    {
+        int monthnum = spinnerMonth.getMonthNumber();
+        String monNum = "" + monthnum;
+        if (monthnum < 10) {
+            monNum = "0" + monthnum;
+        }
+
+        String month = "" + spinnerMonth.getYear() + monNum;
+        String langid = AuroAppPref.INSTANCE.getModelInstance().getUserLanguageId();
+        String subjecttext = binding.subjectTitle.getText().toString();
+        AppLogger.e("callTransportApi-", month);
+        HashMap<String,String> map_data = new HashMap<>();
+        map_data.put("month",month);
+        map_data.put("grade","");
+        map_data.put("subject",subjecttext);
+        map_data.put("user_prefered_language_id",langid);
+
+        RemoteApi.Companion.invoke().getQuizTopic(map_data)
+                .enqueue(new Callback<PassportQuizTopicModel>()
+                {
+                    @Override
+                    public void onResponse(Call<PassportQuizTopicModel> call, Response<PassportQuizTopicModel> response)
+                    {
+                        try {
+                            if (response.isSuccessful()) {
+                                list2.clear();
+                                demoList2.clear();
+                                //listsubject = response.body().getPassportSubjectModelList();
+                                for (int i = 0; i < response.body().getPassportSubjectModelList().size(); i++) {
+                                    list2.add(response.body().getPassportSubjectModelList().get(i));
+                                    demoList2.add(response.body().getPassportSubjectModelList().get(i).getQuiz_name());
+                                    // Toast.makeText(getActivity(), list1.get(i).getSubject(), Toast.LENGTH_SHORT).show();
+                                    //  callTransportApi();
+
+                                }
+
+
+                                Log.d(TAG, "onResponse: ListCount" + list1.size());
+                                //       SubjectQuizSpinnerAdapter adapter = new SubjectQuizSpinnerAdapter(getActivity(), android.R.layout.simple_dropdown_item_1line, list1);
+
+                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, demoList2);
+                                binding.topicSpinner.setAdapter(adapter);
+
+
+                                binding.topicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                                    @Override
+                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                                        binding.topicTitle.setText(demoList2.get(position));
+                                        binding.topicTitle.setTextColor(Color.WHITE);
+                                        String topicname = binding.topicTitle.getText().toString();
+                                        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
+                                        if (topicname.equals("All")){
+                                            checkCallApiStatus("");
+                                        }
+                                        else{
+                                            checkCallApiStatus(topicname);
+                                        }
+
+                                        //   Toast.makeText(getActivity(), demoList.get(position), Toast.LENGTH_SHORT).show();
+
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected(AdapterView<?> parent) {
+                                        binding.topicSpinner.performClick();
+                                    }
+                                });
+
+                            } else {
+                                Log.d(TAG, "onResponser: " + response.message().toString());
+                            }
+                        } catch (Exception e) {
+                            Toast.makeText(getActivity(), "Internet connection", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PassportQuizTopicModel> call, Throwable t)
                     {
                         Log.d(TAG, "onFailure: "+t.getMessage());
                     }

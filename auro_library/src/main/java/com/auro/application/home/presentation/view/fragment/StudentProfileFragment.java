@@ -1,8 +1,10 @@
 package com.auro.application.home.presentation.view.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -13,6 +15,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,6 +64,7 @@ import com.auro.application.home.data.model.FetchStudentPrefReqModel;
 import com.auro.application.home.data.model.GenderData;
 import com.auro.application.home.data.model.GradeData;
 import com.auro.application.home.data.model.GradeDataModel;
+import com.auro.application.home.data.model.LanguageMasterDynamic;
 import com.auro.application.home.data.model.PrivateTutionData;
 import com.auro.application.home.data.model.SchoolData;
 import com.auro.application.home.data.model.SchoolLangData;
@@ -309,7 +313,12 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         AppStringDynamic.setStudentProfilePageStrings(binding);
 
 
-
+        binding.txtlogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openLogoutDialog();
+            }
+        });
 
         binding.etstate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -382,6 +391,50 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
     }
 
+    private void openLogoutDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        String yes = this.getString(R.string.yes);
+        String no = this.getString(R.string.no);
+        builder.setMessage(getString(R.string.sure_to_logout));
+        try {
+            LanguageMasterDynamic model = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic();
+            Details details = model.getDetails();
+            if (model != null) {
+                yes = details.getYes();
+                no = details.getNo();
+                builder.setMessage(details.getSureToLogout());
+            }
+        } catch (Exception e) {
+            AppLogger.e(TAG, e.getMessage());
+        }
+        builder.setPositiveButton(Html.fromHtml("<font color='#00A1DB'>" + yes + "</font>"), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+
+                logout();
+            }
+        });
+
+        builder.setNegativeButton(Html.fromHtml("<font color='#00A1DB'>" + no + "</font>"), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+    private void logout() {
+        getActivity().finish();
+        SharedPreferences.Editor editor1 = getActivity().getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
+        editor1.putString("statustoclose", "true");
+        editor1.apply();
+
+
+
+    }
     private void checkForAddStudentVisibility() {
 
         if (studentKycStatusResModel != null && studentKycStatusResModel.getKycStatus().equalsIgnoreCase(AppConstant.DocumentType.APPROVE)) {

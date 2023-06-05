@@ -5,6 +5,8 @@ import com.auro.application.core.common.ResponseApi
 import com.auro.application.core.common.ResponseStatus
 import com.auro.application.core.network.ErrorResponseModel
 import com.auro.application.core.network.URLConstant
+import com.auro.application.home.data.FaqCategoryDataModel
+import com.auro.application.home.data.FaqQuestionDataModel
 import com.auro.application.home.data.model.*
 import com.auro.application.home.data.model.passportmodels.PassportMonthModel
 import com.auro.application.home.data.model.passportmodels.PassportQuizMonthModel
@@ -78,6 +80,11 @@ interface RemoteApi
 
     @POST("show_pending_refferals")
     public fun getPendingRefferal(@Body params:HashMap<String,String>):Call<ReferralPopUpDataModel>
+
+    @POST("FaqCategoryByLanguageId")
+    public fun getAllFaqCategory(@Body params:HashMap<String,String>):Call<FaqCategoryDataModel>
+    @POST("FaqQuestionAnswerByLanguageId")
+    public fun getAllFaqQuestion(@Body params:HashMap<String,String>):Call<FaqQuestionDataModel>
 
     @POST("check_username")
     public fun checkexist(@Body params:HashMap<String,String>):Call<ParentProfileDataModel>

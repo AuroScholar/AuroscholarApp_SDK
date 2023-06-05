@@ -697,7 +697,6 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
         });
     }
 
-
     private void handleProgress(int status, String msg) {
         switch (status) {
             case 0:

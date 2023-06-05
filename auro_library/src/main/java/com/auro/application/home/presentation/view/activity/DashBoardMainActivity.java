@@ -75,6 +75,7 @@ import com.auro.application.home.data.model.response.VerifyOtpResModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
 import com.auro.application.home.presentation.view.fragment.BottomSheetUsersDialog;
 import com.auro.application.home.presentation.view.fragment.CertificateFragment;
+import com.auro.application.home.presentation.view.fragment.FAQFragment;
 import com.auro.application.home.presentation.view.fragment.FriendsLeaderBoardListFragment;
 import com.auro.application.home.presentation.view.fragment.GradeChangeFragment;
 import com.auro.application.home.presentation.view.fragment.KYCFragment;
@@ -171,6 +172,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     public static final int LEADERBOARD_FRAGMENT = 12;
     public static final int PAYMENT_FRAGMENT = 13;
     public static final int STUDENT_PROFILE_FRAGMENT = 14;
+    public static final int FAQ_FRAGMENT = 22;
     public static final int PARTNERS_FRAGMENT = 15;
     public static final int GRADE_CHANGE_FRAGMENT = 16;
     public static final int SEND_MONEY_FRAGMENT = 17;
@@ -721,8 +723,17 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             selectNavigationMenu(1);
             handlePartnertabClick();
             funnelPartnerApp();
-        } else if (itemId == R.id.item_logout) {
-            openLogoutDialog();
+        }
+        else if (itemId == R.id.item_logout) {
+
+            SharedPreferences mySPrefs = getSharedPreferences("My_Pref", MODE_PRIVATE);
+            SharedPreferences.Editor editor = mySPrefs.edit();
+            editor.remove("viewall_finalcatlistid");
+            editor.apply();
+            selectMoreNavigationMenu(0);
+            openFragment(new FAQFragment());
+
+          //  openLogoutDialog();
         } else if (itemId == R.id.item_aurofriend) {
             isBackNormal = false;
             funnelStudentleaderBoardScreen();
@@ -1269,8 +1280,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     }
 
-    private void
-    openLogoutDialog() {
+    private void openLogoutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String yes = this.getString(R.string.yes);
         String no = this.getString(R.string.no);
@@ -1653,7 +1663,9 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                             menuDashboard.findItem(R.id.item_more).setTitle(genderList.get(4).getTranslatedName());
 
                             Menu backMenuDashboard = binding.naviagtionContent.bottomSecondnavigation.getMenu();
-                            backMenuDashboard.findItem(R.id.item_logout).setTitle("Logout");
+                           // backMenuDashboard.findItem(R.id.item_logout).setTitle("Logout");
+                            backMenuDashboard.findItem(R.id.item_logout).setTitle(genderList.get(5).getTranslatedName());
+
                             backMenuDashboard.findItem(R.id.item_aurofriend).setTitle(genderList.get(6).getTranslatedName());
                             backMenuDashboard.findItem(R.id.item_kyc).setTitle(genderList.get(7).getTranslatedName());
                             backMenuDashboard.findItem(R.id.item_back).setTitle(genderList.get(9).getTranslatedName());

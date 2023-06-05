@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:id="@+id/bottom_sheet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:fitsSystemWindows="true"
+        android:orientation="vertical"
+        app:behavior_hideable="false"
+        app:behavior_peekHeight="@dimen/_50sdp"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent">
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/_25sdp"
+                android:background="@drawable/student_round_bottom"
+                android:orientation="vertical">
+                <ScrollView
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent">
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:id="@+id/layout_header"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="18sp"
+                            android:orientation="vertical">
+
+
+                            <TextView
+                                android:id="@+id/txtcategory"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:text="Question Categories"
+                                android:textColor="@color/black"
+                                android:textSize="16sp"></TextView>
+                            <TextView
+                                android:id="@+id/txtclearall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentRight="true"
+                                android:text="Clear all"
+                                android:textColor="#12AFFF"
+                                android:textSize="16sp"></TextView>
+
+                        </RelativeLayout>
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/recycler_category"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_below="@+id/layout_header"
+                            android:layout_marginStart="@dimen/_10ssp"
+                            android:layout_marginEnd="@dimen/_10ssp"
+                            android:layout_marginBottom="@dimen/_10ssp" />
+
+                        <com.auro.application.core.util.uiwidget.RPTextView
+                            android:id="@+id/btnapply"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/recycler_category"
+                            android:layout_marginStart="@dimen/_10sdp"
+                            android:layout_marginTop="@dimen/_10sdp"
+                            android:layout_marginEnd="@dimen/_10sdp"
+                            android:layout_marginBottom="@dimen/_10sdp"
+                            android:background="@drawable/button_submit"
+                            android:gravity="center"
+                            android:padding="@dimen/_10sdp"
+                            android:text="Apply"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/_14sdp"
+                            android:visibility="visible"
+                            app:Font="ArticulatCF-Regular.otf" />
+
+
+                    </RelativeLayout>
+                </ScrollView>
+            </RelativeLayout>
+        </androidx.core.widget.NestedScrollView>
+
+    </LinearLayout>
+</layout>
