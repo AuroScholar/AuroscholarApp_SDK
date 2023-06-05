@@ -8,32 +8,37 @@
         android:id="@+id/item_home"
         android:enabled="true"
         android:icon="@drawable/ic_home_ds"
-        android:title="@string/nav_home"
+        android:title=""
         app:showAsAction="never" />
+    <!--    @string/nav_home-->
 
     <item
         android:id="@+id/item_partner"
         android:enabled="true"
-        android:title="@string/certificatesmenuauro"
+        android:title=""
         android:icon="@drawable/ic_partner_ds"
         app:showAsAction="never" />
+    <!--    @string/certificatesmenuauro-->
     <item
         android:id="@+id/item_profile"
         android:enabled="true"
         android:icon="@drawable/ic_leaderboard_ds"
-        android:title="@string/my_profile"
+        android:title=""
         app:showAsAction="never" />
+    <!--    @string/my_profile-->
     <item
         android:id="@+id/item_passport"
         android:enabled="true"
-        android:icon="@drawable/ic_passport_ds"
-        android:title="@string/nav_passport"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_passport_student"
+        android:title=""
+        app:showAsAction="never"/>
+    <!--    @string/nav_passport-->
 
     <item
         android:id="@+id/item_more"
         android:enabled="true"
         android:icon="@drawable/ic_more_ds"
-        android:title="@string/more"
+        android:title=""
         app:showAsAction="never" />
+    <!--    @string/more-->
 </menu>

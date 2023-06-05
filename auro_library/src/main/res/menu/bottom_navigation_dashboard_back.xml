@@ -6,32 +6,37 @@
         android:id="@+id/item_logout"
         android:enabled="true"
         android:icon="@drawable/ic_faq_name"
-        android:title="FAQ"
+        android:title=""
         app:showAsAction="never" />
+    <!--    @string/logout-->
 
     <item
         android:id="@+id/item_aurofriend"
         android:enabled="true"
-        android:title="@string/nav_auro_friends"
+        android:title=""
         android:icon="@drawable/ic_auro"
         app:showAsAction="never" />
+    <!--    @string/nav_auro_friends-->
     <item
         android:id="@+id/item_kyc"
         android:enabled="true"
         android:icon="@drawable/ic_kyc_nav"
-        android:title="@string/nav_kyc"
+        android:title=""
         app:showAsAction="never" />
+    <!--    @string/nav_kyc-->
     <item
         android:id="@+id/item_privacy_policy"
         android:enabled="true"
         android:icon="@drawable/ic_privacy_policy"
-        android:title="@string/privacy_policy_auro"
+        android:title=""
         app:showAsAction="never" />
+    <!--    @string/privacy_policy_auro-->
 
     <item
         android:id="@+id/item_back"
         android:enabled="true"
         android:icon="@drawable/ic_back"
-        android:title="@string/nave_back"
+        android:title=""
         app:showAsAction="never" />
+    <!--    @string/nave_back-->
 </menu>
