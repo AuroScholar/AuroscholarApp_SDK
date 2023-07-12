@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+
 import com.auro.application.R;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.common.SdkCallBack;
@@ -51,14 +52,10 @@ import retrofit2.Response;
 
 public class SDKActivity  extends AppCompatActivity {
     TextView bt_sdk;
-    SDKDataModel checkUserResModel;
     EditText mobile_number,partner_source,partner_unique_id,partner_api_key,gradeid;
-    List<SDKChildModel> userDetails = new ArrayList<>();
-    List<SDKChildModel> userDetailsNew = new ArrayList<>();
     LanguageMasterDynamic language;
     LanguageListResModel languageListResModel;
     Details languagedetail;
-    String errormismatch = "";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,9 +71,6 @@ public class SDKActivity  extends AppCompatActivity {
         partner_source.setText("VidyaSaarthi_ANDROID");
         partner_api_key.setText("88c79e7ba48457f1557600c6084ef25c5052ede9a5e989fbf4fb1a87c7ede19e");
         DaggerWrapper.getComponent(this).doInjection(this);
-
-
-
 
         bt_sdk.setOnClickListener(new View.OnClickListener() {
             @Override

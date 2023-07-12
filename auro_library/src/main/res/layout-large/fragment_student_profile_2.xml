@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:bind="http://schemas.android.com/tools">
     <data>
-
         <variable
             name="quizViewModel"
             type="com.auro.application.home.presentation.viewmodel.QuizViewModel" />
@@ -75,10 +74,10 @@
                         android:id="@+id/language_layout"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/_30sdp"
-                        android:layout_marginRight="@dimen/_20sdp"
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_marginLeft="@dimen/_10sdp"
                         android:orientation="horizontal"
-                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/imageView5"
                         app:layout_constraintTop_toTopOf="parent">
 
 
@@ -108,6 +107,19 @@
 
 
                     </LinearLayout>
+                    <TextView
+                        android:id="@+id/txtlogout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="LogOut"
+                        android:textSize="@dimen/_16sdp"
+                        android:textColor="@color/auro_chat_blue"
+                        android:drawableTint="@color/auro_chat_blue"
+                        android:padding="@dimen/_20sdp"
+                        android:drawablePadding="@dimen/_5ssp"
+                        android:drawableRight="@drawable/ic_logout"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintTop_toTopOf="parent"></TextView>
 
 
                 </androidx.constraintlayout.widget.ConstraintLayout>

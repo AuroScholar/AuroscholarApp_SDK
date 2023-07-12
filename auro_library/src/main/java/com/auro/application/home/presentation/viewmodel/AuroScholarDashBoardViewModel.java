@@ -1,5 +1,4 @@
 package com.auro.application.home.presentation.viewmodel;
-
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -46,17 +45,12 @@ import static com.auro.application.core.common.Status.GET_SLABS_API;
 import static com.auro.application.core.common.Status.SEND_REFERRAL_API;
 
 import android.content.Context;
-
 public class AuroScholarDashBoardViewModel extends ViewModel {
-
-
     public HomeUseCase homeUseCase;
     public HomeDbUseCase homeDbUseCase;
     HomeRemoteUseCase homeRemoteUseCase;
     CompositeDisposable compositeDisposable;
     public MutableLiveData<ResponseApi> serviceLiveData = new MutableLiveData<>();
-    Context context;
-
     public AuroScholarDashBoardViewModel(HomeUseCase homeUseCase, HomeDbUseCase homeDbUseCase, HomeRemoteUseCase homeRemoteUseCase) {
         this.homeUseCase = homeUseCase;
         this.homeDbUseCase = homeDbUseCase;
@@ -359,7 +353,6 @@ public class AuroScholarDashBoardViewModel extends ViewModel {
         AppLogger.v("QuizNew", "Dashboard step 5");
         dashBoardApi(auroScholarDataModel);
     }
-
     private void dashBoardApi(AuroScholarDataModel model) {
         getCompositeDisposable()
                 .add(homeRemoteUseCase.getDashboardData(model)

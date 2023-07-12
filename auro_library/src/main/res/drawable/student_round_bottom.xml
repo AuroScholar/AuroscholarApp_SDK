@@ -7,15 +7,15 @@
                 android:color="@color/white"/>
 
             <stroke
-                android:color="@color/ash_grey"
+                android:color="@color/white"
                 android:width="@dimen/_1sdp"
                 />
 
             <corners
 
 
-                android:topLeftRadius="@dimen/_25sdp"
-                android:topRightRadius="@dimen/_25sdp" />
+                android:topLeftRadius="@dimen/_28sdp"
+                android:topRightRadius="@dimen/_28sdp" />
         </shape>
     </item>
 </selector>

@@ -5,13 +5,17 @@ import com.auro.application.core.common.ResponseApi
 import com.auro.application.core.common.ResponseStatus
 import com.auro.application.core.network.ErrorResponseModel
 import com.auro.application.core.network.URLConstant
+import com.auro.application.home.data.FaqCategoryDataModel
+import com.auro.application.home.data.FaqQuestionDataModel
 import com.auro.application.home.data.model.*
 import com.auro.application.home.data.model.passportmodels.PassportMonthModel
 import com.auro.application.home.data.model.passportmodels.PassportQuizMonthModel
+import com.auro.application.home.data.model.passportmodels.PassportQuizTopicModel
 import com.auro.application.home.data.model.response.*
 import com.auro.application.home.data.model.signupmodel.request.SetUsernamePinReqModel
 import com.auro.application.home.data.model.signupmodel.response.RegisterApiResModel
 import com.auro.application.home.data.model.signupmodel.response.SetUsernamePinResModel
+import com.auro.application.teacher.data.model.response.TeacherStudentPassportDetailResModel
 import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -46,8 +50,10 @@ interface RemoteApi
 
     @POST("get_quiz_month_subjects")
     public fun getQuizMonthSubject(@Body params:HashMap<String,String>):Call<PassportQuizMonthModel>
-
-
+    @POST("get_topic_list")
+    public fun getQuizTopic(@Body params:HashMap<String,String>):Call<PassportQuizTopicModel>
+    @POST("get_quiz_months")
+    public fun getStudentPassportMonth(@Body params:HashMap<String,String>):Call<TeacherStudentPassportDetailResModel>
     @Multipart
     @POST("update_student_photo")
     public fun update_student_photo(
@@ -74,6 +80,11 @@ interface RemoteApi
 
     @POST("show_pending_refferals")
     public fun getPendingRefferal(@Body params:HashMap<String,String>):Call<ReferralPopUpDataModel>
+
+    @POST("FaqCategoryByLanguageId")
+    public fun getAllFaqCategory(@Body params:HashMap<String,String>):Call<FaqCategoryDataModel>
+    @POST("FaqQuestionAnswerByLanguageId")
+    public fun getAllFaqQuestion(@Body params:HashMap<String,String>):Call<FaqQuestionDataModel>
 
     @POST("check_username")
     public fun checkexist(@Body params:HashMap<String,String>):Call<ParentProfileDataModel>
