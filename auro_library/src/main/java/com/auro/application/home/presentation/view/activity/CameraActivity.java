@@ -122,8 +122,8 @@ public class CameraActivity extends BaseActivity implements View.OnClickListener
                     binding.stillshot.setEnabled(true);
                     binding.captureButtonSecondaryContainer.animate().alpha(1F).start();
                 } else {
-                    binding.captureButtonSecondaryContainer.animate().alpha(0F).start();
-                    binding.stillshot.setEnabled(false);
+                    binding.captureButtonSecondaryContainer.animate().alpha(1F).start();
+                    binding.stillshot.setEnabled(true);
                 }
                 checkValueEverySecond();
             }

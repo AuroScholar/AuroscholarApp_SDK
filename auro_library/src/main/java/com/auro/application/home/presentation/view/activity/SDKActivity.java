@@ -66,10 +66,10 @@ public class SDKActivity  extends AppCompatActivity {
         partner_unique_id=findViewById(R.id.partner_unique_id);
         partner_api_key=findViewById(R.id.partner_api_key);
         gradeid=findViewById(R.id.grade);
-        mobile_number.setText("7984268169");
-        partner_unique_id.setText("894567890523");
-        partner_source.setText("VidyaSaarthi_ANDROID");
-        partner_api_key.setText("88c79e7ba48457f1557600c6084ef25c5052ede9a5e989fbf4fb1a87c7ede19e");
+        mobile_number.setText("9874561230");
+        partner_unique_id.setText("157488");
+        partner_source.setText("Numismatics_WEB");
+        partner_api_key.setText("8daac713b6335ab1bdf929fe02904664300f4881e9b211543686ebde2aa41ec9");
         DaggerWrapper.getComponent(this).doInjection(this);
 
         bt_sdk.setOnClickListener(new View.OnClickListener() {

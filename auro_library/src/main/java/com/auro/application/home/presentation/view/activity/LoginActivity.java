@@ -895,8 +895,9 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     void openBottomSheetDialog() {
-        BottomSheetUsersDialog bottomSheet = new BottomSheetUsersDialog();
-        bottomSheet.show(getSupportFragmentManager(),
-                "ModalBottomSheet");
+        startActivity(new Intent(this,ChildAccountActivity.class));
+//        BottomSheetUsersDialog bottomSheet = new BottomSheetUsersDialog();
+//        bottomSheet.show(getSupportFragmentManager(),
+//                "ModalBottomSheet");
     }
 }

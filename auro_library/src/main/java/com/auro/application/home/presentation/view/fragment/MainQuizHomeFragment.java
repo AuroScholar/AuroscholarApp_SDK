@@ -754,8 +754,6 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
                                 commonCallBackListner.commonEventListner(AppUtil.getCommonClickModel(0, LISTNER_FAIL, (String) responseApi.data));
                             }
                         }
-
-
                     }
                     break;
 
@@ -825,7 +823,6 @@ public class MainQuizHomeFragment extends BaseFragment implements CommonCallBack
             binding.shimmerViewQuiz.setVisibility(View.GONE);
             binding.shimmerViewQuiz.stopShimmer();
             binding.imageChat.setVisibility(View.VISIBLE);
-
 
 //            binding.errorConstraint.setVisibility(View.GONE);
 //            binding.mainParentLayout.setVisibility(View.GONE);

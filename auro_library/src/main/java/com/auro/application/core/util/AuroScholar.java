@@ -27,6 +27,7 @@ import com.auro.application.home.data.model.LanguageMasterDynamic;
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.data.model.response.LanguageListResModel;
 import com.auro.application.home.presentation.view.activity.AppLanguageActivity;
+import com.auro.application.home.presentation.view.activity.ChildAccountActivity;
 import com.auro.application.home.presentation.view.activity.ChooseGradeActivity;
 import com.auro.application.home.presentation.view.activity.CompleteStudentProfileWithoutPin;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
@@ -168,7 +169,9 @@ public class AuroScholar {
                                     else{
 
                                         progress.dismiss();
-                                        openBottomSheetDialog();
+                                        Intent intent = new Intent(auroScholarDataModel.getActivity(), ChildAccountActivity.class);
+                                        auroScholarDataModel.getActivity().startActivity(intent);
+                                      //  openBottomSheetDialog();
                                     }
                                 }
                                 else {
