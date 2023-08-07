@@ -42,8 +42,8 @@ public class AuroApp extends Application {
                 return;
             }
         });
-      // context = this;
-       AuroApp.context = this;
+       context = this;
+      // AuroApp.context = this;
         appComponent = DaggerAppComponent
                 .builder()
                 .appModule(new AppModule(this))
@@ -58,12 +58,12 @@ public class AuroApp extends Application {
     public static void initializeWithDefaults(Application mApplication){
         mcontext = mApplication;
     }
-//    public static AuroApp getAppContext() {
-//        return context;
-//    }
-    public static Application getAppContext() {
-        return mcontext;
+    public static AuroApp getAppContext() {
+        return context;
     }
+//    public static Application getAppContext() {
+//        return mcontext;
+//    }
     @Override
     protected void attachBaseContext(Context context) {
         super.attachBaseContext(context);

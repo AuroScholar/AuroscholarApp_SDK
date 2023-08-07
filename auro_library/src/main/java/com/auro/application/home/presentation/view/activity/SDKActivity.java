@@ -67,32 +67,31 @@ public class SDKActivity  extends AppCompatActivity {
         partner_api_key=findViewById(R.id.partner_api_key);
         gradeid=findViewById(R.id.grade);
         mobile_number.setText("9874561230");
-        partner_unique_id.setText("157488");
+        partner_unique_id.setText("1574885835783857");
         partner_source.setText("Numismatics_WEB");
         partner_api_key.setText("8daac713b6335ab1bdf929fe02904664300f4881e9b211543686ebde2aa41ec9");
         DaggerWrapper.getComponent(this).doInjection(this);
 
-        bt_sdk.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+//        bt_sdk.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
 
-                String mobno = mobile_number.getText().toString();
-                    String puniqueid = partner_unique_id.getText().toString();
-                    String psource = partner_source.getText().toString();
-                    String apikey = partner_api_key.getText().toString();
-                    String grade = gradeid.getText().toString();
+//                String mobno = mobile_number.getText().toString();
+//                    String puniqueid = partner_unique_id.getText().toString();
+//                    String psource = partner_source.getText().toString();
+//                    String apikey = partner_api_key.getText().toString();
+//                    String grade = gradeid.getText().toString();
                     AuroScholarInputModel inputModel = new AuroScholarInputModel();
-                    inputModel.setMobileNumber(mobno);
-                    inputModel.setStudentClass(String.valueOf(grade));
-                    inputModel.setPartner_unique_id(puniqueid);
-                    inputModel.setPartnerSource(psource);
-                    inputModel.setPartner_api_key(apikey);
-                    inputModel.setActivity((Activity) SDKActivity.this);
-
+                    inputModel.getMobileNumber();
+                    inputModel.getStudentClass();
+                    inputModel.getPartner_unique_id();
+                    inputModel.getPartnerSource();
+                    inputModel.getPartner_api_key();
+                    inputModel.getActivity();
                     AuroScholar.startAuroSDK(inputModel);
-
-            }
-        });
+//
+//            }
+//        });
     }
 
 

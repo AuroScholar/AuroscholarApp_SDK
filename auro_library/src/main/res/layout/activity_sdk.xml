@@ -6,17 +6,21 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/_10sdp"
-        android:gravity="center"
+    android:background="@color/auro_blue"
+        android:gravity="top|center"
         android:padding="@dimen/_10sdp"
         android:orientation="vertical">
-
+<ImageView
+    android:layout_width="@dimen/_160sdp"
+    android:layout_height="@dimen/_160sdp"
+    android:src="@drawable/auro_logo"></ImageView>
 
         <EditText
             android:id="@+id/mobile_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16dp"
+            android:visibility="gone"
             android:inputType="phone"
             android:maxLength="10"
             android:hint="Please Enter Your Mobile Number" />
@@ -26,6 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16dp"
+            android:visibility="gone"
             android:layout_marginTop="@dimen/_14sdp"
             android:hint="Please Enter Partner Source"
             android:layout_below="@+id/mobile_number"/>
@@ -35,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16dp"
+            android:visibility="gone"
             android:layout_marginTop="@dimen/_14sdp"
             android:hint="Please Enter Partner Unique Id"
             android:layout_below="@+id/partner_source"/>
@@ -43,6 +49,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16dp"
+            android:visibility="gone"
             android:layout_marginTop="@dimen/_14sdp"
             android:hint="Please Enter Partner API Key"
             android:layout_below="@+id/partner_unique_id"/>
@@ -68,6 +75,7 @@
          android:gravity="center"
             android:textSize="@dimen/_14sdp"
             android:padding="10dp"
+            android:visibility="gone"
             android:layout_below="@+id/grade"
             android:text="LOGIN"
             android:textColor="@color/white" />
