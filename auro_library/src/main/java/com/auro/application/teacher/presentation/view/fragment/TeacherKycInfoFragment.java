@@ -20,7 +20,8 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 
 import com.auro.application.R;
-import com.auro.application.home.data.base_component.BaseFragment;
+import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.base_component.BaseFragment;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
@@ -34,12 +35,18 @@ import com.auro.application.home.data.model.FetchStudentPrefReqModel;
 import com.auro.application.home.data.model.KYCDocumentDatamodel;
 import com.auro.application.home.presentation.view.activity.HomeActivity;
 import com.auro.application.kyc.presentation.view.fragment.UploadDocumentFragment;
+import com.auro.application.teacher.data.model.response.MyClassRoomResModel;
 import com.auro.application.teacher.data.model.response.MyProfileResModel;
 import com.auro.application.teacher.data.model.response.TeacherKycStatusResModel;
 import com.auro.application.teacher.presentation.view.adapter.TeacherKycDocumentAdapter;
 import com.auro.application.teacher.presentation.viewmodel.TeacherKycViewModel;
 import com.auro.application.util.AppLogger;
+import com.auro.application.util.AppUtil;
+import com.auro.application.util.ImageUtil;
+import com.auro.application.util.TextUtil;
 import com.auro.application.util.ViewUtil;
+import com.auro.application.util.network.ProgressRequestBody;
+import com.auro.application.util.strings.AppStringDynamic;
 import com.auro.application.util.strings.AppStringTeacherDynamic;
 
 import java.util.ArrayList;

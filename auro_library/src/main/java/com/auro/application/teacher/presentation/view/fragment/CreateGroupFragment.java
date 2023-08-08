@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.home.data.base_component.BaseFragment;
+import com.auro.application.core.application.base_component.BaseFragment;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;
@@ -35,6 +35,7 @@ import com.auro.application.util.AppLogger;
 import com.auro.application.util.TextUtil;
 import com.auro.application.util.ViewUtil;
 import com.auro.application.util.strings.AppStringTeacherDynamic;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.home.data.base_component.BaseFragment;
+import com.auro.application.core.application.base_component.BaseFragment;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
@@ -22,6 +22,7 @@ import com.auro.application.core.common.CommonDataModel;
 import com.auro.application.core.common.Status;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.databinding.FragmentWalletInfoDetailBinding;
+import com.auro.application.home.data.model.DashboardResModel;
 import com.auro.application.home.data.model.Details;
 import com.auro.application.home.data.model.LanguageMasterDynamic;
 import com.auro.application.home.data.model.SetPasswordReqModel;

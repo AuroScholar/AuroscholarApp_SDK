@@ -1,11 +1,14 @@
 package com.auro.application.home.presentation.view.activity;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
@@ -18,7 +21,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.home.data.base_component.BaseActivity;
+import com.auro.application.core.application.base_component.BaseActivity;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
@@ -47,6 +50,7 @@ import com.auro.application.util.ViewUtil;
 import com.auro.application.util.firebaseAnalytics.AnalyticsRegistry;
 import com.auro.application.util.strings.AppStringDynamic;
 import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 
 import org.json.JSONException;

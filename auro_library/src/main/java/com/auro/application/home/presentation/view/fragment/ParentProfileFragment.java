@@ -5,7 +5,7 @@ import static com.auro.application.core.common.Status.GENDER;
 import static com.auro.application.core.common.Status.SCHOOL;
 import static com.auro.application.core.common.Status.STATE;
 import static android.app.Activity.RESULT_OK;
-
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,7 +24,8 @@ import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.databinding.DataBindingUtil;
 
 import com.auro.application.R;
-import com.auro.application.home.data.base_component.BaseFragment;
+import com.auro.application.core.application.base_component.BaseActivity;
+import com.auro.application.core.application.base_component.BaseFragment;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;
@@ -50,8 +51,12 @@ import com.auro.application.util.AppUtil;
 import com.auro.application.util.DeviceUtil;
 import com.auro.application.util.RemoteApi;
 import com.auro.application.util.ViewUtil;
+import com.auro.application.util.permission.PermissionHandler;
+import com.auro.application.util.permission.PermissionUtil;
+import com.auro.application.util.permission.Permissions;
 import com.auro.application.util.strings.AppStringDynamic;
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.Arrays;

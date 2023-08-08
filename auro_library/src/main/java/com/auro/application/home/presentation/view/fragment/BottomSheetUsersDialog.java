@@ -1,12 +1,8 @@
 package com.auro.application.home.presentation.view.fragment;
 
 
-import static android.content.Context.MODE_PRIVATE;
-
 import android.app.FragmentManager;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,6 +48,7 @@ import retrofit2.Response;
 public class BottomSheetUsersDialog extends BottomSheetDialogFragment implements CommonCallBackListner {
     BottomStudentListBinding binding;
     SDKDataModel checkUserResModel;
+
     String auto_userid;
     static List<SDKChildModel> userDetails = new ArrayList<>();
 
@@ -59,38 +56,20 @@ public class BottomSheetUsersDialog extends BottomSheetDialogFragment implements
     public View onCreateView(LayoutInflater inflater, @Nullable
             ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = DataBindingUtil.inflate(inflater, R.layout.bottom_student_list, container, false);
-       binding.imgclose.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View v) {
-               dismiss();
-               PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-               prefModel.setLogin(false);
-                AuroAppPref.INSTANCE.clearPref();
-               SharedPreferences preferences =getActivity().getSharedPreferences("My_Pref", Context.MODE_PRIVATE);
-               SharedPreferences.Editor editor = preferences.edit();
-               editor.clear();
-               editor.apply();
-           }
-       });
-        SharedPreferences prefs = getActivity().getSharedPreferences("My_Pref", MODE_PRIVATE);
-        String statustoclose = prefs.getString("statustoclose","");
-//        if (statustoclose.equals("true")||statustoclose== "true"){
-//
-//
-//        }
-//        else {
-            checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
-            setAdapterAllListStudent(checkUserResModel.getUser_details());
-     //   }
-            binding.btnaddstudent.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    setAutoRegister();
+        checkUserResModel = AuroAppPref.INSTANCE.getModelInstance().getChildData();
+        setAdapterAllListStudent(checkUserResModel.getUser_details());
+        binding.btnaddstudent.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                BottomSheetAddUserDialog bottomSheet = new BottomSheetAddUserDialog();
+//                bottomSheet.show(getActivity().getSupportFragmentManager(),
+//                        "ModalBottomSheet");
+//                Intent i1 = new Intent(getActivity(), CompleteStudentProfileWithoutPin.class);
+//                startActivity(i1);
+                setAutoRegister();
 
-                }
-            });
-
-
+            }
+        });
         return binding.getRoot();
     }
     private void setAutoRegister()

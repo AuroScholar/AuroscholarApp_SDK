@@ -8,10 +8,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.TransactionTooLargeException;
+import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
@@ -19,8 +23,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
@@ -38,19 +45,24 @@ import androidx.exifinterface.media.ExifInterface;
 
 
 import com.auro.application.R;
-import com.auro.application.home.data.base_component.BaseActivity;
+import com.auro.application.core.application.base_component.BaseActivity;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;
 
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.databinding.ActivityRealTimeFaceDetectionBinding;
+import com.auro.application.home.presentation.view.activity.HomeActivity;
 import com.auro.application.util.AppLogger;
 
 import com.auro.application.util.alert_dialog.CustomDialogModel;
 import com.auro.application.util.alert_dialog.CustomProgressDialog;
 
+import com.google.android.gms.vision.CameraSource;
+import com.google.common.io.Files;
+
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
+import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 
 
 import java.io.ByteArrayInputStream;

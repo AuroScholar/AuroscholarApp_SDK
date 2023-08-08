@@ -5,13 +5,14 @@ apply plugin: 'maven-publish'
 
 
 android {
-    compileSdkVersion 31
+    compileSdkVersion 32
+    buildToolsVersion "29.0.3"
     ndkVersion '21.1.6352462'
 
     defaultConfig {
         applicationId "com.auroscholar.final_auroscholarapp_sdk"
         minSdkVersion 23
-        targetSdkVersion 31
+        targetSdkVersion 32
         versionCode 1
         versionName "1.0"
         multiDexEnabled true

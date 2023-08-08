@@ -1,5 +1,7 @@
 package com.auro.application.home.presentation.view.fragment;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -7,6 +9,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -14,8 +18,9 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.provider.MediaStore;
 import android.text.Editable;
-import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -26,10 +31,12 @@ import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.databinding.DataBindingUtil;
@@ -41,7 +48,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.home.data.base_component.BaseFragment;
+import com.auro.application.core.application.base_component.BaseFragment;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
@@ -49,8 +56,10 @@ import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;
 import com.auro.application.core.common.FragmentUtil;
 import com.auro.application.core.common.Status;
+import com.auro.application.core.common.ValidationModel;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
+import com.auro.application.core.util.AuroScholar;
 import com.auro.application.databinding.FragmentStudentProfile2Binding;
 import com.auro.application.home.data.model.AddNewSchoolResModel;
 import com.auro.application.home.data.model.AuroScholarInputModel;
@@ -64,23 +73,28 @@ import com.auro.application.home.data.model.FetchStudentPrefReqModel;
 import com.auro.application.home.data.model.GenderData;
 import com.auro.application.home.data.model.GradeData;
 import com.auro.application.home.data.model.GradeDataModel;
-import com.auro.application.home.data.model.LanguageMasterDynamic;
 import com.auro.application.home.data.model.PrivateTutionData;
 import com.auro.application.home.data.model.SchoolData;
+import com.auro.application.home.data.model.SchoolDataModel;
 import com.auro.application.home.data.model.SchoolLangData;
+import com.auro.application.home.data.model.SchoolMediumData;
 import com.auro.application.home.data.model.SchoolTypeData;
 import com.auro.application.home.data.model.StateData;
 import com.auro.application.home.data.model.StudentResponselDataModel;
 import com.auro.application.home.data.model.TutionData;
 import com.auro.application.home.data.model.response.CategorySubjectResModel;
+import com.auro.application.home.data.model.response.ChildDetailResModel;
 import com.auro.application.home.data.model.response.FetchStudentPrefResModel;
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
+import com.auro.application.home.data.model.response.KycDocResModel;
 import com.auro.application.home.data.model.response.StudentKycStatusResModel;
 import com.auro.application.home.data.model.response.SubjectPreferenceResModel;
 import com.auro.application.home.data.model.response.UserDetailResModel;
 import com.auro.application.home.presentation.view.activity.CameraActivity;
+import com.auro.application.home.presentation.view.activity.CompleteStudentProfileWithPinActivity;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
 import com.auro.application.home.presentation.view.activity.SetPinActivity;
+import com.auro.application.home.presentation.view.activity.StudentProfileActivity;
 import com.auro.application.home.presentation.view.adapter.GenderSpinnerAdapter;
 import com.auro.application.home.presentation.view.adapter.GradeSpinnerAdapter;
 import com.auro.application.home.presentation.view.adapter.PrivateTutionSpinnerAdapter;
@@ -94,8 +108,11 @@ import com.auro.application.home.presentation.viewmodel.StudentProfileViewModel;
 import com.auro.application.teacher.data.model.common.DistrictDataModel;
 import com.auro.application.teacher.data.model.common.StateDataModel;
 
+import com.auro.application.teacher.presentation.view.adapter.DistrictSpinnerAdapter;
+import com.auro.application.teacher.presentation.view.adapter.StateSpinnerAdapter;
 import com.auro.application.util.AppLogger;
 import com.auro.application.util.AppUtil;
+import com.auro.application.util.ConversionUtil;
 import com.auro.application.util.DeviceUtil;
 import com.auro.application.util.ImageUtil;
 import com.auro.application.util.RemoteApi;
@@ -105,13 +122,23 @@ import com.auro.application.util.alert_dialog.CustomDialogModel;
 import com.auro.application.util.alert_dialog.CustomProgressDialog;
 import com.auro.application.util.alert_dialog.LanguageChangeDialog;
 import com.auro.application.util.alert_dialog.disclaimer.AddStudentDialog;
+import com.auro.application.util.cropper.CropImages;
 import com.auro.application.util.firebaseAnalytics.AnalyticsRegistry;
 import com.auro.application.util.permission.LocationHandler;
+import com.auro.application.util.permission.LocationModel;
+import com.auro.application.util.permission.LocationUtil;
+import com.auro.application.util.permission.PermissionHandler;
+import com.auro.application.util.permission.PermissionUtil;
+import com.auro.application.util.permission.Permissions;
 import com.auro.application.util.strings.AppStringDynamic;
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
@@ -132,6 +159,7 @@ import static com.auro.application.core.common.Status.REGISTER_CALLBACK;
 import static com.auro.application.core.common.Status.SCHHOLMEDIUM;
 import static com.auro.application.core.common.Status.SCHHOLTYPE;
 import static com.auro.application.core.common.Status.SCHOOL;
+import static com.auro.application.core.common.Status.SCREEN_TOUCH;
 import static com.auro.application.core.common.Status.STATE;
 import static com.auro.application.core.common.Status.SUBJECT_PREFRENCE_LIST_API;
 import static com.auro.application.core.common.Status.TUTION;
@@ -313,12 +341,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
         AppStringDynamic.setStudentProfilePageStrings(binding);
 
 
-        binding.txtlogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openLogoutDialog();
-            }
-        });
+
 
         binding.etstate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -388,53 +411,17 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                 observeServiceResponse();
             }
         });
+        Details details1 = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
 
-    }
 
-    private void openLogoutDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        String yes = this.getString(R.string.yes);
-        String no = this.getString(R.string.no);
-        builder.setMessage(getString(R.string.sure_to_logout));
-        try {
-            LanguageMasterDynamic model = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic();
-            Details details = model.getDetails();
-            if (model != null) {
-                yes = details.getYes();
-                no = details.getNo();
-                builder.setMessage(details.getSureToLogout());
-            }
-        } catch (Exception e) {
-            AppLogger.e(TAG, e.getMessage());
-        }
-        builder.setPositiveButton(Html.fromHtml("<font color='#00A1DB'>" + yes + "</font>"), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
 
-                logout();
-            }
-        });
 
-        builder.setNegativeButton(Html.fromHtml("<font color='#00A1DB'>" + no + "</font>"), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-    private void logout() {
-        getActivity().finish();
-        SharedPreferences.Editor editor1 = getActivity().getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
-        editor1.putString("statustoclose", "true");
-        editor1.apply();
 
 
 
     }
+
     private void checkForAddStudentVisibility() {
 
         if (studentKycStatusResModel != null && studentKycStatusResModel.getKycStatus().equalsIgnoreCase(AppConstant.DocumentType.APPROVE)) {
@@ -951,8 +938,8 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
     }
     private void getKYCStatus()
     {
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String suserid =  prefModel.getUserId();
+
+        String suserid =  AuroAppPref.INSTANCE.getModelInstance().getUserId();
         HashMap<String,String> map_data = new HashMap<>();
         map_data.put("user_id",suserid);
 
@@ -1068,15 +1055,17 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                             AppLogger.v("observeServiceResponse", "UPDATE_STUDENT");
                             handleSubmitProgress(1, "");
                             if (studentProfileModel.getError()) {
+                                AppLogger.v("sendProfilepradeepApi", "UPDATE_STUDENT"+studentProfileModel.getMessage());
                                 showSnackbarError(studentProfileModel.getMessage(), Color.RED);
                             } else {
-
+                                AppLogger.v("sendProfilepradeepApi", "UPDATE_STUDENT");
                                 showSnackbarError(prefModel.getLanguageMasterDynamic().getDetails().getSuccess_fully_save() != null ? prefModel.getLanguageMasterDynamic().getDetails().getSuccess_fully_save() : AuroApp.getAppContext().getResources().getString(R.string.success_fully_save), Color.GREEN);
                             }
                             funnelProfileSubmitScreen();
 
                             callingStudentUpdateProfile();
-                        } else if (responseApi.apiTypeStatus == SUBJECT_PREFRENCE_LIST_API) {
+                        }
+                        else if (responseApi.apiTypeStatus == SUBJECT_PREFRENCE_LIST_API) {
                             SubjectPreferenceResModel subjectPreferenceResModel = (SubjectPreferenceResModel) responseApi.data;
                             if (!TextUtil.checkListIsEmpty(subjectPreferenceResModel.getSubjects())) {
                                 setSubjectListVisibility(true);
@@ -1086,14 +1075,17 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                             } else {
                                 setSubjectListVisibility(false);
                             }
-                        } else if (responseApi.apiTypeStatus == FETCH_STUDENT_PREFERENCES_API) {
+                        }
+                        else if (responseApi.apiTypeStatus == FETCH_STUDENT_PREFERENCES_API) {
                             FetchStudentPrefResModel fetchStudentPrefResModel = (FetchStudentPrefResModel) responseApi.data;
                             PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
                             prefModel.setFetchStudentPrefResModel(fetchStudentPrefResModel);
                             AuroAppPref.INSTANCE.setPref(prefModel);
                             callSubjectListPreference();
+                            // Toast.makeText(getActivity(), "FETCH_STUDENT_PREFERENCES_API", Toast.LENGTH_SHORT).show();
 
-                        } else if (responseApi.apiTypeStatus == GET_USER_PROFILE_DATA) {
+                        }
+                        else if (responseApi.apiTypeStatus == GET_USER_PROFILE_DATA) {
                             AppLogger.v("GET_USER_PROFILE_DATA callApi", firstTimeCome + "   main");
                             handleProgress(1, "");
                             getStudentUpdateProfile = (GetStudentUpdateProfile) responseApi.data;
@@ -1106,16 +1098,16 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 //                                PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
 //                                prefModel.setCheckUserResModel(checkUserResModel);
 //                                AuroAppPref.INSTANCE.setPref(prefModel);
-//                               checkForAddStudentVisibility();
+//                                checkForAddStudentVisibility();
 //                            }
 //
 //                        }
-                        else if (responseApi.apiTypeStatus == Status.STUDENT_KYC_STATUS_API) {
-                            studentKycStatusResModel = (StudentKycStatusResModel) responseApi.data;
-                            if (!studentKycStatusResModel.getError()) {
-                          //    callCheckUserApi();
-                            }
-                        }
+//                        else if (responseApi.apiTypeStatus == Status.STUDENT_KYC_STATUS_API) {
+//                            studentKycStatusResModel = (StudentKycStatusResModel) responseApi.data;
+//                            if (!studentKycStatusResModel.getError()) {
+//                               callCheckUserApi();
+//                            }
+//                        }
                     }
                     break;
 
@@ -1133,7 +1125,7 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
                 default:
                     if (isVisible()) {
-
+                        // handleProgress(1, (String) responseApi.data);
                         AppLogger.v("apiData", responseApi.data + "   pradeep");
                         handleProgress(2, (String) responseApi.data);
                         showSnackbarError(prefModel.getLanguageMasterDynamic().getDetails().getDefaultError() != null ? prefModel.getLanguageMasterDynamic().getDetails().getDefaultError() : getActivity().getString(R.string.default_error));
@@ -2001,11 +1993,10 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
     void callCheckUserApi() {
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-
         CheckUserApiReqModel checkUserApiReqModel = new CheckUserApiReqModel();
         checkUserApiReqModel.setEmailId("");
         checkUserApiReqModel.setMobileNo("");
-        checkUserApiReqModel.setUserType(String.valueOf(0));
+        checkUserApiReqModel.setUserType("0");
         checkUserApiReqModel.setUserName(prefModel.getUserMobile());
         viewModel.checkInternetForApi(Status.CHECKVALIDUSER, checkUserApiReqModel);
     }

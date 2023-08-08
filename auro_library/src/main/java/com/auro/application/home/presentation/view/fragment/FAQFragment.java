@@ -92,12 +92,12 @@ public class FAQFragment extends BaseFragment implements CommonCallBackListner {
         String search = binding.txtsearch.getText().toString();
         SharedPreferences prefs = getActivity().getSharedPreferences("My_Pref", MODE_PRIVATE);
         Set<String>  viewall_finalcatlistid = prefs.getStringSet("viewall_finalcatlistid", null);
-                                      if (viewall_finalcatlistid==null||viewall_finalcatlistid.equals("")||viewall_finalcatlistid.equals("null")||viewall_finalcatlistid.equals(null)){
-                                          getFaqQuestionList("","");
-                                      }
-                                      else{
-                                          getFaqQuestionList(search,TextUtils.join(",",viewall_finalcatlistid));
-                                      }
+        if (viewall_finalcatlistid==null||viewall_finalcatlistid.equals("")||viewall_finalcatlistid.equals("null")||viewall_finalcatlistid.equals(null)){
+            getFaqQuestionList("","");
+        }
+        else{
+            getFaqQuestionList(search,TextUtils.join(",",viewall_finalcatlistid));
+        }
 
 
         ViewUtil.setProfilePic(binding.imageView6);
@@ -160,8 +160,8 @@ public class FAQFragment extends BaseFragment implements CommonCallBackListner {
                 Set<String> viewall_finalcatlistid = prefs.getStringSet("viewall_finalcatlistid",  null);
 
 
-             //   SharedPreferences prefs = getActivity().getSharedPreferences("My_Pref", MODE_PRIVATE);
-            //    Set<String> viewall_finalcatlistid = prefs.getStringSet("viewall_finalcatlistid", new HashSet<>());
+                //   SharedPreferences prefs = getActivity().getSharedPreferences("My_Pref", MODE_PRIVATE);
+                //    Set<String> viewall_finalcatlistid = prefs.getStringSet("viewall_finalcatlistid", new HashSet<>());
                 if (viewall_finalcatlistid==null||viewall_finalcatlistid.equals("")||viewall_finalcatlistid.equals("null")||viewall_finalcatlistid.equals(null)||viewall_finalcatlistid.size()==0){
 
 
@@ -272,7 +272,7 @@ public class FAQFragment extends BaseFragment implements CommonCallBackListner {
                             }
                             else {
 
-                             //   Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                                //   Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
                             }
                         } catch (Exception e) {
                             Toast.makeText(getActivity(), "Internet connection", Toast.LENGTH_SHORT).show();

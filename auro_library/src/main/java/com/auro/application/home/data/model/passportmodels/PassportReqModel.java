@@ -28,17 +28,7 @@ public class PassportReqModel {
     @SerializedName("user_prefered_language_id")
     @Expose
     private Integer userPreferedLanguageId;
-    @SerializedName("topic_name")
-    @Expose
-    private String topic_name;
 
-    public String getTopic_name() {
-        return topic_name;
-    }
-
-    public void setTopic_name(String topic_name) {
-        this.topic_name = topic_name;
-    }
 
     public Integer getUserPreferedLanguageId() {
         return userPreferedLanguageId;

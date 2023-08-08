@@ -13,7 +13,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 
-import androidx.annotation.RequiresApi;
 import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
@@ -59,19 +58,14 @@ public class MLKitFacesAnalyzer implements ImageAnalysis.Analyzer {
         this.isRequired=isRequired;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     public void analyze(ImageProxy image, int rotationDegrees) {
         if (image == null || image.getImage() == null) {
             return;
         }
         int rotation = degreesToFirebaseRotation(rotationDegrees);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             fbImage = FirebaseVisionImage.fromMediaImage(image.getImage(), rotation);
-        }
-        else{
-            fbImage = FirebaseVisionImage.fromMediaImage(image.getImage(), rotation);
-
         }
 
         //getSquareCordinates();

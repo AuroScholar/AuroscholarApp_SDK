@@ -8,14 +8,10 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -24,10 +20,11 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.home.data.base_component.BaseFragment;
+import com.auro.application.core.application.base_component.BaseFragment;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
@@ -38,10 +35,7 @@ import com.auro.application.core.database.PrefModel;
 import com.auro.application.databinding.FragmentCertificateBinding;
 import com.auro.application.home.data.model.DashboardResModel;
 import com.auro.application.home.data.model.Details;
-import com.auro.application.home.data.model.passportmodels.PassportQuizMonthModel;
-import com.auro.application.home.data.model.passportmodels.PassportQuizTopicModel;
-import com.auro.application.home.data.model.passportmodels.PassportSubjectQuizMonthModel;
-import com.auro.application.home.data.model.passportmodels.PassportTopicQuizMonthModel;
+import com.auro.application.home.data.model.TutionData;
 import com.auro.application.home.data.model.response.APIcertificate;
 import com.auro.application.home.data.model.response.CertificateResModel;
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
@@ -50,8 +44,6 @@ import com.auro.application.home.presentation.view.adapter.CertificateAdapter;
 import com.auro.application.home.presentation.viewmodel.TransactionsViewModel;
 import com.auro.application.payment.presentation.view.fragment.SendMoneyFragment;
 
-import com.auro.application.teacher.data.model.response.PassportMonthResModel;
-import com.auro.application.teacher.data.model.response.TeacherStudentPassportDetailResModel;
 import com.auro.application.util.AppUtil;
 import com.auro.application.util.RemoteApi;
 import com.auro.application.util.TextUtil;
@@ -60,16 +52,15 @@ import com.auro.application.util.alert_dialog.AskNameCustomDialog;
 import com.auro.application.util.alert_dialog.CertificateDialog;
 import com.auro.application.util.alert_dialog.CustomDialogModel;
 
+import com.auro.application.util.permission.PermissionHandler;
+import com.auro.application.util.permission.PermissionUtil;
+import com.auro.application.util.permission.Permissions;
 import com.auro.application.util.strings.AppStringDynamic;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -90,7 +81,6 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
     @Inject
     @Named("CertificateFragment")
     ViewModelFactory viewModelFactory;
-    boolean userClick = false;
     FragmentCertificateBinding binding;
     TransactionsViewModel viewModel;
     DashboardResModel dashboardResModel;
@@ -102,14 +92,6 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
     Details details;
     List<APIcertificate> listchilds1 = new ArrayList<>();
     List<APIcertificate> list1 = new ArrayList<>();
-    List<String> monthList = new ArrayList<>();
-    List<String> topicList = new ArrayList<>();
-    List<String> subjectList = new ArrayList<>();
-    String monthid,subjectid,topicid;
-    List<PassportMonthResModel> monthlist = new ArrayList<>();
-    List<PassportSubjectQuizMonthModel> subjectlist = new ArrayList<>();
-    List<PassportTopicQuizMonthModel> topiclist= new ArrayList<>();
-    PrefModel prefModel;
 
     public CertificateFragment() {
         // Required empty public constructor
@@ -132,7 +114,6 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
         binding = DataBindingUtil.inflate(inflater, getLayout(), container, false);
       //  ((AuroApp) getActivity().getApplication()).getAppComponent().doInjection(this);
         DaggerWrapper.getComponent(getActivity()).doInjection(this);
-        prefModel = AuroAppPref.INSTANCE.getModelInstance();
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(TransactionsViewModel.class);
         binding.setLifecycleOwner(this);
         setRetainInstance(true);
@@ -166,14 +147,12 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
 
 
         setListener();
-
-
        // ViewUtil.setProfilePic(binding.imageView6);
         getProfile();
         AppUtil.loadAppLogo(binding.auroScholarLogo,getActivity());
         details = AuroAppPref.INSTANCE.getModelInstance().getLanguageMasterDynamic().getDetails();
         AppStringDynamic.setCertificatesPageStrings(binding);
-        getStudentMonth();
+
     }
     private void getProfile()
     {
@@ -229,17 +208,11 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
         if (viewModel != null && viewModel.serviceLiveData().hasObservers()) {
             viewModel.serviceLiveData().removeObservers(this);
         } else {
-            getCertificateList("","","");
+            getCertificateList();
 
             // observeServiceResponse();
         }
-        binding.monthParentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                userClick = true;
-                binding.monthSpinner.performClick();
-            }
-        });
+
         binding.downloadIcon.setOnClickListener(this);
     }
 
@@ -298,21 +271,12 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
 
     }
 
-    private void getCertificateList(String monthname , String subjectid, String topicid)
+    private void getCertificateList()
     {
 
         HashMap<String,String> map_data = new HashMap<>();
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String userid = prefModel.getUserId();
-        map_data.put("UserId",userid);
-        map_data.put("SubjectId",subjectid);
-        if (topicid.equals("0")||topicid.equals(0)){
-            map_data.put("TopicId","");
-        }
-        else{
-            map_data.put("TopicId",topicid);
-        }
-        map_data.put("ExamMonth", monthname);
+        String userid = AuroAppPref.INSTANCE.getModelInstance().getUserId();
+        map_data.put("UserId",userid);    //"576232"
         RemoteApi.Companion.invoke().getCertificate(map_data)
                 .enqueue(new Callback<CertificateResModel>()
                 {
@@ -320,23 +284,9 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
                     public void onResponse(Call<CertificateResModel> call, Response<CertificateResModel> response)
                     {
                         try {
-                            if (response.code()==400){
-                                JSONObject jsonObject = null;
-                                try {
-                                    jsonObject = new JSONObject(response.errorBody().string());
-                                    String message = jsonObject.getString("message");
-                                    Toast.makeText(getActivity(),message, Toast.LENGTH_SHORT).show();
-
-                                } catch (JSONException | IOException e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-                            else if (response.isSuccessful()) {
+                            if (response.isSuccessful()) {
 
                                 if (response.body().getStatus().equals("success")){
-                                    listchilds1.clear();
-                                    list1.clear();
                                     if (!(response.body().getStudentuseridbasedcertificate() == null || response.body().getStudentuseridbasedcertificate().isEmpty() || response.body().getStudentuseridbasedcertificate().equals("") || response.body().getStudentuseridbasedcertificate().equals("null"))) {
 
                                         listchilds1 = response.body().getStudentuseridbasedcertificate();
@@ -344,20 +294,22 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
                                         for (int i = 0; i < listchilds1.size(); i++) {
                                             list1.add(listchilds1.get(i));
                                         }
-                                        binding.certificateRecyclerView.setVisibility(View.VISIBLE);
                                         CertificateAdapter kyCuploadAdapter = new CertificateAdapter(getActivity(), list1, null);
                                         binding.certificateRecyclerView.setAdapter(kyCuploadAdapter);
 
                                     }
                                     else{
-                                        binding.certificateRecyclerView.setVisibility(View.GONE);
+                                        Toast.makeText(getActivity(), "No Certificate Found", Toast.LENGTH_SHORT).show();
                                     }
                                 }
 
                             }
+                            else {
 
+                               // Toast.makeText(getActivity(), response.message(), Toast.LENGTH_SHORT).show();
+                            }
                         } catch (Exception e) {
-                            Toast.makeText(getActivity(), details.getInternetCheck(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(), "Internet connection", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -372,206 +324,7 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
 
 
     }
-    private void getStudentMonth()
-    {
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String userid = prefModel.getUserId();
-        HashMap<String,String> map_data = new HashMap<>();
-        map_data.put("user_id",userid);
-        RemoteApi.Companion.invoke().getStudentPassportMonth(map_data)
-                .enqueue(new Callback<TeacherStudentPassportDetailResModel>()
-                {
-                    @Override
-                    public void onResponse(Call<TeacherStudentPassportDetailResModel> call, Response<TeacherStudentPassportDetailResModel> response)
-                    {
-                        try {
-                            if (response.isSuccessful()) {
-                                monthlist.clear();
-                                monthList.clear();
-                                for (int i = 0; i < response.body().getData().size(); i++) {
-                                    monthlist.add(response.body().getData().get(i));
-                                    monthList.add(response.body().getData().get(i).getDateName());
 
-                                }
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, monthList);
-                                binding.monthSpinner.setAdapter(adapter);
-                                binding.monthSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                        binding.monthTitle.setText(monthList.get(position));
-                                        binding.monthTitle.setTextColor(Color.WHITE);
-                                        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
-                                        monthid = monthlist.get(position).getDate();
-                                        getPassportSubject(monthid);
-                                        getCertificateList(monthid,"","");
-                                    }
-
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parent) {
-                                        binding.monthSpinner.performClick();
-                                        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
-                                    }
-                                });
-
-                            }
-                        }
-                        catch (Exception e) {
-
-                            Toast.makeText(getActivity(), details.getInternetCheck(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<TeacherStudentPassportDetailResModel> call, Throwable t)
-                    {
-                        Toast.makeText(getActivity(), t.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-    private void getPassportSubject(String monthname)
-    {
-
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String userid = prefModel.getUserId();
-        HashMap<String,String> map_data = new HashMap<>();
-        map_data.put("user_id",userid);
-        map_data.put("month",monthname);
-
-
-        RemoteApi.Companion.invoke().getQuizMonthSubject(map_data)
-                .enqueue(new Callback<PassportQuizMonthModel>()
-                {
-                    @Override
-                    public void onResponse(Call<PassportQuizMonthModel> call, Response<PassportQuizMonthModel> response)
-                    {
-                        try {
-                            if (response.isSuccessful()) {
-                                subjectlist.clear();
-                                subjectList.clear();
-                                for (int i = 0; i < response.body().getPassportSubjectModelList().size(); i++) {
-                                    subjectlist.add(response.body().getPassportSubjectModelList().get(i));
-                                    subjectList.add(response.body().getPassportSubjectModelList().get(i).getSubject());
-
-
-
-
-                                }
-
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, subjectList);
-                                binding.subjectSpinner.setAdapter(adapter);
-
-
-                                binding.subjectSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                        // binding.subjectSpinner.performClick();
-                                        binding.subjectTitle.setText(subjectList.get(position));
-                                        binding.subjectTitle.setTextColor(Color.WHITE);
-                                        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
-                                        String subjectname = subjectlist.get(position).getSubject();
-                                        subjectid = subjectlist.get(position).getSubject_id();
-                                        if (subjectname.equals("All")){
-                                            getCertificateList(monthid,"","");
-                                        }
-                                        else{
-                                            getCertificateList(monthid,subjectid,"");
-                                        }
-
-                                        getTopics(monthname,subjectname);
-                                    }
-
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parent) {
-                                        binding.subjectSpinner.performClick();
-                                        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
-                                    }
-                                });
-
-                            } else {
-                                Log.d(TAG, "onResponser: " + response.message().toString());
-                            }
-                        } catch (Exception e) {
-                            Toast.makeText(getActivity(), "Internet connection", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<PassportQuizMonthModel> call, Throwable t)
-                    {
-                        Log.d(TAG, "onFailure: "+t.getMessage());
-                    }
-                });
-    }
-    private void getTopics(String monthname , String subjectname)
-    {
-        PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
-        String languageId = prefModel.getUserLanguageId();
-        String subjecttext = binding.subjectTitle.getText().toString();
-        HashMap<String,String> map_data = new HashMap<>();
-        map_data.put("month",monthname);
-        map_data.put("grade","");
-        map_data.put("subject",subjectname);
-        map_data.put("user_prefered_language_id",languageId);
-
-        RemoteApi.Companion.invoke().getQuizTopic(map_data)
-                .enqueue(new Callback<PassportQuizTopicModel>()
-                {
-                    @Override
-                    public void onResponse(Call<PassportQuizTopicModel> call, Response<PassportQuizTopicModel> response)
-                    {
-                        try {
-                            if (response.isSuccessful()) {
-                                topiclist.clear();
-                                topicList.clear();
-                                for (int i = 0; i < response.body().getPassportSubjectModelList().size(); i++) {
-                                    topiclist.add(response.body().getPassportSubjectModelList().get(i));
-                                    topicList.add(response.body().getPassportSubjectModelList().get(i).getQuiz_name());
-                                }
-
-                                ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_dropdown_item_1line, topicList);
-                                binding.topicSpinner.setAdapter(adapter);
-
-
-                                binding.topicSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                                    @Override
-                                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                                        binding.topicTitle.setText(topicList.get(position));
-                                        binding.topicTitle.setTextColor(Color.WHITE);
-                                        String topicname = binding.topicTitle.getText().toString();
-                                        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
-                                        topicid = String.valueOf(topiclist.get(position).getQuiz_id());
-                                        if (topicname.equals("All")){
-                                            getCertificateList(monthid,subjectid,"");
-                                        }
-                                        else{
-                                            getCertificateList(monthid,subjectid,topicid);
-                                        }
-
-
-                                    }
-
-
-                                    @Override
-                                    public void onNothingSelected(AdapterView<?> parent) {
-                                        binding.topicSpinner.performClick();
-                                        ((TextView) parent.getChildAt(0)).setTextColor(Color.WHITE);
-                                    }
-                                });
-
-                            } else {
-                                Log.d(TAG, "onResponser: " + response.message().toString());
-                            }
-                        } catch (Exception e) {
-                            Toast.makeText(getActivity(), "Internet connection", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<PassportQuizTopicModel> call, Throwable t)
-                    {
-                        Log.d(TAG, "onFailure: "+t.getMessage());
-                    }
-                });
-    }
 
     public void openSendMoneyFragment() {
         Bundle bundle = new Bundle();
@@ -696,6 +449,7 @@ public class CertificateFragment extends BaseFragment implements View.OnClickLis
 
         });
     }
+
 
     private void handleProgress(int status, String msg) {
         switch (status) {

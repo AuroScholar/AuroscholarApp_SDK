@@ -17,7 +17,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.home.data.base_component.BaseFragment;
+import com.auro.application.core.application.base_component.BaseFragment;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
@@ -30,6 +30,8 @@ import com.auro.application.home.data.model.SelectLanguageModel;
 import com.auro.application.home.data.model.response.ChangeGradeResModel;
 import com.auro.application.home.data.model.response.CheckUserValidResModel;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
+import com.auro.application.home.presentation.view.activity.SplashScreenAnimationActivity;
+import com.auro.application.home.presentation.view.activity.OtpActivity;
 import com.auro.application.home.presentation.view.activity.SplashScreenAnimationActivity;
 import com.auro.application.home.presentation.viewmodel.GradeChangeViewModel;
 import com.auro.application.util.AppLogger;

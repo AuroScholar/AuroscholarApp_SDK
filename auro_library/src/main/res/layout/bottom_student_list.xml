@@ -30,14 +30,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
-                <ImageView
-                    android:id="@+id/imgclose"
-                    android:layout_width="@dimen/_26sdp"
-                    android:layout_height="@dimen/_26sdp"
-                    android:src="@drawable/close_button"
-                    android:layout_alignParentRight="true"
-                    android:layout_margin="@dimen/_16sdp"></ImageView>
-
             <View
                 android:id="@+id/View"
                 android:layout_width="@dimen/_100sdp"

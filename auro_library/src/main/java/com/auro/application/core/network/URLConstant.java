@@ -5,7 +5,7 @@ import com.auro.application.BuildConfig;
 public interface URLConstant {
      String BASE_URL = BuildConfig.BASE_URL; // live
    // String BASE_URL = "https://app.auroscholar.org/api/";
-  // String BASE_URL = "https://staging.auroscholar.com/api/";
+   //String BASE_URL = "https://staging.auroscholar.com/api/";
    // String BASE_URL = "192.168.0.2/auroscholar-product/api/"
     String OTP_SEND_API = BASE_URL + "send_otp";
     String OTP_VERIFY = BASE_URL + "verify_otp_new";
@@ -14,7 +14,9 @@ public interface URLConstant {
     String GRADE_UPGRADE = BASE_URL + "grade_update";
     String DASHBOARD_SDK_API = BASE_URL + "student_full_details";
     String DEMOGRAPHIC_API = BASE_URL + "update_user_details";
-    String AZURE_API = BASE_URL + "save_pre_quiz_image_l";
+    String AZURE_API
+
+            = BASE_URL + "save_pre_quiz_image_l";
     String UPLOAD_IMAGE_URL = BASE_URL + "upload_kyc_documents_ocr";
     String GET_ASSIGNMENT_ID = BASE_URL + "start_quiz";
     String GET_STATE = BASE_URL + "states";

@@ -29,8 +29,8 @@ import retrofit2.http.*
 
 interface RemoteApi
 {
-  @GET("states")
-  public fun getStateData():Call<StateDataModel>
+    @GET("states")
+    public fun getStateData():Call<StateDataModel>
 
     @GET("grade_list")
     public fun getGrade():Call<GradeDataModel>
@@ -89,8 +89,8 @@ interface RemoteApi
     @POST("check_username")
     public fun checkexist(@Body params:HashMap<String,String>):Call<ParentProfileDataModel>
 
-  @POST("districts")
-  public fun getDistrict(@Body params:HashMap<String,String>):Call<DistrictDataModel>
+    @POST("districts")
+    public fun getDistrict(@Body params:HashMap<String,String>):Call<DistrictDataModel>
 
     @POST("get_language_transalation")
     public fun getSchoolmedium(@Body params:HashMap<String,String>):Call<SchoolMediumLangDataModel>
@@ -143,14 +143,14 @@ interface RemoteApi
     @POST("register_user")
     public fun setUserRegistered(@Body params:HashMap<String,String>):Call<RegisterApiResModel>
 
-  @POST("get_translated_master")
-  public fun getGender(@Body params:HashMap<String,String>):Call<GenderDataModel>
+    @POST("get_translated_master")
+    public fun getGender(@Body params:HashMap<String,String>):Call<GenderDataModel>
 
     @POST("get_translated_master")
     public fun getAllData(@Body params:HashMap<String,String>):Call<GenderDataModel>
 
-  @POST("get_schools")
-  public fun getSchool(@Body params:HashMap<String,String>):Call<SchoolDataModel>
+    @POST("get_schools")
+    public fun getSchool(@Body params:HashMap<String,String>):Call<SchoolDataModel>
 
     @POST("set_username_pin")
     public fun setUsernamePin(@Body params:HashMap<String,String>):Call<SetUsernamePinResModel>
@@ -158,30 +158,30 @@ interface RemoteApi
     @POST("get_kyc_details")
     public fun getKYCStatus(@Body params:HashMap<String,String>):Call<StudentKycStatusResModel>
 
-  @Multipart
-  @POST("update_user_details")
-  public fun updateuserdetail(@Part("build_version")build_Version:RequestBody,
-                              @Part("school_name") schoolName:RequestBody ,
-                              @Part("email") emailId:RequestBody ,
-                              @Part("gender") gender:RequestBody ,
-                              @Part("partner_source") partner_source:RequestBody ,
-                              @Part("device_token") deviceToken:RequestBody ,
-                              @Part("state_id") stateCode:RequestBody ,
-                              @Part("district_id") distcitcode:RequestBody ,
-                              @Part("username") firstName:RequestBody ,
-                              @Part("user_id") userId:RequestBody ,
-                              @Part("student_name") studentname:RequestBody ,
-                              @Part image:MultipartBody.Part
-                               ):Call<StudentResponselDataModel>
+    @Multipart
+    @POST("update_user_details")
+    public fun updateuserdetail(@Part("build_version")build_Version:RequestBody,
+                                @Part("school_name") schoolName:RequestBody ,
+                                @Part("email") emailId:RequestBody ,
+                                @Part("gender") gender:RequestBody ,
+                                @Part("partner_source") partner_source:RequestBody ,
+                                @Part("device_token") deviceToken:RequestBody ,
+                                @Part("state_id") stateCode:RequestBody ,
+                                @Part("district_id") distcitcode:RequestBody ,
+                                @Part("username") firstName:RequestBody ,
+                                @Part("user_id") userId:RequestBody ,
+                                @Part("student_name") studentname:RequestBody ,
+                                @Part image:MultipartBody.Part
+    ):Call<StudentResponselDataModel>
 
     @Multipart
     @POST("update_user_details")
     public fun updateaddnewchilddetail(@Part("build_version")build_Version:RequestBody,
                                        @Part("partner_source") partner_source:RequestBody ,
-                                @Part("school_name") schoolName:RequestBody ,
-                                @Part("email") emailId:RequestBody ,
+                                       @Part("school_name") schoolName:RequestBody ,
+                                       @Part("email") emailId:RequestBody ,
                                        @Part("board_type") boardType:RequestBody ,
-                                @Part("gender") gender:RequestBody ,
+                                       @Part("gender") gender:RequestBody ,
                                        @Part("regitration_source") registersource:RequestBody ,
                                        @Part("share_type") sharetype:RequestBody ,
                                        @Part("device_token") deviceToken:RequestBody ,
@@ -200,7 +200,7 @@ interface RemoteApi
                                        @Part("language") language:RequestBody ,
                                        @Part("mobile_manufacturer") mobilemanufacture:RequestBody ,
                                        @Part("state_id") stateCode:RequestBody ,
-                                @Part("district_id") distcitcode:RequestBody ,
+                                       @Part("district_id") distcitcode:RequestBody ,
                                        @Part("username") firstName:RequestBody ,
                                        @Part("school_type") schooltype:RequestBody ,
                                        @Part("user_id") userId:RequestBody ,
@@ -221,37 +221,37 @@ interface RemoteApi
     @Multipart
     @POST("update_user_details")
     public fun updateexistchilddetail(@Part("build_version")build_Version:RequestBody,
-                                       @Part("partner_source") partner_source:RequestBody ,
-                                       @Part("school_name") schoolName:RequestBody ,
-                                       @Part("email") emailId:RequestBody ,
-                                       @Part("board_type") boardType:RequestBody ,
-                                       @Part("gender") gender:RequestBody ,
-                                       @Part("regitration_source") registersource:RequestBody ,
-                                       @Part("share_type") sharetype:RequestBody ,
-                                       @Part("device_token") deviceToken:RequestBody ,
-                                       @Part("email_verified") emailverify:RequestBody ,
-                                       @Part("share_identity") shareidentity:RequestBody ,
-                                       @Part("user_partner_id") userpartnerid:RequestBody ,
-                                       @Part("ip_address") ipaddress:RequestBody ,
-                                       @Part("mobile_version") mobileversion:RequestBody ,
-                                       @Part("mobile_model") mobilemode:RequestBody ,
-                                       @Part("private_tution_type") privatetution:RequestBody ,
-                                       @Part("is_private_tution") isprivatetution:RequestBody ,
-                                       @Part("latitude") latitude:RequestBody ,
-                                       @Part("longitude") longitude:RequestBody ,
-                                       @Part("language") language:RequestBody ,
-                                       @Part("mobile_manufacturer") mobilemanufacture:RequestBody ,
-                                       @Part("state_id") stateCode:RequestBody ,
-                                       @Part("district_id") distcitcode:RequestBody ,
-                                       @Part("username") firstName:RequestBody ,
-                                       @Part("school_type") schooltype:RequestBody ,
-                                       @Part("user_id") userId:RequestBody ,
-                                       @Part("language_version") languageversion:RequestBody ,
+                                      @Part("partner_source") partner_source:RequestBody ,
+                                      @Part("school_name") schoolName:RequestBody ,
+                                      @Part("email") emailId:RequestBody ,
+                                      @Part("board_type") boardType:RequestBody ,
+                                      @Part("gender") gender:RequestBody ,
+                                      @Part("regitration_source") registersource:RequestBody ,
+                                      @Part("share_type") sharetype:RequestBody ,
+                                      @Part("device_token") deviceToken:RequestBody ,
+                                      @Part("email_verified") emailverify:RequestBody ,
+                                      @Part("share_identity") shareidentity:RequestBody ,
+                                      @Part("user_partner_id") userpartnerid:RequestBody ,
+                                      @Part("ip_address") ipaddress:RequestBody ,
+                                      @Part("mobile_version") mobileversion:RequestBody ,
+                                      @Part("mobile_model") mobilemode:RequestBody ,
+                                      @Part("private_tution_type") privatetution:RequestBody ,
+                                      @Part("is_private_tution") isprivatetution:RequestBody ,
+                                      @Part("latitude") latitude:RequestBody ,
+                                      @Part("longitude") longitude:RequestBody ,
+                                      @Part("language") language:RequestBody ,
+                                      @Part("mobile_manufacturer") mobilemanufacture:RequestBody ,
+                                      @Part("state_id") stateCode:RequestBody ,
+                                      @Part("district_id") distcitcode:RequestBody ,
+                                      @Part("username") firstName:RequestBody ,
+                                      @Part("school_type") schooltype:RequestBody ,
+                                      @Part("user_id") userId:RequestBody ,
+                                      @Part("language_version") languageversion:RequestBody ,
                                       @Part("medium_of_instruction") mediuminst:RequestBody ,
-                                       @Part("api_version") apiversion:RequestBody ,
-                                       @Part("user_prefered_language_id") userpreferlanguageid:RequestBody ,
-                                       @Part("student_name") studentname:RequestBody,
-                                       @Part image:MultipartBody.Part
+                                      @Part("api_version") apiversion:RequestBody ,
+                                      @Part("user_prefered_language_id") userpreferlanguageid:RequestBody ,
+                                      @Part("student_name") studentname:RequestBody,
+                                      @Part image:MultipartBody.Part
     ):Call<StudentResponselDataModel>
 
 
@@ -263,28 +263,28 @@ interface RemoteApi
     @Multipart
     @POST("update_parent")
     public fun updateparentdetail(@Part("user_id")user_id:RequestBody,
-                                @Part("full_name") full_name:RequestBody ,
-                                @Part("state_id") state_id:RequestBody ,
-                                @Part("district_id") district_id:RequestBody ,
-                                @Part("gender") gender:RequestBody ,
+                                  @Part("full_name") full_name:RequestBody ,
+                                  @Part("state_id") state_id:RequestBody ,
+                                  @Part("district_id") district_id:RequestBody ,
+                                  @Part("gender") gender:RequestBody ,
                                   @Part("user_prefered_language_id") langid:RequestBody ,
-                                @Part("email_id") email_id:RequestBody,
-                                @Part image:MultipartBody.Part
+                                  @Part("email_id") email_id:RequestBody,
+                                  @Part image:MultipartBody.Part
     ):Call<StudentResponselDataModel>
 
 
 
 
 
-  companion object
-  {
-    operator fun invoke():RemoteApi
+    companion object
     {
-      return Retrofit.Builder()
-        .baseUrl(URLConstant.BASE_URL)
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-        .create(RemoteApi::class.java)
+        operator fun invoke():RemoteApi
+        {
+            return Retrofit.Builder()
+                .baseUrl(URLConstant.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build()
+                .create(RemoteApi::class.java)
+        }
     }
-  }
 }

@@ -437,7 +437,6 @@
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
                                     android:layout_marginRight="@dimen/_10sdp"
-                                    android:importantForAutofill="no"
                                     android:layout_weight="3.5"
                                     android:hint="@string/enter_your_name">
 
@@ -448,7 +447,6 @@
                                         android:digits="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz "
                                         android:inputType="textPersonName"
                                         android:maxLines="1"
-                                        android:importantForAutofill="no"
                                         android:longClickable="false"
                                         android:paddingRight="@dimen/_20sdp"
                                         android:textColor="@color/black"
@@ -462,7 +460,6 @@
                                     android:layout_height="wrap_content"
                                     android:layout_below="@+id/tiaddusername"
                                     android:layout_marginTop="8dp"
-                                    android:importantForAutofill="no"
                                     android:layout_marginRight="@dimen/_10sdp"
                                     android:layout_weight="3.5"
                                     android:hint="@string/student_phone_number">
@@ -474,7 +471,6 @@
                                         android:editable="false"
                                         android:inputType="none"
                                         android:maxLines="1"
-                                        android:importantForAutofill="no"
                                         android:longClickable="false"
                                         android:paddingRight="@dimen/_20sdp"
                                         android:textColor="@color/black"
@@ -600,7 +596,6 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginRight="@dimen/_10sdp"
                                     android:layout_weight="3.5"
-                                    android:importantForAutofill="no"
                                     android:hint="@string/email_id">
 
                                     <com.google.android.material.textfield.TextInputEditText
@@ -610,7 +605,6 @@
                                         android:digits="abcdefghijklmnopqrstuvwxyz1234567890@#$_-."
                                         android:inputType="textPersonName"
                                         android:maxLines="1"
-                                        android:importantForAutofill="no"
                                         android:longClickable="false"
                                         android:paddingRight="@dimen/_20sdp"
                                         android:textColor="@color/black"
@@ -648,7 +642,6 @@
                                     android:editable="false"
                                     android:textColorHint="@color/auro_border_blue"
                                     app:endIconMode="none"
-                                    android:importantForAutofill="no"
                                     app:layout_constraintBottom_toBottomOf="parent"
                                     app:layout_constraintEnd_toEndOf="parent"
                                     app:layout_constraintStart_toStartOf="parent">
@@ -663,7 +656,6 @@
                                         android:longClickable="false"
                                         android:focusable="false"
                                         android:gravity="left"
-                                        android:importantForAutofill="no"
                                         android:maxLines="1"
                                         android:paddingEnd="@dimen/_20sdp"
                                         android:textColor="@color/black" />
@@ -680,13 +672,11 @@
                                     android:layout_marginTop="@dimen/_8sdp"
                                     android:editable="false"
                                     android:hint="@string/school_type"
-                                    android:importantForAutofill="no"
                                     android:textColorHint="@color/auro_border_blue"
                                     app:endIconMode="none">
 
                                     <AutoCompleteTextView
                                         android:id="@+id/etSchooltype"
-                                        android:importantForAutofill="no"
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:drawableRight="@drawable/ic_user_drop_down"
@@ -710,7 +700,6 @@
                                     android:layout_below="@+id/tlSchooltype"
                                     android:layout_marginTop="@dimen/_8sdp"
                                     android:hint="@string/board"
-                                    android:importantForAutofill="no"
                                     android:editable="false"
                                     android:textColorHint="@color/auro_border_blue"
                                     app:endIconMode="none">
@@ -724,7 +713,6 @@
                                         android:dropDownHeight="wrap_content"
                                         android:focusable="false"
                                         android:longClickable="false"
-                                        android:importantForAutofill="no"
                                         android:gravity="left"
                                         android:maxLines="1"
                                         android:paddingEnd="@dimen/_20sdp"
@@ -741,7 +729,6 @@
                                     android:layout_below="@+id/tlSchoolboard"
                                     android:layout_marginTop="@dimen/_8sdp"
                                     android:editable="false"
-                                    android:importantForAutofill="no"
                                     android:hint="@string/language_medium"
                                     android:textColorHint="@color/auro_border_blue"
                                     app:endIconMode="none">
@@ -755,7 +742,6 @@
                                         android:dropDownHeight="wrap_content"
                                         android:focusable="false"
                                         android:gravity="left"
-                                        android:importantForAutofill="no"
                                         android:longClickable="false"
                                         android:maxLines="1"
                                         android:paddingEnd="@dimen/_20sdp"
@@ -772,7 +758,6 @@
                                     android:layout_below="@+id/tlSchoolmedium"
                                     android:layout_marginTop="@dimen/_8sdp"
                                     android:editable="false"
-                                    android:importantForAutofill="no"
                                     android:hint="@string/taking_private_tutions"
                                     android:textColorHint="@color/auro_border_blue"
                                     app:endIconMode="none">
@@ -786,7 +771,6 @@
                                         android:dropDownHeight="wrap_content"
                                         android:focusable="false"
                                         android:gravity="left"
-                                        android:importantForAutofill="no"
                                         android:maxLines="1"
                                         android:longClickable="false"
                                         android:paddingEnd="@dimen/_20sdp"
@@ -804,7 +788,6 @@
                                     android:layout_marginTop="@dimen/_8sdp"
                                     android:hint="@string/taking_type"
                                     android:editable="false"
-                                    android:importantForAutofill="no"
                                     android:textColorHint="@color/auro_border_blue"
                                     app:endIconMode="none">
 
@@ -819,7 +802,6 @@
                                         android:gravity="left"
                                         android:longClickable="false"
                                         android:maxLines="1"
-                                        android:importantForAutofill="no"
                                         android:paddingEnd="@dimen/_20sdp"
                                         android:textColor="@color/black" />
 
@@ -834,7 +816,6 @@
                                     android:layout_below="@+id/tltutiontype"
                                     android:layout_marginTop="@dimen/_8sdp"
                                     android:hint="@string/state"
-                                    android:importantForAutofill="no"
                                     android:editable="false"
                                     android:textColorHint="@color/auro_border_blue"
                                     app:endIconMode="none">
@@ -848,7 +829,6 @@
                                         android:dropDownHeight="wrap_content"
                                         android:focusable="false"
                                         android:gravity="left"
-                                        android:importantForAutofill="no"
                                         android:maxLines="1"
                                         android:longClickable="false"
                                         android:paddingEnd="@dimen/_20sdp"
@@ -866,7 +846,6 @@
                                     android:layout_below="@+id/tlstate"
                                     android:layout_marginTop="@dimen/_8sdp"
                                     android:hint="@string/district"
-                                    android:importantForAutofill="no"
                                     android:textColorHint="@color/auro_border_blue"
                                     app:endIconMode="none">
 
@@ -881,7 +860,6 @@
                                         android:gravity="left"
                                         android:longClickable="false"
                                         android:maxLines="1"
-                                        android:importantForAutofill="no"
                                         android:paddingEnd="@dimen/_20sdp"
                                         android:textColor="@color/black" />
 
@@ -904,7 +882,6 @@
 
                                         android:layout_marginRight="@dimen/_10sdp"
                                         android:layout_weight="3.5"
-
                                         android:hint="Search school here.."
                                         android:theme="@style/MyEditText">
 
@@ -961,7 +938,6 @@
                                         android:drawableRight="@drawable/places_ic_search"
                                         android:drawableTint="@color/grey"
                                         android:hint="Search School"
-                                        android:importantForAutofill="no"
                                         android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ "
                                         android:popupBackground="#ffffff"
                                         android:textColor="@color/black"
@@ -1002,7 +978,6 @@
                                         android:dropDownHeight="wrap_content"
                                         android:focusable="false"
                                         android:gravity="left"
-                                        android:importantForAutofill="no"
                                         android:maxLines="1"
                                         android:paddingEnd="@dimen/_20sdp"
                                         android:singleLine="true"
@@ -1032,7 +1007,6 @@
                                         android:focusable="false"
                                         android:longClickable="false"
                                         android:gravity="left"
-                                        android:importantForAutofill="no"
                                         android:maxLines="1"
                                         android:paddingEnd="@dimen/_20sdp"
                                         android:textColor="@color/black" />

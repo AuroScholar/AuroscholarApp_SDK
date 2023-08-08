@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -30,7 +31,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.home.data.base_component.BaseActivity;
+import com.auro.application.core.application.base_component.BaseActivity;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.common.CommonCallBackListner;
@@ -46,6 +47,7 @@ import com.auro.application.home.data.model.StateDataModel;
 import com.auro.application.home.data.model.StateDataModelNew;
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.presentation.view.adapter.DistrictSpinnerAdapter;
+import com.auro.application.home.presentation.view.adapter.DistrictSpinnerUserAdapter;
 
 import com.auro.application.home.presentation.view.adapter.GenderSpinnerAdapter;
 import com.auro.application.home.presentation.view.adapter.SchoolSpinnerAdapter;
@@ -64,6 +66,7 @@ import com.auro.application.util.permission.PermissionUtil;
 import com.auro.application.util.permission.Permissions;
 import com.auro.application.util.strings.AppStringDynamic;
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.Arrays;

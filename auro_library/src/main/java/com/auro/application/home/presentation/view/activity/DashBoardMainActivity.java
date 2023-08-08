@@ -2,26 +2,33 @@ package com.auro.application.home.presentation.view.activity;
 
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.text.Html;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,7 +40,7 @@ import androidx.lifecycle.ViewModelProviders;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.home.data.base_component.BaseActivity;
+import com.auro.application.core.application.base_component.BaseActivity;
 
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
@@ -53,18 +60,26 @@ import com.auro.application.databinding.ActivityDashBoardMainBinding;
 import com.auro.application.home.data.model.AuroScholarDataModel;
 import com.auro.application.home.data.model.AuroScholarInputModel;
 import com.auro.application.home.data.model.DashboardResModel;
+import com.auro.application.home.data.model.DashboardResponselDataModel;
 import com.auro.application.home.data.model.Details;
+import com.auro.application.home.data.model.FbGoogleUserModel;
 import com.auro.application.home.data.model.FetchStudentPrefReqModel;
 import com.auro.application.home.data.model.GenderData;
 import com.auro.application.home.data.model.GenderDataModel;
+import com.auro.application.home.data.model.GetAllChildModel;
 import com.auro.application.home.data.model.LanguageMasterDynamic;
 import com.auro.application.home.data.model.OtpOverCallReqModel;
+import com.auro.application.home.data.model.ParentProfileDataModel;
 import com.auro.application.home.data.model.PendingKycDocsModel;
+import com.auro.application.home.data.model.ReferralPopUpDataModel;
+import com.auro.application.home.data.model.RefferalReqModel;
 import com.auro.application.home.data.model.SendOtpReqModel;
+import com.auro.application.home.data.model.StudentResponselDataModel;
 import com.auro.application.home.data.model.VerifyOtpReqModel;
 import com.auro.application.home.data.model.response.CheckVerResModel;
 import com.auro.application.home.data.model.response.DynamiclinkResModel;
 import com.auro.application.home.data.model.response.FetchStudentPrefResModel;
+import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.data.model.response.InstructionsResModel;
 import com.auro.application.home.data.model.response.NoticeInstruction;
 import com.auro.application.home.data.model.response.OtpOverCallResModel;
@@ -73,14 +88,16 @@ import com.auro.application.home.data.model.response.ShowDialogModel;
 import com.auro.application.home.data.model.response.SlabsResModel;
 import com.auro.application.home.data.model.response.VerifyOtpResModel;
 import com.auro.application.home.data.model.signupmodel.InstructionModel;
-import com.auro.application.home.presentation.view.fragment.BottomSheetUsersDialog;
+import com.auro.application.home.data.model.signupmodel.UserSlabsRequest;
+import com.auro.application.home.presentation.view.adapter.SelectYourParentChildAdapter;
 import com.auro.application.home.presentation.view.fragment.CertificateFragment;
-import com.auro.application.home.presentation.view.fragment.FAQFragment;
+import com.auro.application.home.presentation.view.fragment.DemographicFragment;
 import com.auro.application.home.presentation.view.fragment.FriendsLeaderBoardListFragment;
 import com.auro.application.home.presentation.view.fragment.GradeChangeFragment;
 import com.auro.application.home.presentation.view.fragment.KYCFragment;
 import com.auro.application.home.presentation.view.fragment.KYCViewFragment;
 import com.auro.application.home.presentation.view.fragment.MainQuizHomeFragment;
+import com.auro.application.home.presentation.view.fragment.ParentProfileFragment;
 import com.auro.application.home.presentation.view.fragment.PrivacyPolicyFragment;
 import com.auro.application.home.presentation.view.fragment.StudentKycInfoFragment;
 import com.auro.application.home.presentation.view.fragment.StudentProfileFragment;
@@ -92,6 +109,7 @@ import com.auro.application.payment.presentation.view.fragment.SendMoneyFragment
 import com.auro.application.util.AppLogger;
 import com.auro.application.util.AppUtil;
 import com.auro.application.util.ConversionUtil;
+import com.auro.application.util.DateUtil;
 import com.auro.application.util.RemoteApi;
 import com.auro.application.util.TextUtil;
 import com.auro.application.util.ViewUtil;
@@ -102,6 +120,7 @@ import com.auro.application.util.alert_dialog.disclaimer.CustomOtpDialog;
 import com.auro.application.util.alert_dialog.disclaimer.GradeChnageCongDialogBox;
 import com.auro.application.util.alert_dialog.disclaimer.LoginDisclaimerDialog;
 import com.auro.application.util.alert_dialog.disclaimer.NoticeDialogBox;
+import com.auro.application.util.authenticate.GoogleSignInHelper;
 import com.auro.application.util.firebaseAnalytics.AnalyticsRegistry;
 import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -115,8 +134,10 @@ import com.google.android.play.core.install.model.AppUpdateType;
 import com.google.android.play.core.install.model.InstallStatus;
 import com.google.android.play.core.install.model.UpdateAvailability;
 import com.google.android.play.core.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.googlejavaformat.Indent;
 import com.google.gson.Gson;
-
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -130,7 +151,10 @@ import static com.auro.application.core.common.Status.GET_SLABS_API;
 import static com.auro.application.core.common.Status.LISTNER_FAIL;
 import static com.auro.application.core.common.Status.LISTNER_SUCCESS;
 import static com.auro.application.core.common.Status.SEND_OTP;
+import static com.auro.application.core.common.Status.SEND_REFERRAL_API;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -149,6 +173,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     NoticeDialogBox noticeDialogBox;
     GradeChnageCongDialogBox gradeChnageCongDialogBox;
     AlertDialog alertDialog;
+
+
     private static final int REQ_CODE_VERSION_UPDATE = 530;
     private AppUpdateManager appUpdateManager;
     private InstallStateUpdatedListener installStateUpdatedListener;
@@ -163,6 +189,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     public static final int QUIZ_KYC_VIEW_FRAGMENT = 3;
     public static final int WALLET_INFO_FRAGMENT = 4;
     public static final int QUIZ_TEST_FRAGMENT = 5;
+    public static final int FAQ_FRAGMENT = 22;
     public static final int PRIVACY_POLICY_FRAGMENT = 6;
     public static final int CERTIFICATE_FRAGMENT = 7;
     public static final int KYC_DIRECT_FRAGMENT = 8;
@@ -172,7 +199,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     public static final int LEADERBOARD_FRAGMENT = 12;
     public static final int PAYMENT_FRAGMENT = 13;
     public static final int STUDENT_PROFILE_FRAGMENT = 14;
-    public static final int FAQ_FRAGMENT = 22;
     public static final int PARTNERS_FRAGMENT = 15;
     public static final int GRADE_CHANGE_FRAGMENT = 16;
     public static final int SEND_MONEY_FRAGMENT = 17;
@@ -330,9 +356,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
         inputModel.setPartnerSource(prefModel.getPartnersource()); //this id is provided by auroscholar for valid partner
         inputModel.setSdkcallback(new SdkCallBack() {
             @Override
-            public void callBack(
-                    String message
-            ) {
+            public void callBack(String message) {
 
             }
 
@@ -688,7 +712,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        finish();
+        AppLogger.e(TAG, "onDestroy method calling ");
+        unregisterInstallStateUpdListener();
     }
 
 
@@ -723,17 +748,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             selectNavigationMenu(1);
             handlePartnertabClick();
             funnelPartnerApp();
-        }
-        else if (itemId == R.id.item_logout) {
-
-            SharedPreferences mySPrefs = getSharedPreferences("My_Pref", MODE_PRIVATE);
-            SharedPreferences.Editor editor = mySPrefs.edit();
-            editor.remove("viewall_finalcatlistid");
-            editor.apply();
-            selectMoreNavigationMenu(0);
-            openFragment(new FAQFragment());
-
-          //  openLogoutDialog();
+        } else if (itemId == R.id.item_logout) {
+            openLogoutDialog();
         } else if (itemId == R.id.item_aurofriend) {
             isBackNormal = false;
             funnelStudentleaderBoardScreen();
@@ -1280,7 +1296,8 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
     }
 
-    private void openLogoutDialog() {
+    private void
+    openLogoutDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         String yes = this.getString(R.string.yes);
         String no = this.getString(R.string.no);
@@ -1300,7 +1317,6 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
-
                 logout();
             }
         });
@@ -1318,21 +1334,18 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
 
 
     private void logout() {
-        finish();
-        SharedPreferences.Editor editor1 = getSharedPreferences("My_Pref", MODE_PRIVATE).edit();
-        editor1.putString("statustoclose", "true");
-        editor1.apply();
 
-//        Intent i = new Intent(DashBoardMainActivity.this, SplashScreenAnimationActivity.class);
-//        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//        startActivity(i);
 
+        AppLogger.e("Chhonker", "Logout");
+        AuroAppPref.INSTANCE.clearPref();
+        SharedPreferences preferences =getSharedPreferences("My_Pref",Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.apply();
+
+        finishAffinity();
     }
-    private void startMainActivity(Context context) throws PackageManager.NameNotFoundException {
-        PackageManager pm = context.getPackageManager();
-        Intent intent = pm.getLaunchIntentForPackage(context.getPackageName());
-        context.startActivity(intent);
-    }
+
 
     private void openFriendLeaderBoardFragment() {
         FriendsLeaderBoardListFragment fragment = new FriendsLeaderBoardListFragment();
@@ -1587,30 +1600,27 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
             pendingKycDocsModel.setUserPreferedLanguageId(1);
             AppLogger.v("Pending_Pradeep","  calling GRADE_CHANGE_DIALOG   " );
             viewModel.checkInternet(Status.PENDING_KYC_DOCS, pendingKycDocsModel);
+
         }
     }
 
-   @Override
-  public void onBackPressed() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//        builder.setMessage("Are you sure you want to exit?")
-//                .setCancelable(false)
-//                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        //finish();
-//                      finishFromChild(DashBoardMainActivity.this);
-//                    }
-//                })
-//                .setNegativeButton("No", new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        dialog.cancel();
-//                    }
-//                });
-//        AlertDialog alert = builder.create();
-//        alert.show();
-
-
-       openLogoutDialog();
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to exit?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        finishAffinity();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
 
     }
     private void getDashboardMenu()
@@ -1663,9 +1673,7 @@ public class DashBoardMainActivity extends BaseActivity implements GradeChangeFr
                             menuDashboard.findItem(R.id.item_more).setTitle(genderList.get(4).getTranslatedName());
 
                             Menu backMenuDashboard = binding.naviagtionContent.bottomSecondnavigation.getMenu();
-                           // backMenuDashboard.findItem(R.id.item_logout).setTitle("Logout");
                             backMenuDashboard.findItem(R.id.item_logout).setTitle(genderList.get(5).getTranslatedName());
-
                             backMenuDashboard.findItem(R.id.item_aurofriend).setTitle(genderList.get(6).getTranslatedName());
                             backMenuDashboard.findItem(R.id.item_kyc).setTitle(genderList.get(7).getTranslatedName());
                             backMenuDashboard.findItem(R.id.item_back).setTitle(genderList.get(9).getTranslatedName());

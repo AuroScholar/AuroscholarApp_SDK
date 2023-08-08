@@ -13,6 +13,8 @@ public class SubmitExamAPIResult{
 	@Expose
 	private  int score;
 
+
+
 	public Boolean getSuccessFlag() {
 		return successFlag;
 	}

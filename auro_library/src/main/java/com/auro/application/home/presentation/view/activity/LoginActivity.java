@@ -18,7 +18,8 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.auro.application.R;
-import com.auro.application.home.data.base_component.BaseActivity;
+import com.auro.application.core.application.AuroApp;
+import com.auro.application.core.application.base_component.BaseActivity;
 import com.auro.application.core.application.di.component.DaggerWrapper;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.AppConstant;
@@ -50,6 +51,8 @@ import com.auro.application.util.strings.AppStringDynamic;
 
 
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -895,9 +898,8 @@ public class LoginActivity extends BaseActivity implements View.OnClickListener,
     }
 
     void openBottomSheetDialog() {
-        startActivity(new Intent(this,ChildAccountActivity.class));
-//        BottomSheetUsersDialog bottomSheet = new BottomSheetUsersDialog();
-//        bottomSheet.show(getSupportFragmentManager(),
-//                "ModalBottomSheet");
+        BottomSheetUsersDialog bottomSheet = new BottomSheetUsersDialog();
+        bottomSheet.show(getSupportFragmentManager(),
+                "ModalBottomSheet");
     }
 }

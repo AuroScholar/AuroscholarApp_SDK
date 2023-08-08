@@ -19,6 +19,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class StudentKycDocumentAdapter extends RecyclerView.Adapter {
+
+
     List<KYCDocumentDatamodel> list;
     CommonCallBackListner commonCallBackListner;
 

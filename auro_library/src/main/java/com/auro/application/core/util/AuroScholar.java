@@ -1,17 +1,22 @@
 package com.auro.application.core.util;
 
+import static android.content.Context.MODE_PRIVATE;
+
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
 import com.auro.application.core.application.di.component.DaggerWrapper;
+import com.auro.application.core.common.AppConstant;
 import com.auro.application.core.database.AuroAppPref;
 import com.auro.application.core.database.PrefModel;
 import com.auro.application.home.data.model.AuroScholarDataModel;
@@ -21,13 +26,21 @@ import com.auro.application.home.data.model.LanguageMasterDynamic;
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.data.model.response.LanguageListResModel;
 import com.auro.application.home.presentation.view.activity.AppLanguageActivity;
-import com.auro.application.home.presentation.view.activity.ChildAccountActivity;
 import com.auro.application.home.presentation.view.activity.ChooseGradeActivity;
 import com.auro.application.home.presentation.view.activity.CompleteStudentProfileWithoutPin;
 import com.auro.application.home.presentation.view.activity.DashBoardMainActivity;
+import com.auro.application.home.presentation.view.activity.HomeActivity;
+import com.auro.application.home.presentation.view.activity.SDKActivity;
+import com.auro.application.home.presentation.view.activity.SplashScreenAnimationActivity;
+import com.auro.application.home.presentation.view.activity.StudentMainDashboardActivity;
+import com.auro.application.home.presentation.view.activity.StudentProfileActivity;
 import com.auro.application.home.presentation.view.fragment.BottomSheetUsersDialog;
+import com.auro.application.home.presentation.view.fragment.FriendsLeaderBoardListFragment;
 
+import com.auro.application.home.presentation.view.fragment.MainQuizHomeFragment;
+import com.auro.application.util.AppLogger;
 import com.auro.application.util.RemoteApi;
+import com.auro.application.util.TextUtil;
 import com.auroscholar.final_auroscholarapp_sdk.SDKChildModel;
 import com.auroscholar.final_auroscholarapp_sdk.SDKDataModel;
 
@@ -55,12 +68,9 @@ public class AuroScholar {
     static Details languagedetail;
     static ProgressDialog progress;
 
-    static AuroScholarInputModel inputModel;
-    static Activity activity;
+
     /*For generic with PhoneNumber and class*/
-
     public static Fragment startAuroSDK(AuroScholarInputModel inputModel) {
-
         auroScholarDataModel = new AuroScholarDataModel();
         auroScholarDataModel.setMobileNumber(inputModel.getMobileNumber());
         auroScholarDataModel.setStudentClass(inputModel.getStudentClass());
@@ -69,15 +79,16 @@ public class AuroScholar {
         auroScholarDataModel.setUserPartnerid(inputModel.getPartner_unique_id());
         auroScholarDataModel.setPartnerSource(inputModel.getPartnerSource());
         auroScholarDataModel.setApikey(inputModel.getPartner_api_key());
-
         DaggerWrapper.getComponent(inputModel.getActivity()).doInjection(inputModel.getActivity());
        AuroApp.setAuroModel(auroScholarDataModel);
        getMultiLanguage();
         getLanguage("1");
         setSDKAPI(inputModel.getMobileNumber(),inputModel.getPartner_unique_id(),inputModel.getPartnerSource(),inputModel.getPartner_api_key(),inputModel.getStudentClass());
+
+
+
         return null;
     }
-
 
     private static void setSDKAPI(String mobno, String partneruniqueid, String partnersource, String apikey, String grade)
     {
@@ -158,9 +169,7 @@ public class AuroScholar {
                                     else{
 
                                         progress.dismiss();
-                                        Intent intent = new Intent(auroScholarDataModel.getActivity(), ChildAccountActivity.class);
-                                        auroScholarDataModel.getActivity().startActivity(intent);
-                                      //  openBottomSheetDialog();
+                                        openBottomSheetDialog();
                                     }
                                 }
                                 else {
@@ -187,11 +196,20 @@ public class AuroScholar {
     }
 
     public static void opendashboard(){
-        auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), DashBoardMainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+        auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), DashBoardMainActivity.class));
 
     }
 
-
+    public static void openGenricSDK(String mobileNumber, String partneruniqueid, String partnersource, String partnerapi, String grade) {
+        AuroScholarInputModel inputModel = new AuroScholarInputModel();
+        inputModel.setMobileNumber(mobileNumber);
+        inputModel.setStudentClass(grade);
+        inputModel.setPartner_unique_id(partneruniqueid);
+        inputModel.setPartnerSource(partnersource);
+        inputModel.setPartner_api_key(partnerapi);
+        inputModel.setActivity(auroScholarDataModel.getActivity());
+        setSDKAPI(mobileNumber,partneruniqueid,partnersource,partnerapi,"");
+    }
     public static void openBottomSheetDialog() {
         BottomSheetUsersDialog bottomSheet = new BottomSheetUsersDialog();
         bottomSheet.show(((FragmentActivity)auroScholarDataModel.getActivity()).getSupportFragmentManager(),
@@ -216,14 +234,14 @@ public class AuroScholar {
 //                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                                startActivity(i);
                                 progress.dismiss();
-                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), AppLanguageActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), AppLanguageActivity.class));
                             }
                             else if (errormismatch.equals("Error! Grade Mismatched")){
 //                                Intent i = new Intent(SDKActivity.this, ChooseGradeActivity.class);
 //                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                                startActivity(i);
                                progress.dismiss();
-                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), ChooseGradeActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), ChooseGradeActivity.class));
 
                             }
 
@@ -233,7 +251,7 @@ public class AuroScholar {
 //                                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //                                startActivity(i);
                                progress.dismiss();
-                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), CompleteStudentProfileWithoutPin.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), CompleteStudentProfileWithoutPin.class));
 
                             }
                             else{
@@ -246,7 +264,7 @@ public class AuroScholar {
                                 inputModel.setPartner_unique_id(prefModel.getPartneruniqueid());
                                 inputModel.setPartnerSource(prefModel.getPartnersource());
                                 inputModel.setPartner_api_key(prefModel.getApikey());
-                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), DashBoardMainActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+                                auroScholarDataModel.getActivity().startActivity(new Intent(auroScholarDataModel.getActivity(), DashBoardMainActivity.class));
 
                             }
 

@@ -24,12 +24,14 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
@@ -38,10 +40,11 @@ import androidx.annotation.Nullable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawable;
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory;
 import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.ViewModelProviders;
 
 import com.auro.application.R;
 import com.auro.application.core.application.AuroApp;
-import com.auro.application.home.data.base_component.BaseActivity;
+import com.auro.application.core.application.base_component.BaseActivity;
 import com.auro.application.core.application.di.component.ViewModelFactory;
 import com.auro.application.core.common.CommonCallBackListner;
 import com.auro.application.core.common.CommonDataModel;
@@ -53,11 +56,13 @@ import com.auro.application.home.data.model.AddNewSchoolResModel;
 import com.auro.application.home.data.model.AuroScholarInputModel;
 import com.auro.application.home.data.model.BoardData;
 import com.auro.application.home.data.model.CheckUserResModel;
+import com.auro.application.home.data.model.DashboardResModel;
 import com.auro.application.home.data.model.Details;
 import com.auro.application.home.data.model.DistrictData;
 import com.auro.application.home.data.model.GenderData;
 import com.auro.application.home.data.model.GradeData;
 import com.auro.application.home.data.model.GradeDataModel;
+import com.auro.application.home.data.model.ParentProfileDataModel;
 import com.auro.application.home.data.model.PrivateTutionData;
 import com.auro.application.home.data.model.SchoolData;
 import com.auro.application.home.data.model.SchoolLangData;
@@ -68,6 +73,8 @@ import com.auro.application.home.data.model.TutionData;
 import com.auro.application.home.data.model.response.GetStudentUpdateProfile;
 import com.auro.application.home.data.model.response.StudentKycStatusResModel;
 import com.auro.application.home.data.model.response.UserDetailResModel;
+import com.auro.application.home.data.model.signupmodel.response.RegisterApiResModel;
+import com.auro.application.home.data.model.signupmodel.response.SetUsernamePinResModel;
 import com.auro.application.home.presentation.view.adapter.DistrictSpinnerAdapter;
 import com.auro.application.home.presentation.view.adapter.GenderSpinnerAdapter;
 import com.auro.application.home.presentation.view.adapter.GradeSpinnerAdapter;
@@ -76,8 +83,10 @@ import com.auro.application.home.presentation.view.adapter.SchoolBoardSpinnerAda
 import com.auro.application.home.presentation.view.adapter.SchoolMediumSpinnerAdapter;
 import com.auro.application.home.presentation.view.adapter.SchoolSpinnerAdapter;
 import com.auro.application.home.presentation.view.adapter.SchoolTypeSpinnerAdapter;
+import com.auro.application.home.presentation.view.adapter.SelectYourParentChildAdapter;
 import com.auro.application.home.presentation.view.adapter.StateSpinnerAdapter;
 import com.auro.application.home.presentation.view.adapter.TutionTypeSpinnerAdapter;
+import com.auro.application.home.presentation.viewmodel.CompleteStudentProfileWithPinViewModel;
 
 import com.auro.application.util.AppLogger;
 import com.auro.application.util.AppUtil;
@@ -87,8 +96,14 @@ import com.auro.application.util.RemoteApi;
 import com.auro.application.util.ViewUtil;
 import com.auro.application.util.alert_dialog.CustomDialog;
 import com.auro.application.util.alert_dialog.CustomDialogModel;
+import com.auro.application.util.alert_dialog.CustomProgressDialog;
+import com.auro.application.util.permission.LocationHandler;
 import com.auro.application.util.strings.AppStringDynamic;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.Target;
 import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -115,13 +130,18 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     @Inject
     @Named("CompleteStudentProfileWithoutPin")
     ViewModelFactory viewModelFactory;
+
+
     String getschool_id;
     List<String> genderListString = new ArrayList<>();
     List<UserDetailResModel> listchilds = new ArrayList<>();
     List<UserDetailResModel> list = new ArrayList<>();
     private static final int CAMERA_REQUEST = 1888;
+
     UserDetailResModel checkUserResModel;
+
     FragmentStudentUpdateProfileBinding binding;
+
     GetStudentUpdateProfile studentProfileModel = new GetStudentUpdateProfile();
 
     boolean firstTimeCome;
@@ -142,7 +162,6 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     String boardtype = "";
     String schooltype = "";
     String ExistGrade;
-    String ExistGradenew;
     String kycgrade;
     CustomDialog customDialog;
     List<SchoolData> districtList = new ArrayList<>();
@@ -251,9 +270,6 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                 if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
                     binding.etgrade.showDropDown();
                 }
-                else if (ConversionUtil.INSTANCE.convertStringToInteger(ExistGradenew) > 0){
-                    binding.etgrade.showDropDown();
-                }
                 else{
                     openErrorDialog();
                 }
@@ -267,10 +283,6 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                 if (hasFocus)
                 {
                     if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
-                        binding.etgrade.showDropDown();
-                    }
-
-                    else if (ConversionUtil.INSTANCE.convertStringToInteger(ExistGradenew) > 0){
                         binding.etgrade.showDropDown();
                     }
                     else{
@@ -629,7 +641,6 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                             String district = response.body().getDistrictname();
                             String email = response.body().getEmailId();
                             ExistGrade = response.body().getStudentclass();
-                            ExistGradenew = response.body().getStudentclass();
                             String name = response.body().getStudentName();
                             String schooltype = response.body().getSchoolType();
                             String board = response.body().getBoardType();
@@ -784,9 +795,6 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         }
 
         if (gradeid == null || gradeid.equals("null") || gradeid.equals("")||gradeid.isEmpty()){
-            gradeid = binding.etgrade.getText().toString();
-        }
-        else{
             gradeid = binding.etgrade.getText().toString();
         }
 
@@ -1714,7 +1722,7 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
             GradeData gData = (GradeData) commonDataModel.getObject();
             binding.etgrade.setText(gData.getGrade_id());
             gradeid = gData.getGrade_id();
-            openErrorDialog();
+
 
         }
 
@@ -1751,9 +1759,6 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
 
             else if (v.getId() == R.id.etgrade) {
                 if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
-                    binding.etgrade.showDropDown();
-                }
-                else if (ConversionUtil.INSTANCE.convertStringToInteger(ExistGradenew) > 0){
                     binding.etgrade.showDropDown();
                 }
                 else{
@@ -1794,9 +1799,6 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
             if (ExistGrade.equals("0")||ExistGrade.equals(0)||ExistGrade.equals("")||ExistGrade.equals("null")||ExistGrade.equals(null)){
                 binding.etgrade.showDropDown();
             }
-            else if (ConversionUtil.INSTANCE.convertStringToInteger(ExistGradenew) > 0){
-                binding.etgrade.showDropDown();
-            }
             else{
                 openErrorDialog();
             }
@@ -1827,54 +1829,49 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     }
     private void openErrorDialog() {
         String grade = binding.etgrade.getText().toString();
+
+
         if (kycgrade.equals("Pending")||kycgrade == "Pending"){
-            if (gradeid == null || gradeid.equals("null") || gradeid.equals("")||gradeid.isEmpty()||gradeid.equals(0)||gradeid.equals("0")){
-                gradeid = "0";
-            }
+            String message = prefModel.getLanguageMasterDynamic().getDetails().getYou_have_changed_you_grade()+"" + ExistGrade + "th - " + gradeid + "th."+prefModel.getLanguageMasterDynamic().getDetails().getYou_will_loose_your_current();
+            CustomDialogModel customDialogModel = new CustomDialogModel();
+            customDialogModel.setContext(CompleteStudentProfileWithoutPin.this);
+            customDialogModel.setTitle(prefModel.getLanguageMasterDynamic().getDetails().getInformation() != null ? prefModel.getLanguageMasterDynamic().getDetails().getInformation() : AuroApp.getAppContext().getResources().getString(R.string.information));
+            customDialogModel.setContent(message);
+            customDialogModel.setTwoButtonRequired(true);
+            customDialog = new CustomDialog(CompleteStudentProfileWithoutPin.this, customDialogModel);
+            customDialog.setSecondBtnTxt(prefModel.getLanguageMasterDynamic().getDetails().getYes()+"");//Yes
+            customDialog.setFirstBtnTxt(prefModel.getLanguageMasterDynamic().getDetails().getNo()+"");//No
+            customDialog.setFirstCallcack(new CustomDialog.FirstCallcack() {
+                @Override
+                public void clickNoCallback() {
+                    customDialog.dismiss();
+                    customDialog.setCancelable(true);
 
-          if (ExistGrade == null || ExistGrade.equals("null") || ExistGrade.equals("")||ExistGrade.isEmpty()||ExistGrade.equals(0)||ExistGrade.equals("0")){
 
-          }
-          else {
-              String message = prefModel.getLanguageMasterDynamic().getDetails().getYou_have_changed_you_grade() + " " + ExistGrade + "th - " + gradeid + "th. " + prefModel.getLanguageMasterDynamic().getDetails().getYou_will_loose_your_current();
-              CustomDialogModel customDialogModel = new CustomDialogModel();
-              customDialogModel.setContext(CompleteStudentProfileWithoutPin.this);
-              customDialogModel.setTitle(prefModel.getLanguageMasterDynamic().getDetails().getInformation() != null ? prefModel.getLanguageMasterDynamic().getDetails().getInformation() : AuroApp.getAppContext().getResources().getString(R.string.information));
-              customDialogModel.setContent(message);
-              customDialogModel.setTwoButtonRequired(true);
-              customDialog = new CustomDialog(CompleteStudentProfileWithoutPin.this, customDialogModel);
-              customDialog.setSecondBtnTxt(prefModel.getLanguageMasterDynamic().getDetails().getYes() + "");//Yes
-              customDialog.setFirstBtnTxt(prefModel.getLanguageMasterDynamic().getDetails().getNo() + "");//No
+                }
+            });
 
-              customDialog.setFirstCallcack(new CustomDialog.FirstCallcack() {
-                  @Override
-                  public void clickNoCallback() {
-                      binding.etgrade.setText(ExistGrade);
-                      customDialog.dismiss();
-                  }
-              });
+            customDialog.setSecondCallcack(new CustomDialog.SecondCallcack() {
+                @Override
+                public void clickYesCallback() {
+                    customDialog.dismiss();
+                    binding.etgrade.showDropDown();
+                    customDialog.setCancelable(true);
 
-              customDialog.setSecondCallcack(new CustomDialog.SecondCallcack() {
-                  @Override
-                  public void clickYesCallback() {
-                      binding.etgrade.setText(gradeid);
-                      customDialog.dismiss();
 
-                  }
-              });
+                }
+            });
 
-              WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-              lp.copyFrom(customDialog.getWindow().getAttributes());
-              lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-              lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
-              customDialog.getWindow().setAttributes(lp);
-              Objects.requireNonNull(customDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-              customDialog.setCancelable(false);
-              customDialog.show();
-          }
-
+            WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
+            lp.copyFrom(customDialog.getWindow().getAttributes());
+            lp.width = WindowManager.LayoutParams.WRAP_CONTENT;
+            lp.height = WindowManager.LayoutParams.WRAP_CONTENT;
+            customDialog.getWindow().setAttributes(lp);
+            Objects.requireNonNull(customDialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+            customDialog.setCancelable(true);
+            customDialog.show();
         }
-        else  if (kycgrade.equals("Approve")||kycgrade == "Approve"||kycgrade.equals("Approved")||kycgrade == "Approved"){
+        else{
             binding.etgrade.setEnabled(false);
         }
 

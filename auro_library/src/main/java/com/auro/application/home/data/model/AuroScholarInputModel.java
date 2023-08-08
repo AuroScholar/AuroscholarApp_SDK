@@ -26,7 +26,6 @@ public class AuroScholarInputModel implements Parcelable {
     int fragmentContainerUiId;
     String setDeviceToken = "test123";
     String partner_api_key;
-    String partner_unique_id;
 
     public String getPartner_api_key() {
         return partner_api_key;
@@ -36,6 +35,7 @@ public class AuroScholarInputModel implements Parcelable {
         this.partner_api_key = partner_api_key;
     }
 
+    String partner_unique_id;
     SdkCallBack sdkcallback;
     public SdkCallBack getSdkcallback() {
         return sdkcallback;
@@ -48,7 +48,6 @@ public class AuroScholarInputModel implements Parcelable {
     protected AuroScholarInputModel(Parcel in) {
         userid = in.readString();
         partner_unique_id = in.readString();
-        partner_api_key = in.readString();
         mobileNumber = in.readString();
         setDeviceToken = in.readString();
         studentClass = in.readString();
@@ -71,7 +70,6 @@ public class AuroScholarInputModel implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(partner_unique_id);
-        dest.writeString(partner_api_key);
         dest.writeString(userid);
         dest.writeString(setDeviceToken);
         dest.writeString(mobileNumber);
@@ -134,6 +132,9 @@ public class AuroScholarInputModel implements Parcelable {
     }
 
     String partnerName="";
+
+
+
 
     public String getSchoolType() {
         return schoolType;
@@ -233,10 +234,6 @@ public class AuroScholarInputModel implements Parcelable {
     public void setMobileNumber(String mobileNumber) {
         this.mobileNumber = mobileNumber;
     }
-
-
-
-
 
     public Activity getActivity() {
         return activity;
