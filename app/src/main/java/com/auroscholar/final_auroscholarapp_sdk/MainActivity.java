@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         inputModel.setPartnerSource("Numismatics_WEB");
         inputModel.setPartner_api_key("8daac713b6335ab1bdf929fe02904664300f4881e9b211543686ebde2aa41ec9");
         inputModel.setActivity((Activity) MainActivity.this);
-      //  AuroScholar.startAuroSDK(inputModel);
         startActivity(new Intent(MainActivity.this, SDKActivity.class)
                 .putExtra("auro_sdk", inputModel));
 
