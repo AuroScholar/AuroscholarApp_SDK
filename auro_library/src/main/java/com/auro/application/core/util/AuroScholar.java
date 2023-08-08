@@ -69,7 +69,7 @@ public class AuroScholar {
         auroScholarDataModel.setUserPartnerid(inputModel.getPartner_unique_id());
         auroScholarDataModel.setPartnerSource(inputModel.getPartnerSource());
         auroScholarDataModel.setApikey(inputModel.getPartner_api_key());
-        activity = inputModel.getActivity();
+
         DaggerWrapper.getComponent(inputModel.getActivity()).doInjection(inputModel.getActivity());
        AuroApp.setAuroModel(auroScholarDataModel);
        getMultiLanguage();
@@ -81,7 +81,7 @@ public class AuroScholar {
 
     private static void setSDKAPI(String mobno, String partneruniqueid, String partnersource, String apikey, String grade)
     {
-        progress = new ProgressDialog(activity);
+        progress = new ProgressDialog(auroScholarDataModel.getActivity());
         progress.setTitle("Processing..");
         progress.setMessage("fetching data");
         progress.setCancelable(true); // disable dismiss by tapping outside of the dialog
