@@ -84,9 +84,6 @@ public class AuroScholar {
        getMultiLanguage();
         getLanguage("1");
         setSDKAPI(inputModel.getMobileNumber(),inputModel.getPartner_unique_id(),inputModel.getPartnerSource(),inputModel.getPartner_api_key(),inputModel.getStudentClass());
-
-
-
         return null;
     }
 

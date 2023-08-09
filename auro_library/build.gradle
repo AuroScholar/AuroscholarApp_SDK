@@ -128,7 +128,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.AuroScholar'
                 artifactId = 'auroscholar-android-sdk'
-                version = '3.0.2'
+                version = '3.0.3'
             }
         }
     }

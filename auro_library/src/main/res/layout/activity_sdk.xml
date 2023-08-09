@@ -6,14 +6,24 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/_10sdp"
+
         android:gravity="center"
-        android:padding="@dimen/_10sdp"
+
         android:orientation="vertical">
 <ImageView
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
+    android:layout_width="@dimen/_180sdp"
+    android:layout_height="@dimen/_180sdp"
+    android:layout_centerHorizontal="true"
     android:src="@drawable/auro_scholar_logo"></ImageView>
+
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:id="@+id/home_container_sdk"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <EditText
             android:id="@+id/mobile_number"

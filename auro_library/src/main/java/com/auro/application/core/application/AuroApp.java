@@ -25,7 +25,6 @@ import io.reactivex.plugins.RxJavaPlugins;
  */
 
 public class AuroApp extends Application {
-
     AppComponent appComponent;
     public static AuroApp context;
     public static Application mcontext;
