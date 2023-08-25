@@ -97,7 +97,10 @@ dependencies {
 
     implementation 'com.google.firebase:firebase-ml-vision:24.0.1'
     implementation 'com.google.guava:listenablefuture:9999.0-empty-to-avoid-conflict-with-guava'
-    implementation 'com.github.dhaval2404:imagepicker:2.1'
+    implementation ('com.github.dhaval2404:imagepicker:2.1')
+    {
+        exclude group: 'com.yalantis', module: 'ucrop'
+    }
     implementation 'com.github.pwittchen:reactivenetwork-rx2:3.0.2'
 
     def camerax_version = '1.0.0-alpha06'
@@ -124,7 +127,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.AuroScholar'
                 artifactId = 'auroscholar-android-sdk'
-                version = '2.4.11'
+                version = '2.4.12'
             }
         }
     }

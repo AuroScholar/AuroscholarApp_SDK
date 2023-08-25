@@ -35,7 +35,6 @@ public class MainActivity extends AppCompatActivity {
         inputModel.setActivity((Activity) MainActivity.this);
         AuroScholar.startAuroSDK(inputModel);
        // startActivity(new Intent(MainActivity.this, SDKActivity.class));
-
        // startActivity(new Intent(MainActivity.this, SDKActivity.class));
 //        btncall.setOnClickListener(new View.OnClickListener() {
 //            @Override
