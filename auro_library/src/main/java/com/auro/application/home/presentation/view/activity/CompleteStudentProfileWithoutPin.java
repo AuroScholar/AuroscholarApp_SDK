@@ -88,7 +88,8 @@ import com.auro.application.util.ViewUtil;
 import com.auro.application.util.alert_dialog.CustomDialog;
 import com.auro.application.util.alert_dialog.CustomDialogModel;
 import com.auro.application.util.strings.AppStringDynamic;
-import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.esafirm.imagepicker.features.ImagePicker;
+
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1565,10 +1566,15 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
     }
     private void askPermission() {
 
-        ImagePicker.with(CompleteStudentProfileWithoutPin.this)
-                .crop()
-                .compress(1024)
-                .maxResultSize(1080, 1080)
+//        ImagePicker.with(CompleteStudentProfileWithoutPin.this)
+//                .crop()
+//                .compress(1024)
+//                .maxResultSize(1080, 1080)
+//                .start();
+
+        ImagePicker.create(this) // Pass the context
+                .folderMode(true)  // Enable folder mode (optional)
+                .single()          // Single mode for selecting one image (use multi() for multiple images)
                 .start();
 
     }
@@ -1604,9 +1610,10 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
                     AppLogger.e("StudentProfile", "fragment exception=" + e.getMessage());
                 }
 
-            } else if (resultCode == ImagePicker.RESULT_ERROR) {
-
-            } else {
+            }
+//            else if (resultCode == ImagePicker.RESULT_ERROR) {
+//            }
+            else {
 
             }
         }

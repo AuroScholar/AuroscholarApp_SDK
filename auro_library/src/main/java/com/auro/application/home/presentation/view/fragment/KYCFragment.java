@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -58,6 +59,7 @@ import com.auro.application.home.presentation.view.adapter.KYCuploadAdapter;
 import com.auro.application.home.presentation.viewmodel.KYCViewModel;
 import com.auro.application.payment.presentation.view.fragment.SendMoneyFragment;
 import com.auro.application.util.AppLogger;
+import com.auro.application.util.AppUtil;
 import com.auro.application.util.ConversionUtil;
 import com.auro.application.util.TextUtil;
 import com.auro.application.util.ViewUtil;
@@ -67,7 +69,9 @@ import com.auro.application.util.alert_dialog.disclaimer.DisclaimerKycDialog;
 import com.auro.application.util.cropper.CropImageViews;
 import com.auro.application.util.cropper.CropImages;
 import com.auro.application.util.strings.AppStringDynamic;
-import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
+
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -336,8 +340,19 @@ public class KYCFragment extends BaseFragment implements CommonCallBackListner, 
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         AppLogger.e("StudentProfile", "fragment requestCode=" + requestCode);
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            List<Image> images = ImagePicker.getImages(data);
+            if (images != null && !images.isEmpty()) {
+                // Handle the selected image(s) here
+                Image selectedImage = images.get(0); // Get the first selected image
+                String image_path = selectedImage.getPath(); // Get the image file path
+                Uri uri = data.getData();
+                updateKYCList(uri.getPath());
 
-        if (requestCode == 2) {
+            }
+
+        }
+       else if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
                 try {
 
@@ -375,69 +390,7 @@ public class KYCFragment extends BaseFragment implements CommonCallBackListner, 
 
 
 
-//    @Override
-//    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        AppLogger.e("chhonker", "fragment requestCode=" + requestCode);
-//        if (data != null) {
-//            resultUri = data.getData();
-//        }
-//        if (resultUri != null) {
-//            AppLogger.e("chhonker", "Exception resultUri=" + resultUri.getPath());
-//        }
-//        if (requestCode == 2404) {
-//            // CropImages.ActivityResult result = CropImages.getActivityResult(data);
-//            if (resultCode == RESULT_OK) {
-//                try {
-//
-//                    try {
-//                        resultUri = data.getData();
-//                        updateKYCList(resultUri.getPath());
-//                    } catch (Exception e) {
-//                        AppLogger.e("chhonker", "Exception requestCode=" + e.getMessage());
-//                    }
-//                } catch (Exception e) {
-//                    AppLogger.e("StudentProfile", "fragment exception=" + e.getMessage());
-//                }
-//
-//            } else if (resultCode == ImagePicker.RESULT_ERROR) {
-//                ViewUtil.showSnackBar(binding.getRoot(), ImagePicker.getError(data));
-//            } else {
-//                ViewUtil.showSnackBar(binding.getRoot(), "Task Cancelled");
-//            }
-//        }
-//        else if (requestCode == CropImages.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
-//            CropImages.ActivityResult result = CropImages.getActivityResult(data);
-//            if (resultCode == RESULT_OK) {
-//                AppLogger.v("BigDes", "Sdk step 4");
-//                try {
-//                    resultUri = result.getUri();
-//                    updateKYCList(resultUri.getPath());
-//
-//                } catch (Exception e) {
-//
-//                }
-//
-//            } else if (resultCode == CropImages.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-//                Exception error = result.getError();
-//                AppLogger.e("chhonker", "Exception error=" + error.getMessage());
-//            }
-//        }
-//        else if (requestCode == AppConstant.CAMERA_REQUEST_CODE) {
-//            if (resultCode == RESULT_OK) {
-//                try {
-//                    String path = data.getStringExtra(AppConstant.PROFILE_IMAGE_PATH);
-//                    updateKYCList(path);
-//                    AppLogger.e("chhonker PROFILE_IMAGE_PATH--", "=" + path);
-//                    // loadImageFromStorage(path);
-//                } catch (Exception e) {
-//                    AppLogger.e("chhonker", "Exception error=" + e.getMessage());
-//                }
-//
-//            }
-//        }
-//
-//    }
+
 
     private void loadImageFromStorage(String path) {
         try {
@@ -715,10 +668,14 @@ public class KYCFragment extends BaseFragment implements CommonCallBackListner, 
                         .setGuidelines(CropImageViews.Guidelines.ON)
                         .start(getActivity());
             } else {
-                ImagePicker.with(getActivity())
-                        .crop()                    //Crop image(Optional), Check Customization for more option
-                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
+//                ImagePicker.with(getActivity())
+//                        .crop()                    //Crop image(Optional), Check Customization for more option
+//                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
+//                        .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
+//                        .start();
+                ImagePicker.create(this) // Pass the context
+                        .folderMode(true)  // Enable folder mode (optional)
+                        .single()          // Single mode for selecting one image (use multi() for multiple images)
                         .start();
             }
 

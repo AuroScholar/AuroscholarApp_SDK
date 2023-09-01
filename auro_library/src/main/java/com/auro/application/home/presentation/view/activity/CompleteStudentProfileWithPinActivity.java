@@ -86,7 +86,7 @@ import com.auro.application.util.ViewUtil;
 import com.auro.application.util.alert_dialog.CustomProgressDialog;
 import com.auro.application.util.permission.LocationHandler;
 import com.auro.application.util.strings.AppStringDynamic;
-import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.esafirm.imagepicker.features.ImagePicker;
 
 
 import java.util.ArrayList;
@@ -1420,26 +1420,18 @@ CompleteStudentProfileWithPinActivity extends BaseActivity implements View.OnCli
         binding.etstate.setTextColor(Color.BLACK);
     }
     private void askPermission() {
-//        String rationale = "For Upload Profile Picture. Camera and Storage Permission is Must.";
-//        Permissions.Options options = new Permissions.Options()
-//                .setRationaleDialogTitle("Info")
-//                .setSettingsDialogTitle("Warning");
-//        Permissions.check(this, PermissionUtil.mCameraPermissions, rationale, options, new PermissionHandler() {
-//            @Override
-//            public void onGranted() {
-                ImagePicker.with(CompleteStudentProfileWithPinActivity.this)
-                        .crop()                    //Crop image(Optional), Check Customization for more option
-                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
-                        .start();
-//            }
-//
-//            @Override
-//            public void onDenied(Context context, ArrayList<String> deniedPermissions) {
-//                // permission denied, block the feature.
-//                ViewUtil.showSnackBar(binding.getRoot(), rationale);
-//            }
-//        });
+
+//                ImagePicker.with(CompleteStudentProfileWithPinActivity.this)
+//                        .crop()                    //Crop image(Optional), Check Customization for more option
+//                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
+//                        .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
+//                        .start();
+
+        ImagePicker.create(this) // Pass the context
+                .folderMode(true)  // Enable folder mode (optional)
+                .single()          // Single mode for selecting one image (use multi() for multiple images)
+                .start();
+
     }
     private void selectImage() {
         final CharSequence[] options = { "Take Photo", "Choose from Gallery","Cancel" };
@@ -1691,9 +1683,12 @@ CompleteStudentProfileWithPinActivity extends BaseActivity implements View.OnCli
                     AppLogger.e("StudentProfile", "fragment exception=" + e.getMessage());
                 }
 
-            } else if (resultCode == ImagePicker.RESULT_ERROR) {
-                showSnackbarError(ImagePicker.getError(data));
-            } else {
+            }
+//            else if (resultCode == ImagePicker.RESULT_ERROR) {
+//                showSnackbarError(ImagePicker.getError(data));
+//            }
+            else
+            {
                 // Toast.makeText(getActivity(), "Task Cancelled", Toast.LENGTH_SHORT).show();
             }
         }

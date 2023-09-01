@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.ViewModelProviders;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,12 +40,15 @@ import com.auro.application.util.AppLogger;
 import com.auro.application.util.AppUtil;
 import com.auro.application.util.ViewUtil;
 import com.auro.application.util.network.ProgressRequestBody;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 //import com.facebook.appevents.codeless.internal.EventBinding;
-import com.github.dhaval2404.imagepicker.ImagePicker;
+
 
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -143,26 +147,17 @@ public class UploadDocumentFragment extends BaseDialog implements View.OnClickLi
 
 
     private void askPermission() {
-//        String rationale = "For Upload Profile Picture. Camera and Storage Permission is Must.";
-//        Permissions.Options options = new Permissions.Options()
-//                .setRationaleDialogTitle("Info")
-//                .setSettingsDialogTitle("Warning");
-//        Permissions.check(getContext(), PermissionUtil.mCameraPermissions, rationale, options, new PermissionHandler() {
-//            @Override
-//            public void onGranted() {
-                ImagePicker.with(UploadDocumentFragment.this)
-                        .crop()                    //Crop image(Optional), Check Customization for more option
-                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
-                        .start();
-//            }
-//
-//            @Override
-//            public void onDenied(Context context, ArrayList<String> deniedPermissions) {
-//                // permission denied, block the feature.
-//                ViewUtil.showSnackBar(binding.getRoot(), rationale);
-//            }
-//        });
+
+//                ImagePicker.with(UploadDocumentFragment.this)
+//                        .crop()                    //Crop image(Optional), Check Customization for more option
+//                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
+//                        .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
+//                        .start();
+
+        ImagePicker.create(this) // Pass the context
+                .folderMode(true)  // Enable folder mode (optional)
+                .single()          // Single mode for selecting one image (use multi() for multiple images)
+                .start();
     }
 
     @Override
@@ -170,15 +165,18 @@ public class UploadDocumentFragment extends BaseDialog implements View.OnClickLi
         super.onActivityResult(requestCode, resultCode, data);
         AppLogger.e("StudentProfile", "fragment requestCode=" + requestCode);
 
-        if (requestCode == 2404) {
-            // CropImages.ActivityResult result = CropImages.getActivityResult(data);
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            List<Image> images = ImagePicker.getImages(data);
+            if (images != null && !images.isEmpty()) {
+                Image selectedImage = images.get(0); // Get the first selected image
+                String image_path = selectedImage.getPath(); // Get the image file path
+                handleData(data);
+            }
+        }
+        else if (requestCode == 2404) {
             if (resultCode == RESULT_OK) {
                 AppLogger.v("StudentPradeep", "handleData" );
                 handleData(data);
-            } else if (resultCode == ImagePicker.RESULT_ERROR) {
-                showSnackbarError(ImagePicker.getError(data));
-            } else {
-                // Toast.makeText(getActivity(), "Task Cancelled", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -322,7 +320,6 @@ public class UploadDocumentFragment extends BaseDialog implements View.OnClickLi
 
     private void updateKYCList(String path) {
         try {
-            AppLogger.e("calluploadApi-", "Step 1");
             kycDocumentDatamodelArrayList = kycViewModel.teacherUseCase.makeAdapterDocumentList(teacherKycStatusResModel);
             int pos = kycDocumentDatamodel.getPosition();
             if (kycDocumentDatamodelArrayList.get(pos).getDocumentId() == AppConstant.DocumentType.ID_PROOF_FRONT_SIDE) {
@@ -338,7 +335,7 @@ public class UploadDocumentFragment extends BaseDialog implements View.OnClickLi
             File file = new File(kycDocumentDatamodelArrayList.get(pos).getDocumentURi().getPath());
             InputStream is = AuroApp.getAppContext().getApplicationContext().getContentResolver().openInputStream(Uri.fromFile(file));
             kycDocumentDatamodelArrayList.get(pos).setImageBytes(kycViewModel.teacherUseCase.getBytes(is));
-            AppLogger.e("calluploadApi-", "Step 2");
+
 
             uploadAllDocApi();
         } catch (Exception e) {
@@ -349,8 +346,6 @@ public class UploadDocumentFragment extends BaseDialog implements View.OnClickLi
     }
 
     private void uploadAllDocApi() {
-        AppLogger.e("calluploadApi-", "Step 4");
-
         kycViewModel.checkInternet(Status.TEACHER_KYC_API, kycDocumentDatamodelArrayList);
     }
 

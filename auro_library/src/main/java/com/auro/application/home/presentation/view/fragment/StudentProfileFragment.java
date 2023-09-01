@@ -108,7 +108,10 @@ import com.auro.application.util.alert_dialog.disclaimer.AddStudentDialog;
 import com.auro.application.util.firebaseAnalytics.AnalyticsRegistry;
 import com.auro.application.util.permission.LocationHandler;
 import com.auro.application.util.strings.AppStringDynamic;
-import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.features.ReturnMode;
+import com.esafirm.imagepicker.model.Image;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -1661,23 +1664,60 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
 
     private void askPermission() {
 
-        ImagePicker.with(getActivity())
-                .crop()                    //Crop image(Optional), Check Customization for more option
-                .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
+//        ImagePicker.with(getActivity())
+//                .crop()                    //Crop image(Optional), Check Customization for more option
+//                .compress(1024)            //Final image size will be less than 1 MB(Optional)
+//                .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
+//                .start();
+
+        ImagePicker.create(this) // Pass your activity or fragment
+                .returnMode(ReturnMode.ALL) // Set return mode (all images, single image, or none)
+                .folderMode(true)           // Enable folder mode (optional)
+                .toolbarFolderTitle("Select a folder") // Set folder selection title (optional)
+                .toolbarImageTitle("Tap to select")     // Set image selection title (optional)
+                .single()                   // Single mode for selecting one image (use multi() for multiple images)
+                .limit(1)                   // Limit the number of selected images (optional)
+                .showCamera(true)           // Show camera option (optional)
                 .start();
-
     }
-
-
-
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         AppLogger.e("StudentProfile", "fragment requestCode=" + requestCode);
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            List<Image> images = ImagePicker.getImages(data);
+            if (images != null && !images.isEmpty()) {
+                // Handle the selected image(s) here
+                Image selectedImage = images.get(0); // Get the first selected image
+                image_path = selectedImage.getPath(); // Get the image file path
 
-        if (requestCode == 2404) {
+                try {
+                  //  Uri uri = data.getData();
+                    //image_path = uri.getPath();
+
+                    Log.d(TAG, "imagepathon: " + image_path);
+                    Bitmap picBitmap = BitmapFactory.decodeFile(selectedImage.getPath());
+                    byte[] bytes = AppUtil.encodeToBase64(picBitmap, 100);
+                    long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
+                    int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
+
+
+                    if (file_size >= 500) {
+                        studentProfileModel.setImageBytes(AppUtil.encodeToBase64(picBitmap, 50));
+                    } else {
+                        studentProfileModel.setImageBytes(bytes);
+                    }
+
+
+                    loadimage(picBitmap);
+                } catch (Exception e) {
+                    AppLogger.e("StudentProfile", "fragment exception=" + e.getMessage());
+                }
+            }
+
+        }
+        else if (requestCode == 2404) {
             // CropImages.ActivityResult result = CropImages.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 try {
@@ -1704,9 +1744,11 @@ public class StudentProfileFragment extends BaseFragment implements View.OnClick
                     AppLogger.e("StudentProfile", "fragment exception=" + e.getMessage());
                 }
 
-            } else if (resultCode == ImagePicker.RESULT_ERROR) {
-                showSnackbarError(ImagePicker.getError(data));
-            } else {
+            }
+//            else if (resultCode == ImagePicker.RESULT_ERROR) {
+//                showSnackbarError(ImagePicker.getError(data));
+//            }
+            else {
                 // Toast.makeText(getActivity(), "Task Cancelled", Toast.LENGTH_SHORT).show();
             }
         }

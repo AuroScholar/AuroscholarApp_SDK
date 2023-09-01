@@ -14,6 +14,7 @@ import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -61,7 +62,9 @@ import com.auro.application.util.permission.PermissionHandler;
 import com.auro.application.util.permission.PermissionUtil;
 import com.auro.application.util.permission.Permissions;
 import com.auro.application.util.strings.AppStringTeacherDynamic;
-import com.github.dhaval2404.imagepicker.ImagePicker;
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
+
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -402,10 +405,14 @@ public class TeacherUserProfileFragment extends BaseFragment implements View.OnF
         Permissions.check(getContext(), PermissionUtil.mCameraPermissions, rationale, options, new PermissionHandler() {
             @Override
             public void onGranted() {
-                ImagePicker.with(TeacherUserProfileFragment.this)
-                        .crop()                    //Crop image(Optional), Check Customization for more option
-                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                        .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
+//                ImagePicker.with(TeacherUserProfileFragment.this)
+//                        .crop()                    //Crop image(Optional), Check Customization for more option
+//                        .compress(1024)            //Final image size will be less than 1 MB(Optional)
+//                        .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
+//                        .start();
+                ImagePicker.create(getActivity()) // Pass the context
+                        .folderMode(true)  // Enable folder mode (optional)
+                        .single()          // Single mode for selecting one image (use multi() for multiple images)
                         .start();
             }
 
@@ -420,9 +427,40 @@ public class TeacherUserProfileFragment extends BaseFragment implements View.OnF
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        AppLogger.e("StudentProfile", "fragment requestCode=" + requestCode);
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            List<Image> images = ImagePicker.getImages(data);
+            if (images != null && !images.isEmpty()) {
+                // Handle the selected image(s) here
+                Image selectedImage = images.get(0); // Get the first selected image
+                String image_path = selectedImage.getPath(); // Get the image file path
 
-        if (requestCode == 2404) {
+                try {
+                    //  Uri uri = data.getData();
+                    //image_path = uri.getPath();
+
+
+                    Bitmap picBitmap = BitmapFactory.decodeFile(selectedImage.getPath());
+                    byte[] bytes = AppUtil.encodeToBase64(picBitmap, 100);
+                    long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
+                    int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
+
+
+                    if (file_size >= 500) {
+                        teacherProfileModel.setTeacher_profile_pic(AppUtil.encodeToBase64(picBitmap, 50));
+                    } else {
+                        teacherProfileModel.setTeacher_profile_pic(bytes);
+                    }
+
+
+                    loadimage(picBitmap);
+                } catch (Exception e) {
+                    AppLogger.e("StudentProfile", "fragment exception=" + e.getMessage());
+                }
+            }
+
+        }
+
+       else if (requestCode == 2404) {
             // CropImages.ActivityResult result = CropImages.getActivityResult(data);
             if (resultCode == RESULT_OK) {
                 try {
@@ -449,9 +487,8 @@ public class TeacherUserProfileFragment extends BaseFragment implements View.OnF
                     AppLogger.e("StudentProfile", "fragment exception=" + e.getMessage());
                 }
 
-            } else if (resultCode == ImagePicker.RESULT_ERROR) {
-                showSnackbarError(ImagePicker.getError(data));
-            } else {
+            }
+            else {
                 Toast.makeText(getActivity(), "Task Cancelled", Toast.LENGTH_SHORT).show();
             }
         }

@@ -58,7 +58,9 @@ import com.auro.application.util.RemoteApi;
 import com.auro.application.util.ViewUtil;
 import com.auro.application.util.network.ProgressRequestBody;
 import com.auro.application.util.strings.AppStringDynamic;
-import com.github.dhaval2404.imagepicker.ImagePicker;
+
+import com.esafirm.imagepicker.features.ImagePicker;
+import com.esafirm.imagepicker.model.Image;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -199,21 +201,31 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
 
     private void askPermission() {
 
-        ImagePicker.with(StudentUploadDocumentFragment.this)
-                .crop()                    //Crop image(Optional), Check Customization for more option
-                .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
+
+
+//        ImagePicker.with(StudentUploadDocumentFragment.this)
+//                .crop()                    //Crop image(Optional), Check Customization for more option
+//                .compress(1024)            //Final image size will be less than 1 MB(Optional)
+//                .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
+//                .start();
+        ImagePicker.create(this) // Pass the context
+                .folderMode(true)  // Enable folder mode (optional)
+                .single()          // Single mode for selecting one image (use multi() for multiple images)
                 .start();
 
     }
 
     private void askPermissionCamera() {
 
-        ImagePicker.with(StudentUploadDocumentFragment.this)
-                .crop()                    //Crop image(Optional), Check Customization for more option
-                .compress(1024)            //Final image size will be less than 1 MB(Optional)
-                .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
-                .cameraOnly()
+//        ImagePicker.with(StudentUploadDocumentFragment.this)
+////                .crop()                    //Crop image(Optional), Check Customization for more option
+////                .compress(1024)            //Final image size will be less than 1 MB(Optional)
+////                .maxResultSize(1080, 1080)    //Final image resolution will be less than 1080 x 1080(Optional)
+////                .cameraOnly()
+////                .start();
+        ImagePicker.create(this) // Pass the context
+                .folderMode(true)  // Enable folder mode (optional)
+                .single()          // Single mode for selecting one image (use multi() for multiple images)
                 .start();
 
     }
@@ -223,7 +235,19 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         AppLogger.e("StudentProfile", "fragment requestCode=" + requestCode);
-        if (Build.VERSION.SDK_INT > 26) {
+        if (ImagePicker.shouldHandle(requestCode, resultCode, data)) {
+            List<Image> images = ImagePicker.getImages(data);
+            if (images != null && !images.isEmpty()) {
+                // Handle the selected image(s) here
+                Image selectedImage = images.get(0); // Get the first selected image
+                String image_path = selectedImage.getPath();
+                handleData(image_path);
+
+            }
+
+        }
+
+        else if (Build.VERSION.SDK_INT > 26) {
             if (requestCode == 2404) {
 
 
@@ -233,7 +257,7 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
 
 
 
-                        handleData(data);
+                       // handleData(data);
 
 
 
@@ -246,7 +270,7 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
             }
             else if (requestCode == 1 ) {
                 if (Build.VERSION.SDK_INT > 26) {
-                    handleData(data);
+                   // handleData(data);
 
 
                 }
@@ -254,7 +278,7 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
                     if (resultCode == RESULT_OK) {
                         AppLogger.v("BigDes", "Sdk step 4");
                         try {
-                            handleData(data);
+                         //   handleData(data);
 
 
                         } catch (Exception e) {
@@ -271,7 +295,7 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
                 if (resultCode == RESULT_OK) {
                     try {
 
-                        handleData(data);
+                   //     handleData(data);
 
 
                     } catch (Exception e) {
@@ -288,7 +312,7 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
 
                 if (requestCode == 1 && resultCode == Activity.RESULT_OK)
                 {
-                    handleData(data);
+                 //   handleData(data);
 
                 }
 
@@ -304,23 +328,24 @@ public class StudentUploadDocumentFragment extends BaseDialog implements View.On
         ViewUtil.showSnackBar(binding.getRoot(), message);
     }
 
-    void handleData(Intent data) {
+    void handleData(String data) {
         try {
-            Uri uri = data.getData();
-            AppLogger.v("StudentProfile", "image path=" + uri.getPath());
 
-            Bitmap picBitmap = BitmapFactory.decodeFile(uri.getPath());
+
+           // Uri uri = data.getData();
+            //AppLogger.v("StudentProfile", "image path=" + uri.getPath());
+
+            Bitmap picBitmap = BitmapFactory.decodeFile(data);
             byte[] bytes = AppUtil.encodeToBase64(picBitmap, 100);
             long mb = AppUtil.bytesIntoHumanReadable(bytes.length);
             int file_size = Integer.parseInt(String.valueOf(bytes.length / 1024));
 
-            AppLogger.v("StudentProfile", "image size=" + uri.getPath());
-            File f = new File("" + uri);
+            File f = new File("" + data);
 
-            if (!uri.getPath().isEmpty()) {
+            if (!data.isEmpty()) {
                 handleUi(0);
                 binding.fileNameTxt.setText(f.getName());
-                updateKYCList(uri.getPath());
+                updateKYCList(data);
             }
 
         } catch (Exception e) {
