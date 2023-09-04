@@ -70,7 +70,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-fragment:2.3.0'
     implementation 'com.github.faruktoptas:FancyShowCaseView:1.3.9'
     implementation 'com.robinhood.ticker:ticker:2.0.2'
-    implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0'
+   // implementation 'com.pierfrancescosoffritti.androidyoutubeplayer:core:11.1.0'
     //implementation files('libs/yubobotsdk-debug.aar')
 
     annotationProcessor googleDependencies.daggerCompiler
@@ -128,7 +128,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.AuroScholar'
                 artifactId = 'auroscholar-android-sdk'
-                version = '2.4.13'
+                version = '2.4.14'
             }
         }
     }
