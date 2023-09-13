@@ -27,9 +27,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         //btncall=findViewById(R.id.btncall);
         AuroScholarInputModel inputModel = new AuroScholarInputModel();
-        inputModel.setMobileNumber("9874561230");
-        inputModel.setStudentClass(String.valueOf("7"));
-        inputModel.setPartner_unique_id("157488");
+        inputModel.setMobileNumber("9874561231");
+        inputModel.setStudentClass(String.valueOf(""));
+        inputModel.setPartner_unique_id("1574888988");
         inputModel.setPartnerSource("Numismatics_WEB");
         inputModel.setPartner_api_key("8daac713b6335ab1bdf929fe02904664300f4881e9b211543686ebde2aa41ec9");
         inputModel.setActivity((Activity) MainActivity.this);
