@@ -28,7 +28,7 @@ public class MainActivity extends AppCompatActivity {
 
         PrefModel prefModel = AuroAppPref.INSTANCE.getModelInstance();
         prefModel.setUserMobile("9874561230");
-        prefModel.setUserclass(7);
+        prefModel.setUserclass(0);
         prefModel.setPartnersource("Numismatics_WEB");
         prefModel.setApikey("8daac713b6335ab1bdf929fe02904664300f4881e9b211543686ebde2aa41ec9");
         prefModel.setPartneruniqueid("1574886464534233");
