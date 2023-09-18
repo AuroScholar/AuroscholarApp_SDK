@@ -74,7 +74,7 @@ dependencies {
     annotationProcessor DatabaseDependencies.roomCompiler
     implementation DatabaseDependencies.lifecyleRuntime
     implementation DatabaseDependencies.lifecyleExtension
-    implementation TruecallerDependencies.truecaller
+  //  implementation TruecallerDependencies.truecaller
     implementation FacebookDependencies.facebook
     implementation OtpDependencies.otpdependencies
     implementation FirebaseDependencies.values()
@@ -113,7 +113,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.AuroScholar'
                 artifactId = 'auroscholar-android-sdk'
-                version = '2.4.16'
+                version = '2.4.17'
             }
         }
     }

@@ -21,7 +21,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import com.google.firebase.analytics.FirebaseAnalytics;
 
-import static org.shadow.apache.commons.lang3.StringUtils.isNumeric;
+
 
 public class FirebaseAnalyticsEvent {
     FirebaseAnalytics mObjFirebaseAnalytics;
