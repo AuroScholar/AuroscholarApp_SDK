@@ -37,6 +37,7 @@ ext {
     googleDependencies = [
             gson             :         "com.google.code.gson:gson:${gson}",
             dagger           :         "com.google.dagger:dagger:${dagger}",
+
             daggerCompiler   :         "com.google.dagger:dagger-compiler:${dagger}",
             phoneNum         :         "com.googlecode.libphonenumber:libphonenumber:${phoneNum}",
             map              :         "com.google.android.gms:play-services-maps:${googleVersion}",
