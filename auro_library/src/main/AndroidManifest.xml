@@ -32,6 +32,7 @@
     <application
         android:name=".core.application.AuroApp"
         android:usesCleartextTraffic="true">
+
         <activity
             android:name=".home.presentation.view.activity.SetPinActivity"
             android:exported="true" />
