@@ -24,6 +24,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -466,8 +467,10 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
         if (id == R.id.editImage) {
             if (Build.VERSION.SDK_INT > 26) {
                 askPermission();
+              //  galleryIntent();
             } else {
-                askPermission();
+               // galleryIntent();
+               askPermission();
             }
         } else if (id == R.id.btdonenew) {
             String pin = binding.pinView.getText().toString();
@@ -597,6 +600,13 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
 
             }
         }
+    }
+
+    private void galleryIntent() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT);//
+        startActivityForResult(Intent.createChooser(intent, "Select File"), 1024);
     }
 
     private void loadimage(Bitmap picBitmap) {
@@ -1574,14 +1584,9 @@ public class CompleteStudentProfileWithoutPin extends BaseActivity implements Vi
 //                .maxResultSize(1080, 1080)
 //                .start();
 
-        ImagePicker.create(this) // Pass your activity or fragment
-                .returnMode(ReturnMode.ALL) // Set return mode (all images, single image, or none)
-                .folderMode(true)           // Enable folder mode (optional)
-                .toolbarFolderTitle("Select a folder") // Set folder selection title (optional)
-                .toolbarImageTitle("Tap to select")     // Set image selection title (optional)
-                .single()                   // Single mode for selecting one image (use multi() for multiple images)
-                .limit(1)                   // Limit the number of selected images (optional)
-                .showCamera(true)           // Show camera option (optional)
+        ImagePicker.create(this) // Pass the context
+                .folderMode(true)  // Enable folder mode (optional)
+                .single()          // Single mode for selecting one image (use multi() for multiple images)
                 .start();
 
     }

@@ -29,9 +29,9 @@ public class MainActivity extends AppCompatActivity {
         AuroScholarInputModel inputModel = new AuroScholarInputModel();
         inputModel.setMobileNumber("9874561231");
         inputModel.setStudentClass(String.valueOf(""));
-        inputModel.setPartner_unique_id("1574888988");
-        inputModel.setPartnerSource("Numismatics_WEB");
-        inputModel.setPartner_api_key("8daac713b6335ab1bdf929fe02904664300f4881e9b211543686ebde2aa41ec9");
+        inputModel.setPartner_unique_id("43434");
+        inputModel.setPartnerSource("The_Teachers_Hub_WEB");
+        inputModel.setPartner_api_key("2e6f3b8e45ab785e3a46e5ad19ce53e0316276d48f0ccd871f15091ba88dc9a1");
         inputModel.setActivity((Activity) MainActivity.this);
         AuroScholar.startAuroSDK(inputModel);
        // startActivity(new Intent(MainActivity.this, SDKActivity.class));
