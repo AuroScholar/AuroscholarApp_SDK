@@ -20,8 +20,12 @@ android {
 
     buildTypes {
         release {
+            debuggable false
+            shrinkResources true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            buildConfigField "boolean", "SSL_ENABLED", "false"
+            buildConfigField "boolean", "LOG_ENABLED", "false"
         }
     }
     flavorDimensions "tfliteInference"
