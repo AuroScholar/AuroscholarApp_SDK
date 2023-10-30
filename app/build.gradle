@@ -24,6 +24,17 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    flavorDimensions "tfliteInference"
+    productFlavors {
+        // The TFLite inference is built using the TFLite Support library.
+        support {
+            dimension "tfliteInference"
+        }
+        // The TFLite inference is built using the TFLite Task library.
+        taskApi {
+            dimension "tfliteInference"
+        }
+    }
 
     android {
         dataBinding {

@@ -41,6 +41,7 @@ android {
             enabled = true
         }
     }
+
 }
 
 configurations.all {
@@ -114,7 +115,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.AuroScholar'
                 artifactId = 'auroscholar-android-sdk'
-                version = '2.4.20'  //2.4.17 previous working version
+                version = '2.4.21'  //2.4.17 previous working version
             }
         }
     }
